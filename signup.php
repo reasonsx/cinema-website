@@ -1,7 +1,12 @@
 <?php
 // signup.php
-include 'header.php';
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<?php include 'head.php'; ?>
+<body class="bg-light text-black font-sans">
+
+<?php include 'header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
@@ -11,7 +16,7 @@ include 'header.php';
             <input type="email" name="email" placeholder="Email" required class="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
             <input type="password" name="password" placeholder="Password" required class="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
             <input type="password" name="confirm_password" placeholder="Confirm Password" required class="px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-            <button type="submit" class="btn w-full text-center">
+            <button type="submit" class="btn w-full text-center justify-center items-center">
                 <i class="pi pi-user-plus"></i> Sign Up
             </button>
         </form>
@@ -22,3 +27,6 @@ include 'header.php';
 </section>
 
 <?php include 'footer.php'; ?>
+
+</body>
+</html>

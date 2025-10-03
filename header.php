@@ -26,10 +26,10 @@
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-6">
-                <a href="#" class="hover:text-secondary flex items-center gap-1 transition">Home</a>
-                <a href="#" class="hover:text-secondary flex items-center gap-1 transition">Movies</a>
-                <a href="#" class="hover:text-secondary flex items-center gap-1 transition">Schedule</a>
-                <a href="#" class="hover:text-secondary flex items-center gap-1 transition">Contact</a>
+                <a href="index.php" class="hover:text-secondary flex items-center gap-1 transition">Home</a>
+                <a href="movies.php" class="hover:text-secondary flex items-center gap-1 transition">Movies</a>
+                <a href="schedule.php" class="hover:text-secondary flex items-center gap-1 transition">Schedule</a>
+                <a href="contact.php" class="hover:text-secondary flex items-center gap-1 transition">Contact</a>
 
                 <!-- Search Bar -->
                 <div>
@@ -38,8 +38,8 @@
 
                 <!-- Login / Sign Up Buttons -->
                 <div class="flex items-center gap-2 ml-4">
-                    <a href="#" class="px-4 py-1 rounded-full border border-white text-white hover:bg-white hover:text-black transition">Login</a>
-                    <a href="#" class="px-4 py-1 rounded-full bg-primary text-white hover:bg-secondary transition">Sign Up</a>
+                    <a href="login.php" class="px-4 py-1 rounded-full border border-white text-white hover:bg-white hover:text-black transition">Login</a>
+                    <a href="signup.php" class="px-4 py-1 rounded-full bg-primary text-white hover:bg-secondary transition">Sign Up</a>
                 </div>
             </nav>
 
@@ -54,17 +54,17 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="md:hidden hidden bg-black px-6 pb-4">
             <ul class="flex flex-col gap-4">
-                <li><a href="#" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-home"></i> Home</a></li>
-                <li><a href="#" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-ticket"></i> Movies</a></li>
-                <li><a href="#" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-calendar"></i> Schedule</a></li>
-                <li><a href="#" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-phone"></i> Contact</a></li>
+                <li><a href="index.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-home"></i> Home</a></li>
+                <li><a href="movies.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-ticket"></i> Movies</a></li>
+                <li><a href="schedule.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-calendar"></i> Schedule</a></li>
+                <li><a href="contact.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-phone"></i> Contact</a></li>
                 <li>
                     <input type="text" placeholder="Search movies..." class="w-full px-3 py-1 rounded-full text-black focus:outline-none focus:ring-2 focus:ring-primary" />
                 </li>
                 <!-- Mobile Login / Sign Up Buttons -->
                 <li class="flex flex-col gap-2 mt-2">
-                    <a href="#" class="px-4 py-2 rounded-full border border-white text-white hover:bg-white hover:text-black text-center transition">Login</a>
-                    <a href="#" class="px-4 py-2 rounded-full bg-primary text-white hover:bg-secondary text-center transition">Sign Up</a>
+                    <a href="login.php" class="px-4 py-2 rounded-full border border-white text-white hover:bg-white hover:text-black text-center transition">Login</a>
+                    <a href="signup.php" class="px-4 py-2 rounded-full bg-primary text-white hover:bg-secondary text-center transition">Sign Up</a>
                 </li>
             </ul>
         </div>
