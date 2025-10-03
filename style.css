@@ -45,7 +45,7 @@ body, p, li, a {
     background-color: var(--primary);
     color: var(--white);
     padding: 0.5rem 1rem;  /* smaller size */
-    border-radius: 9999px; /* fully rounded pill shape */
+    border-radius: 0.75rem; /* fully rounded pill shape */
     font-weight: 600;
     font-size: 0.95rem;
     transition: background-color 0.2s ease;
@@ -59,4 +59,49 @@ body, p, li, a {
 
 .btn:active {
     background-color: #c74730; /* even darker for click */
+}
+
+/* style.css - Global Input Styles */
+
+/* Base styles for all inputs and textareas */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    font-family: var(--body-font);
+    padding: 0.5rem 1rem;           /* consistent padding */
+    border-radius: 0.75rem;         /* rounded corners */
+    border: 1px solid #d1d5db;      /* default gray border */
+    outline: none;
+    transition: all 0.3s ease-in-out; /* smooth transition */
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--white);
+    color: var(--black);
+}
+
+/* Hover state */
+input[type="text"]:hover,
+input[type="email"]:hover,
+input[type="password"]:hover,
+textarea:hover {
+    border-color: var(--black);          /* darken border on hover */
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1); /* subtle glow effect */
+}
+
+/* Focus state with smooth animation */
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    border-color: var(--black);         /* change border to black */
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2); /* subtle black glow */
+}
+
+/* Placeholder styling */
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af; /* gray-400 */
+    opacity: 1;
 }
