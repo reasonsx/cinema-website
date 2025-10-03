@@ -8,7 +8,7 @@
 
 <?php include 'header.php'; ?>
 
-<section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
+<section class="flex justify-center items-center min-h-[80vh] bg-primary px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <h2 class="text-3xl font-header mb-6 text-center text-primary">Create an Account</h2>
         <form action="signup_process.php" method="POST" class="flex flex-col gap-4">
