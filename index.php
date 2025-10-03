@@ -16,31 +16,16 @@
 
     <!-- Custom Colors -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Limelight&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 </head>
 <body class="bg-light text-black font-sans">
 
 <!-- Header -->
-<header class="bg-black text-white shadow-lg">
-    <div class="container mx-auto flex justify-between items-center px-6 py-4">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-            <i class="pi pi-video text-primary"></i> MyCinema
-        </h1>
-        <nav class="flex gap-6">
-            <a href="#" class="hover:text-secondary flex items-center gap-1">
-                <i class="pi pi-home"></i> Home
-            </a>
-            <a href="#" class="hover:text-secondary flex items-center gap-1">
-                <i class="pi pi-ticket"></i> Movies
-            </a>
-            <a href="#" class="hover:text-secondary flex items-center gap-1">
-                <i class="pi pi-calendar"></i> Schedule
-            </a>
-            <a href="#" class="hover:text-secondary flex items-center gap-1">
-                <i class="pi pi-phone"></i> Contact
-            </a>
-        </nav>
-    </div>
-</header>
+<?php include 'header.php'; ?>
+
 
 <!-- Hero Section -->
 <section class="relative bg-secondary text-black text-center py-20">

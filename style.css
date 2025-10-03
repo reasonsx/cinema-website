@@ -4,6 +4,18 @@
     --secondary: #FFAF7F;
     --white: #ffffff;
     --black: #000000;
+    --primary-font: 'Limelight', cursive;
+    --body-font: 'Inter', sans-serif;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--primary-font);
+}
+
+/* Body */
+body, p, li, a {
+    font-family: var(--body-font);
 }
 
 /* Background helpers */
