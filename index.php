@@ -46,7 +46,7 @@
 <section class="relative bg-secondary text-black text-center py-20">
     <h2 class="text-4xl font-bold">Welcome to MyCinema</h2>
     <p class="mt-4 text-lg">Book your tickets and enjoy the latest blockbusters.</p>
-    <a href="#movies" class="mt-6 inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary transition">
+    <a href="#movies" class="btn">
         <i class="pi pi-ticket mr-2"></i> Book Now
     </a>
 </section>
@@ -64,7 +64,7 @@
             <div class="p-4">
                 <h4 class="text-xl font-semibold mb-2">Movie Title</h4>
                 <p class="text-black text-sm mb-4">Short description of the movie...</p>
-                <a href="#" class="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-md font-medium hover:bg-secondary transition">
+                <a href="#" class="btn">
                     <i class="pi pi-play"></i> Watch Trailer
                 </a>
             </div>

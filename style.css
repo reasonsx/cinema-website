@@ -23,3 +23,28 @@
 .border-secondary { border-color: var(--secondary); }
 .border-white { border-color: var(--white); }
 .border-black { border-color: var(--black); }
+
+/* style.css - Reusable Button Styles */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* space between icon and text */
+    background-color: var(--primary);
+    color: var(--white);
+    padding: 0.5rem 1rem;  /* smaller size */
+    border-radius: 9999px; /* fully rounded pill shape */
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+}
+
+/* Hover tint effect */
+.btn:hover {
+    background-color: #d9543a; /* slightly darker than #ED6044 */
+}
+
+.btn:active {
+    background-color: #c74730; /* even darker for click */
+}
