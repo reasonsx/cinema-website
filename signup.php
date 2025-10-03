@@ -46,4 +46,21 @@
     const signupPassword = document.getElementById('signup-password');
     const toggleSignup = document.getElementById('toggle-signup-password');
     toggleSignup.addEventListener('click', () => {
-        const type = signupPasswo
+        const type = signupPassword.type === 'password' ? 'text' : 'password';
+        signupPassword.type = type;
+        toggleSignup.innerHTML = type === 'password' ? '<i class="pi pi-eye"></i>' : '<i class="pi pi-eye-slash"></i>';
+    });
+
+    const signupConfirm = document.getElementById('signup-confirm-password');
+    const toggleConfirm = document.getElementById('toggle-signup-confirm-password');
+    toggleConfirm.addEventListener('click', () => {
+        const type = signupConfirm.type === 'password' ? 'text' : 'password';
+        signupConfirm.type = type;
+        toggleConfirm.innerHTML = type === 'password' ? '<i class="pi pi-eye"></i>' : '<i class="pi pi-eye-slash"></i>';
+    });
+</script>
+
+<?php include 'footer.php'; ?>
+
+</body>
+</html>
