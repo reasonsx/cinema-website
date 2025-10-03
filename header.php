@@ -20,9 +20,12 @@
         <div class="container mx-auto flex justify-between items-center px-6 py-4">
 
             <!-- Logo / Brand -->
-            <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-2 text-primary">
-                <i class="pi pi-video text-primary"></i> MyCinema
-            </h1>
+            <a href="index.php" class="flex items-center gap-2 text-primary">
+                <h1 class="text-2xl md:text-3xl font-bold flex items-center gap-2">
+                    <i class="pi pi-video text-primary"></i> MyCinema
+                </h1>
+            </a>
+
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-6">
