@@ -1,0 +1,25 @@
+/* style.css - Cinema Website Colors */
+:root {
+    --primary: #ED6044;
+    --secondary: #FFAF7F;
+    --white: #ffffff;
+    --black: #000000;
+}
+
+/* Background helpers */
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-white { background-color: var(--white); }
+.bg-black { background-color: var(--black); }
+
+/* Text helpers */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-white { color: var(--white); }
+.text-black { color: var(--black); }
+
+/* Border helpers */
+.border-primary { border-color: var(--primary); }
+.border-secondary { border-color: var(--secondary); }
+.border-white { border-color: var(--white); }
+.border-black { border-color: var(--black); }
