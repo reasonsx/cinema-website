@@ -21,8 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['error'] = 'Email already registered!';
             } else {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname) VALUES (?, ?, ?, ?)");
-                $stmt->execute([$email, $passwordHash, $firstname, $lastname]);
+               // Check if admin checkbox is checked
+                $isAdmin = isset($_POST['isAdmin']) && $_POST['isAdmin'] == '1' ? 1 : 0;
+
+                $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES (?, ?, ?, ?, ?)");
+                $stmt->execute([$email, $passwordHash, $firstname, $lastname, $isAdmin]);
 
                 $_SESSION['success'] = 'Account created successfully! Please log in.';
                 header('Location: login.php');
@@ -101,6 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="pi pi-eye"></i>
                 </button>
             </div>
+<!-- Admin Checkbox (development only) -->
+<div class="flex items-center gap-2">
+    <input type="checkbox" id="isAdmin" name="isAdmin" value="1">
+    <label for="isAdmin" class="text-sm text-gray-700">Make user admin (development feature)</label>
+</div>
 
 
             <button id="signup-button" type="submit" class="btn w-full text-center justify-center items-center opacity-50 cursor-not-allowed" disabled>
