@@ -14,6 +14,48 @@ $movies = [];
 $users = [];
 $error = '';
 
+// Handle new movie submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
+    $title = trim($_POST['title']);
+    $release_year = trim($_POST['release_year']);
+    $rating = trim($_POST['rating']);
+    $length = trim($_POST['length']);
+    $description = trim($_POST['description']);
+    $posterPath = '';
+
+    // Handle poster upload
+    if (isset($_FILES['poster']) && $_FILES['poster']['error'] === 0) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = $_FILES['poster']['type'];
+        $fileSize = $_FILES['poster']['size'];
+
+        if (in_array($fileType, $allowedTypes) && $fileSize < 10 * 1024 * 1024) {
+            $targetDir = 'images/';
+            $fileName = time() . '_' . basename($_FILES['poster']['name']);
+            $targetFile = $targetDir . $fileName;
+
+            if (move_uploaded_file($_FILES['poster']['tmp_name'], $targetFile)) {
+                $posterPath = $targetFile;
+            } else {
+                $error = "Failed to upload poster image.";
+            }
+        } else {
+            $error = "Invalid file type or size. Only JPEG, PNG, GIF under 10MB allowed.";
+        }
+    }
+
+    if (empty($error)) {
+        try {
+            $stmt = $db->prepare("INSERT INTO movies (title, release_year, rating, length, description, poster) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath]);
+            $success = "Movie added successfully!";
+        } catch (PDOException $e) {
+            $error = "Database error: " . $e->getMessage();
+        }
+    }
+}
+
+
 try {
     if ($view === 'movies') {
         $stmt = $db->query("SELECT id, title, release_year, rating, description, length, poster FROM movies ORDER BY id DESC");
@@ -57,6 +99,20 @@ try {
 
         <?php if ($view === 'movies') : ?>
             <h2 class="text-2xl font-bold mb-4">All Movies</h2>
+            <!-- Add New Movie Form -->
+<details class="mb-6">
+    <summary class="cursor-pointer text-primary font-semibold">Add New Movie</summary>
+    <form action="" method="post" enctype="multipart/form-data" class="flex flex-col gap-3 mt-3">
+        <input type="text" name="title" placeholder="Title" required class="border p-2 rounded">
+        <input type="number" name="release_year" placeholder="Release Year" required class="border p-2 rounded">
+        <input type="text" name="rating" placeholder="Rating" required class="border p-2 rounded">
+        <input type="number" name="length" placeholder="Length (min)" required class="border p-2 rounded">
+        <textarea name="description" placeholder="Description" required class="border p-2 rounded"></textarea>
+        <input type="file" name="poster" accept="image/*" required>
+        <button type="submit" name="add_movie" class="btn bg-primary text-white rounded mt-2">Add Movie</button>
+    </form>
+</details>
+
             <?php if (!empty($movies)) : ?>
                 <table class="w-full text-left border-collapse">
                     <thead>
