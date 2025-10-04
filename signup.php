@@ -1,6 +1,40 @@
 <?php
-// signup.php
+session_start();
+require_once 'include/connection.php'; // keep this path since your folder is "include"
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $firstname = trim($_POST['firstname']);
+    $lastname = trim($_POST['lastname']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = 'Passwords do not match!';
+    } else {
+        try {
+            // Check if email already exists
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+
+            if ($stmt->rowCount() > 0) {
+                $_SESSION['error'] = 'Email already registered!';
+            } else {
+                $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$email, $passwordHash, $firstname, $lastname]);
+
+                $_SESSION['success'] = 'Account created successfully! Please log in.';
+                header('Location: login.php');
+                exit;
+            }
+        } catch (PDOException $e) {
+            $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+        }
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
@@ -11,13 +45,33 @@
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <h2 class="text-3xl font-header mb-6 text-center text-primary">Create an Account</h2>
-        <form action="signup_process.php" method="POST" class="flex flex-col gap-4">
-            <!-- Full Name -->
-            <div class="flex flex-col">
-                <label for="name" class="sr-only">Full Name</label>
-                <input id="name" type="text" name="name" placeholder="Full Name" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-            </div>
+        <?php
+            if (isset($_SESSION['error'])) {
+                echo '<p class="text-red-500 text-center mb-4">'.$_SESSION['error'].'</p>';
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo '<p class="text-green-500 text-center mb-4">'.$_SESSION['success'].'</p>';
+                unset($_SESSION['success']);
+            }
+            ?>
+
+       <form action="" method="POST" class="flex flex-col gap-4">
+
+           <!-- First Name -->
+<div class="flex flex-col">
+    <label for="firstname" class="sr-only">First Name</label>
+    <input id="firstname" type="text" name="firstname" placeholder="First Name" required
+           class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+
+<!-- Last Name -->
+<div class="flex flex-col">
+    <label for="lastname" class="sr-only">Last Name</label>
+    <input id="lastname" type="text" name="lastname" placeholder="Last Name" required
+           class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
+</div>
+
 
             <!-- Email -->
             <div class="flex flex-col">
@@ -61,12 +115,14 @@
 </section>
 
 <script>
-    const signupInputs = [
-        document.getElementById('name'),
-        document.getElementById('email'),
-        document.getElementById('signup-password'),
-        document.getElementById('signup-confirm-password')
-    ];
+   const signupInputs = [
+    document.getElementById('firstname'),
+    document.getElementById('lastname'),
+    document.getElementById('email'),
+    document.getElementById('signup-password'),
+    document.getElementById('signup-confirm-password')
+];
+
     const signupButton = document.getElementById('signup-button');
 
     function checkInputs() {

@@ -1,6 +1,38 @@
 <?php
-// login.php
+session_start();
+require_once 'include/connection.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    try {
+        $stmt = $db->prepare("SELECT id, password, firstname, lastname, isAdmin FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['firstname'] = $user['firstname'];
+            $_SESSION['lastname'] = $user['lastname'];
+            $_SESSION['isAdmin'] = $user['isAdmin'];
+
+            if ($user['isAdmin']) {
+                header('Location: admin_dashboard.php');
+            } else {
+                header('Location: user_dashboard.php');
+            }
+            exit;
+        } else {
+            $_SESSION['error'] = 'Invalid email or password!';
+        }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+    }
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
@@ -11,7 +43,18 @@
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <h2 class="text-3xl font-header mb-6 text-center text-primary">Log in</h2>
-        <form action="login_process.php" method="POST" class="flex flex-col gap-4">
+                    <?php
+            if (isset($_SESSION['error'])) {
+                echo '<p class="text-red-500 text-center mb-4">'.$_SESSION['error'].'</p>';
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo '<p class="text-green-500 text-center mb-4">'.$_SESSION['success'].'</p>';
+                unset($_SESSION['success']);
+            }
+            ?>
+
+       <form action="" method="POST" class="flex flex-col gap-4">
 
             <!-- Email -->
             <div class="flex flex-col">
