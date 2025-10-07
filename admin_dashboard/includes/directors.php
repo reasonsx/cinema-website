@@ -20,4 +20,21 @@ function getDirectorsList($db) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-?>
+
+
+function deleteDirector($db, $directorId): array {
+    try {
+        //  remove links to movies first
+        $stmt = $db->prepare("DELETE FROM directorDirects WHERE director_id = ?");
+        $stmt->execute([$directorId]);
+
+        // Delete the director
+        $stmt = $db->prepare("DELETE FROM directors WHERE id = ?");
+        $stmt->execute([$directorId]);
+
+        return ["Director deleted successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: " . $e->getMessage()];
+    }
+}
+

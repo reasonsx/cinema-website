@@ -31,9 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-        case 'directors':
+         case 'directors':
             if (isset($_POST['add_director'])) {
                 [$success, $error] = addDirectorHandler($db, $_POST);
+            }
+            if (isset($_POST['delete_director'])) {
+                [$success, $error] = deleteDirector($db, $_POST['delete_director_id']);
             }
             break;
 

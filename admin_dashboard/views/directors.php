@@ -38,6 +38,7 @@
                     <th class="px-4 py-2 text-left">DOB</th>
                     <th class="px-4 py-2 text-left">Gender</th>
                     <th class="px-4 py-2 text-left">Description</th>
+                    <th class="px-4 py-2 text-left">Actions</th> <!-- New -->
                 </tr>
             </thead>
             <tbody>
@@ -48,9 +49,20 @@
                         <td class="px-4 py-2"><?= htmlspecialchars($director['date_of_birth']) ?></td>
                         <td class="px-4 py-2"><?= htmlspecialchars($director['gender']) ?></td>
                         <td class="px-4 py-2"><?= htmlspecialchars($director['description']) ?></td>
+                        <td class="px-4 py-2">
+                            <form method="post" style="display:inline;" 
+                                onsubmit="return confirm('Are you sure you want to delete this director?');">
+                                <input type="hidden" name="delete_director_id" value="<?= $director['id'] ?>">
+                                <button type="submit" name="delete_director"
+                                        class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+
         </table>
     </div>
 </section>
