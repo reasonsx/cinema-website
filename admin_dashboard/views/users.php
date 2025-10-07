@@ -47,7 +47,7 @@
                             <td class="px-4 py-2"><?= htmlspecialchars($user['email']) ?></td>
                             <td class="px-4 py-2"><?= $user['isAdmin'] ? 'Yes' : 'No' ?></td>
                             <td class="px-4 py-2">
-                                <form method="post" style="display:inline;">
+                                <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
                                     <input type="hidden" name="delete_user_id" value="<?= $user['id'] ?>">
                                     <button type="submit" name="delete_user"
                                             class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
@@ -55,6 +55,7 @@
                                     </button>
                                 </form>
                             </td>
+
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

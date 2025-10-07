@@ -13,13 +13,14 @@ function addUser($db, $data): array {
             $data['lastname'],
             $data['email'],
             password_hash($data['password'], PASSWORD_DEFAULT),
-            $data['isAdmin'] ? 1 : 0
+            isset($data['isAdmin']) && $data['isAdmin'] ? 1 : 0
         ]);
         return ["User added successfully!", ""];
     } catch (PDOException $e) {
         return ["", "Database error: " . $e->getMessage()];
     }
 }
+
 
 function deleteUser($db, $userId): array {
     try {

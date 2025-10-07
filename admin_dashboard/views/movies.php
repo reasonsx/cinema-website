@@ -63,6 +63,7 @@
                     <th class="px-4 py-2 text-left">Description</th>
                     <th class="px-4 py-2 text-left">Actors</th>
                     <th class="px-4 py-2 text-left">Directors</th>
+                    <th class="px-4 py-2 text-left">Actions</th> <!-- new -->
                 </tr>
             </thead>
             <tbody>
@@ -97,9 +98,19 @@
                             }
                             ?>
                         </td>
+                        <td class="px-4 py-2">
+                            <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                                <input type="hidden" name="delete_movie_id" value="<?= $movie['id'] ?>">
+                                <button type="submit" name="delete_movie"
+                                        class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+
         </table>
     </div>
 </section>

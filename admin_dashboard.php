@@ -37,9 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-        case 'movies':
+       case 'movies':
             if (isset($_POST['add_movie'])) {
                 [$success, $error] = addMovieHandler($db, $_POST, $_FILES);
+            }
+            if (isset($_POST['delete_movie'])) {
+                [$success, $error] = deleteMovie($db, $_POST['delete_movie_id']);
             }
             break;
 

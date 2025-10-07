@@ -61,4 +61,22 @@ function getMovies($db) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-?>
+
+function deleteMovie($db, $movieId): array {
+    try {
+        // Optionally, delete related actor/director links first
+        $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id = ?");
+        $stmt->execute([$movieId]);
+
+        $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id = ?");
+        $stmt->execute([$movieId]);
+
+        // Delete the movie itself
+        $stmt = $db->prepare("DELETE FROM movies WHERE id = ?");
+        $stmt->execute([$movieId]);
+
+        return ["Movie deleted successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: " . $e->getMessage()];
+    }
+}
