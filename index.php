@@ -11,33 +11,31 @@
 
 
 <!-- Hero Section -->
-<section class="relative bg-secondary text-black text-center py-20">
-    <h2 class="text-4xl font-bold">Welcome to MyCinema</h2>
-    <p class="mt-4 text-lg">Book your tickets and enjoy the latest blockbusters.</p>
-    <a href="#movies" class="btn">
-        <i class="pi pi-ticket mr-2"></i> Book Now
+<section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
+  <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
+    <h1 class="text-6xl font-[Limelight] text-[var(--black)]">MYCINEMA</h1>
+    <a href="#top-films" class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
+      TEXT
     </a>
+    <img src="images/film-reel.png" alt="Film Reel" class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
+  </div>
 </section>
 
-<!-- Movies Section -->
-<section id="movies" class="container mx-auto px-6 py-12">
-    <h3 class="text-3xl font-bold mb-6 flex items-center gap-2 text-primary">
-        <i class="pi pi-video"></i> Now Showing
-    </h3>
 
-    <div class="grid md:grid-cols-3 gap-8">
-        <!-- Movie Card -->
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <img src="https://via.placeholder.com/400x250" alt="Movie Poster" class="w-full h-56 object-cover">
-            <div class="p-4">
-                <h4 class="text-xl font-semibold mb-2">Movie Title</h4>
-                <p class="text-black text-sm mb-4">Short description of the movie...</p>
-                <a href="#" class="btn">
-                    <i class="pi pi-play"></i> Watch Trailer
-                </a>
-            </div>
+
+
+
+<!-- Now Playing Section -->
+<section id="now-playing" class="bg-[var(--secondary)] py-16">
+    <div class="container mx-auto text-center">
+        <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-12">NOW PLAYING</h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 justify-items-center">
+            <img src="images/dune.jpg" alt="Dune" class="w-40 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+            <img src="images/shrek.jpg" alt="Shrek" class="w-40 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+            <img src="images/star-wars.jpg" alt="Star Wars" class="w-40 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+            <img src="images/harry-potter.jpg" alt="Harry Potter" class="w-40 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
         </div>
-        <!-- Duplicate movie cards as needed -->
     </div>
 </section>
 
