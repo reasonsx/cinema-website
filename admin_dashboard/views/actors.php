@@ -38,6 +38,7 @@
                     <th class="px-4 py-2 text-left">DOB</th>
                     <th class="px-4 py-2 text-left">Gender</th>
                     <th class="px-4 py-2 text-left">Description</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,6 +49,16 @@
                         <td class="px-4 py-2"><?= htmlspecialchars($actor['date_of_birth']) ?></td>
                         <td class="px-4 py-2"><?= htmlspecialchars($actor['gender']) ?></td>
                         <td class="px-4 py-2"><?= htmlspecialchars($actor['description']) ?></td>
+                        <td class="px-4 py-2">
+                            <form method="post" style="display:inline;" 
+                                onsubmit="return confirm('Are you sure you want to delete this actor?');">
+                                <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
+                                <button type="submit" name="delete_actor"
+                                        class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

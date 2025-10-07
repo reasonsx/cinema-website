@@ -20,4 +20,21 @@ function getActorsList($db) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-?>
+
+
+function deleteActor($db, $actorId): array {
+    try {
+        // Optionally remove actor-movie links first
+        $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE actor_id = ?");
+        $stmt->execute([$actorId]);
+
+        // Delete the actor
+        $stmt = $db->prepare("DELETE FROM actors WHERE id = ?");
+        $stmt->execute([$actorId]);
+
+        return ["Actor deleted successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: " . $e->getMessage()];
+    }
+}
+

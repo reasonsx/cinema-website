@@ -25,12 +25,15 @@ $success = '';
 // ------------------- Handle Form Submissions -------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($view) {
-        case 'actors':
+         case 'actors':
             if (isset($_POST['add_actor'])) {
                 [$success, $error] = addActorHandler($db, $_POST);
             }
+            if (isset($_POST['delete_actor'])) {
+                [$success, $error] = deleteActor($db, $_POST['delete_actor_id']);
+            }
             break;
-
+            
          case 'directors':
             if (isset($_POST['add_director'])) {
                 [$success, $error] = addDirectorHandler($db, $_POST);
