@@ -105,3 +105,19 @@ textarea::placeholder {
     color: #9ca3af; /* gray-400 */
     opacity: 1;
 }
+.actor-btn.selected,
+.director-btn.selected {
+    background-color: #ED6044; /* Blue background when selected */
+    color: white;              /* White text */
+    border-color: #ED6044;     /* Optional: border matches background */
+}
+.actor-btn,
+.director-btn {
+    transition: all 0.2s ease; /* Smooth color change */
+}
+.actor-btn:hover,
+.director-btn:hover {
+    background-color: #d9543a;  /* Optional: hover effect */
+}
+
+
