@@ -1,5 +1,5 @@
 <section class="mb-10">
-    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] drop-shadow-md mb-6">All Users</h2>
+    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-6">All Users</h2>
 
     <!-- Add User Form -->
     <details class="mb-8">

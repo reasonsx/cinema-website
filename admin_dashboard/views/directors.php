@@ -1,5 +1,5 @@
 <section class="mb-10">
-    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] drop-shadow-md mb-6">All Directors</h2>
+    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-6">All Directors</h2>
 
     <!-- Add Director Form -->
     <details class="mb-8">
