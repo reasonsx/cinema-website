@@ -1,0 +1,64 @@
+<?php
+function addMovieHandler($db, $data, $files): array {
+    $title = trim($data['title']);
+    $release_year = trim($data['release_year']);
+    $rating = trim($data['rating']);
+    $length = trim($data['length']);
+    $description = trim($data['description']);
+    $posterPath = '';
+
+    // Handle poster upload
+    if (isset($files['poster']) && $files['poster']['error'] === 0) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = $files['poster']['type'];
+        $fileSize = $files['poster']['size'];
+
+        if (in_array($fileType, $allowedTypes) && $fileSize < 10 * 1024 * 1024) {
+            $targetDir = 'images/';
+            $fileName = time() . '_' . basename($files['poster']['name']);
+            $targetFile = $targetDir . $fileName;
+
+            if (move_uploaded_file($files['poster']['tmp_name'], $targetFile)) {
+                $posterPath = $targetFile;
+            } else {
+                return ["", "Failed to upload poster image."];
+            }
+        } else {
+            return ["", "Invalid file type or size. Only JPEG, PNG, GIF under 10MB allowed."];
+        }
+    }
+
+    try {
+        // Insert movie
+        $stmt = $db->prepare("INSERT INTO movies (title, release_year, rating, length, description, poster) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath]);
+        $movie_id = $db->lastInsertId();
+
+        // Link actors
+        if (!empty($data['actors'])) {
+            $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
+            foreach ($data['actors'] as $actor_id) {
+                $stmt->execute([$actor_id, $movie_id]);
+            }
+        }
+
+        // Link directors
+        if (!empty($data['directors'])) {
+            $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
+            foreach ($data['directors'] as $director_id) {
+                $stmt->execute([$director_id, $movie_id]);
+            }
+        }
+
+        return ["Movie added successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: " . $e->getMessage()];
+    }
+}
+
+function getMovies($db) {
+    $stmt = $db->prepare("SELECT * FROM movies ORDER BY id DESC");
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+?>

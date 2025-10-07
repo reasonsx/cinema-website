@@ -115,9 +115,5 @@ textarea::placeholder {
 .director-btn {
     transition: all 0.2s ease; /* Smooth color change */
 }
-.actor-btn:hover,
-.director-btn:hover {
-    background-color: #d9543a;  /* Optional: hover effect */
-}
 
 
