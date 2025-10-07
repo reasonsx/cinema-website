@@ -115,29 +115,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_movie'])) {
 // ------------------- Fetch Data for Views -------------------
 try {
     if ($view === 'movies') {
-        $stmt = $db->query("SELECT * FROM movies ORDER BY id DESC");
+        $stmt = $db->prepare("SELECT * FROM movies ORDER BY id DESC");
+        $stmt->execute();
         $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } elseif ($view === 'users') {
-        $stmt = $db->query("SELECT id, firstname, lastname, email, isAdmin FROM users ORDER BY id DESC");
+        $stmt = $db->prepare("SELECT id, firstname, lastname, email, isAdmin FROM users ORDER BY id DESC");
+        $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } elseif ($view === 'actors') {
-        $stmt = $db->query("SELECT * FROM actors ORDER BY last_name");
+        $stmt = $db->prepare("SELECT * FROM actors ORDER BY last_name");
+        $stmt->execute();
         $actors = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } elseif ($view === 'directors') {
-        $stmt = $db->query("SELECT * FROM directors ORDER BY last_name");
+        $stmt = $db->prepare("SELECT * FROM directors ORDER BY last_name");
+        $stmt->execute();
         $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Always fetch lists for movie form
-    $stmt = $db->query("SELECT id, first_name, last_name FROM actors ORDER BY last_name");
+    $stmt = $db->prepare("SELECT id, first_name, last_name FROM actors ORDER BY last_name");
+    $stmt->execute();
     $allActors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $stmt = $db->query("SELECT id, first_name, last_name FROM directors ORDER BY last_name");
+    $stmt = $db->prepare("SELECT id, first_name, last_name FROM directors ORDER BY last_name");
+    $stmt->execute();
     $allDirectors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Database error: " . $e->getMessage();
 }
+
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
