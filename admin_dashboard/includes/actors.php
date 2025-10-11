@@ -38,3 +38,14 @@ function deleteActor($db, $actorId): array {
     }
 }
 
+
+function editActorHandler($db, $data): array {
+    try {
+        $stmt = $db->prepare("UPDATE actors SET first_name = ?, last_name = ?, date_of_birth = ?, gender = ?, description = ? WHERE id = ?");
+        $stmt->execute([$data['first_name'], $data['last_name'], $data['date_of_birth'], $data['gender'], $data['description'], $data['actor_id']]);
+        return ["Actor updated successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: ".$e->getMessage()];
+    }
+}
+

@@ -32,6 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['delete_actor'])) {
                 [$success, $error] = deleteActor($db, $_POST['delete_actor_id']);
             }
+            if (isset($_POST['edit_actor'])) {
+                [$success, $error] = editActorHandler($db, $_POST);
+            }
             break;
             
          case 'directors':
