@@ -98,19 +98,114 @@
                             }
                             ?>
                         </td>
-                        <td class="px-4 py-2">
-                            <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this movie?');">
-                                <input type="hidden" name="delete_movie_id" value="<?= $movie['id'] ?>">
-                                <button type="submit" name="delete_movie"
-                                        class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
-                                    Delete
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                        
+<td class="px-4 py-2">
+    <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+        <input type="hidden" name="delete_movie_id" value="<?= $movie['id'] ?>">
+        <button type="submit" name="delete_movie"
+                class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
+            Delete
+        </button>
+    </form>
+
+    <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
+            class="bg-[var(--secondary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--primary)] transition-colors duration-300 font-[Limelight] text-sm">
+        Edit
+    </button>
+</td>
+</tr> <!-- Close movie row -->
+
+<!-- ✅ New full-width row for edit form -->
+<!-- ✅ New full-width row for edit form -->
+<tr id="edit-form-<?= $movie['id'] ?>" class="hidden bg-gray-50">
+  <td colspan="10" class="p-6 border-t-4 border-[var(--primary)]">
+    <h3 class="text-3xl font-[Limelight] text-[var(--primary)] mb-4">Edit Movie</h3>
+
+    <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4">
+      <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
+
+      <input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>" required
+             class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+      
+      <input type="number" name="release_year" value="<?= htmlspecialchars($movie['release_year']) ?>" required
+             class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+      
+      <input type="text" name="rating" value="<?= htmlspecialchars($movie['rating']) ?>" required
+             class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+      
+      <input type="number" name="length" value="<?= htmlspecialchars($movie['length']) ?>" required
+             class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+      
+      <textarea name="description" rows="3" required
+                class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]"><?= htmlspecialchars($movie['description']) ?></textarea>
+      
+      <input type="file" name="poster" accept="image/*"
+             class="border-b-2 border-[var(--primary)] bg-transparent px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+
+      <!-- Actors -->
+      <label class="text-black font-semibold">Actors:</label>
+      <div class="flex flex-wrap gap-2">
+        <?php foreach ($allActors as $actor): ?>
+          <?php
+            $stmt = $db->prepare("SELECT 1 FROM actorAppearIn WHERE movie_id = ? AND actor_id = ?");
+            $stmt->execute([$movie['id'], $actor['id']]);
+            $isSelected = $stmt->fetch() ? true : false;
+          ?>
+          <div class="actor-btn cursor-pointer px-3 py-1 border-2 rounded-lg transition-colors duration-300 
+                      <?= $isSelected ? 'border-[var(--secondary)] bg-[var(--secondary)] text-white' : 'border-[var(--primary)] hover:text-black' ?>"
+               data-id="<?= $actor['id'] ?>">
+            <?= htmlspecialchars($actor['first_name'].' '.$actor['last_name']) ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <!-- Directors -->
+      <label class="text-black font-semibold">Directors:</label>
+      <div class="flex flex-wrap gap-2">
+        <?php foreach ($allDirectors as $director): ?>
+          <?php
+            $stmt = $db->prepare("SELECT 1 FROM directorDirects WHERE movie_id = ? AND director_id = ?");
+            $stmt->execute([$movie['id'], $director['id']]);
+            $isSelected = $stmt->fetch() ? true : false;
+          ?>
+          <div class="director-btn cursor-pointer px-3 py-1 border-2 rounded-lg transition-colors duration-300 
+                      <?= $isSelected ? 'border-[var(--secondary)] bg-[var(--secondary)] text-white' : 'border-[var(--primary)] hover:text-black' ?>"
+               data-id="<?= $director['id'] ?>">
+            <?= htmlspecialchars($director['first_name'].' '.$director['last_name']) ?>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="flex gap-4 mt-4">
+        <button type="submit" name="edit_movie"
+                class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
+          Save Changes
+        </button>
+
+        <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
+                class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-300 font-[Limelight] text-lg">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </td>
+</tr>
+
+
                 <?php endforeach; ?>
             </tbody>
 
         </table>
     </div>
 </section>
+<script>
+function toggleEditForm(movieId) {
+    const form = document.getElementById(`edit-form-${movieId}`);
+    form.classList.toggle('hidden');
+
+    // Optional: smooth scroll to the form when it opens
+    if (!form.classList.contains('hidden')) {
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+</script>
