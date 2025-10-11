@@ -126,22 +126,30 @@ function editMovieHandler($db, $data, $files): array {
         $stmt->execute([$movie_id]);
 
         if (!empty($data['actors'])) {
-            $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
-            foreach ($data['actors'] as $actor_id) {
-                $stmt->execute([$actor_id, $movie_id]);
-            }
+    $actorIds = explode(',', $data['actors']);
+    $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
+    foreach ($actorIds as $actor_id) {
+        if (trim($actor_id) !== '') {
+            $stmt->execute([$actor_id, $movie_id]);
         }
+    }
+}
+ 
 
         // Update director links
         $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id=?");
         $stmt->execute([$movie_id]);
 
-        if (!empty($data['directors'])) {
-            $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
-            foreach ($data['directors'] as $director_id) {
-                $stmt->execute([$director_id, $movie_id]);
-            }
+       if (!empty($data['directors'])) {
+    $directorIds = explode(',', $data['directors']);
+    $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
+    foreach ($directorIds as $director_id) {
+        if (trim($director_id) !== '') {
+            $stmt->execute([$director_id, $movie_id]);
         }
+    }
+}
+
 
         return ["Movie updated successfully!", ""];
     } catch (PDOException $e) {
