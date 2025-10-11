@@ -109,8 +109,8 @@
     </form>
 
     <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
-            class="bg-[var(--secondary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--primary)] transition-colors duration-300 font-[Limelight] text-sm">
-        Edit
+           class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
+                                 Edit
     </button>
 </td>
 </tr> <!-- Close movie row -->

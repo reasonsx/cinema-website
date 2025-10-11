@@ -41,6 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['delete_director'])) {
                 [$success, $error] = deleteDirector($db, $_POST['delete_director_id']);
             }
+            if (isset($_POST['edit_director'])) {
+                [$successMessage, $errorMessage] = editDirectorHandler($db, $_POST);
+            }
+
             break;
 
        case 'movies':

@@ -38,3 +38,21 @@ function deleteDirector($db, $directorId): array {
     }
 }
 
+function editDirectorHandler($db, $data): array {
+    try {
+        $stmt = $db->prepare("UPDATE directors 
+            SET first_name = ?, last_name = ?, date_of_birth = ?, gender = ?, description = ? 
+            WHERE id = ?");
+        $stmt->execute([
+            $data['first_name'],
+            $data['last_name'],
+            $data['date_of_birth'],
+            $data['gender'],
+            $data['description'],
+            $data['id']
+        ]);
+        return ["Director updated successfully!", ""];
+    } catch (PDOException $e) {
+        return ["", "Database error: " . $e->getMessage()];
+    }
+}
