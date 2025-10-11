@@ -102,3 +102,47 @@ INSERT INTO directorDirects (director_id, movie_id) VALUES
 (1, 3), -- Christopher Nolan directed Interstellar
 (2, 2), -- Lana Wachowski directed The Matrix
 (3, 2); -- Lilly Wachowski directed The Matrix
+
+
+-- Screening Rooms Table
+-- Screening Rooms Table (without capacity column)
+CREATE TABLE IF NOT EXISTS screening_rooms (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+
+-- Example Screening Rooms
+INSERT INTO screening_rooms (name) VALUES
+('Main Hall'),
+('VIP Room'),
+('Kids Room');
+
+-- Seats Table
+CREATE TABLE IF NOT EXISTS seats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    screening_room_id INT NOT NULL,
+    `row_number` VARCHAR(5) NOT NULL,  -- backticks because reserved
+    seat_number INT NOT NULL,
+    FOREIGN KEY (screening_room_id) REFERENCES screening_rooms(id) ON DELETE CASCADE
+);
+
+-- Example Seats for Main Hall (50 seats)
+INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
+(1,'A',1),(1,'A',2),(1,'A',3),(1,'A',4),(1,'A',5),(1,'A',6),(1,'A',7),(1,'A',8),(1,'A',9),(1,'A',10),
+(1,'B',1),(1,'B',2),(1,'B',3),(1,'B',4),(1,'B',5),(1,'B',6),(1,'B',7),(1,'B',8),(1,'B',9),(1,'B',10),
+(1,'C',1),(1,'C',2),(1,'C',3),(1,'C',4),(1,'C',5),(1,'C',6),(1,'C',7),(1,'C',8),(1,'C',9),(1,'C',10),
+(1,'D',1),(1,'D',2),(1,'D',3),(1,'D',4),(1,'D',5),(1,'D',6),(1,'D',7),(1,'D',8),(1,'D',9),(1,'D',10),
+(1,'E',1),(1,'E',2),(1,'E',3),(1,'E',4),(1,'E',5),(1,'E',6),(1,'E',7),(1,'E',8),(1,'E',9),(1,'E',10);
+
+-- Same fix for other rooms:
+INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
+(2,'A',1),(2,'A',2),(2,'A',3),(2,'A',4),(2,'A',5),
+(2,'B',1),(2,'B',2),(2,'B',3),(2,'B',4),(2,'B',5),
+(2,'C',1),(2,'C',2),(2,'C',3),(2,'C',4),(2,'C',5),
+(2,'D',1),(2,'D',2),(2,'D',3),(2,'D',4),(2,'D',5);
+
+INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
+(3,'A',1),(3,'A',2),(3,'A',3),(3,'A',4),(3,'A',5),(3,'A',6),(3,'A',7),(3,'A',8),(3,'A',9),(3,'A',10),
+(3,'B',1),(3,'B',2),(3,'B',3),(3,'B',4),(3,'B',5),(3,'B',6),(3,'B',7),(3,'B',8),(3,'B',9),(3,'B',10),
+(3,'C',1),(3,'C',2),(3,'C',3),(3,'C',4),(3,'C',5),(3,'C',6),(3,'C',7),(3,'C',8),(3,'C',9),(3,'C',10);

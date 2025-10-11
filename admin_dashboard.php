@@ -7,6 +7,7 @@ require_once 'admin_dashboard/includes/actors.php';
 require_once 'admin_dashboard/includes/directors.php';
 require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/users.php';
+require_once 'admin_dashboard/includes/screening_rooms.php'; // <-- NEW
 
 // Redirect non-admins
 if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
@@ -15,7 +16,7 @@ if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
 }
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users'];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms']; // <-- NEW
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
 
@@ -25,7 +26,7 @@ $success = '';
 // ------------------- Handle Form Submissions -------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($view) {
-         case 'actors':
+        case 'actors':
             if (isset($_POST['add_actor'])) {
                 [$success, $error] = addActorHandler($db, $_POST);
             }
@@ -36,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$success, $error] = editActorHandler($db, $_POST);
             }
             break;
-            
-         case 'directors':
+
+        case 'directors':
             if (isset($_POST['add_director'])) {
                 [$success, $error] = addDirectorHandler($db, $_POST);
             }
@@ -45,12 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$success, $error] = deleteDirector($db, $_POST['delete_director_id']);
             }
             if (isset($_POST['edit_director'])) {
-                [$successMessage, $errorMessage] = editDirectorHandler($db, $_POST);
+                [$success, $error] = editDirectorHandler($db, $_POST);
             }
-
             break;
 
-       case 'movies':
+        case 'movies':
             if (isset($_POST['add_movie'])) {
                 [$success, $error] = addMovieHandler($db, $_POST, $_FILES);
             }
@@ -62,19 +62,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-
         case 'users':
-                if (isset($_POST['add_user'])) {
-                    [$success, $error] = addUser($db, $_POST);
-                }
-                if (isset($_POST['edit_user'])) {
-                    [$success, $error] = editUser($db, $_POST);
-                }
-                if (isset($_POST['delete_user'])) {
-                    [$success, $error] = deleteUser($db, $_POST['delete_user_id']);
-                }
-                break;
+            if (isset($_POST['add_user'])) {
+                [$success, $error] = addUser($db, $_POST);
+            }
+            if (isset($_POST['edit_user'])) {
+                [$success, $error] = editUser($db, $_POST);
+            }
+            if (isset($_POST['delete_user'])) {
+                [$success, $error] = deleteUser($db, $_POST['delete_user_id']);
+            }
+            break;
 
+        case 'screening_rooms': // NEW
+            // For now, view-only. Future: add/edit/delete handling here.
+            break;
     }
 }
 
@@ -85,6 +87,7 @@ $movies       = getMovies($db);
 $users        = getUsers($db);
 $allActors    = getActorsList($db);       // For movie form
 $allDirectors = getDirectorsList($db);    // For movie form
+$screeningRooms = getScreeningRooms($db); // <-- NEW
 
 // ------------------- Include Layout -------------------
 include 'head.php';
@@ -100,6 +103,7 @@ include 'header.php';
             <li><a href="?view=actors" class="<?= $view === 'actors' ? 'text-primary' : 'text-gray-700' ?>">All Actors</a></li>
             <li><a href="?view=directors" class="<?= $view === 'directors' ? 'text-primary' : 'text-gray-700' ?>">All Directors</a></li>
             <li><a href="?view=users" class="<?= $view === 'users' ? 'text-primary' : 'text-gray-700' ?>">All Users</a></li>
+            <li><a href="?view=screening_rooms" class="<?= $view === 'screening_rooms' ? 'text-primary' : 'text-gray-700' ?>">All Screening Rooms</a></li> <!-- NEW -->
         </ul>
     </aside>
 
