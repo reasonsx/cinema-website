@@ -57,13 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         case 'users':
-            if (isset($_POST['add_user'])) {
-                [$success, $error] = addUser($db, $_POST);
-            }
-            if (isset($_POST['delete_user'])) {
-                [$success, $error] = deleteUser($db, $_POST['delete_user_id']);
-            }
-            break;
+                if (isset($_POST['add_user'])) {
+                    [$success, $error] = addUser($db, $_POST);
+                }
+                if (isset($_POST['edit_user'])) {
+                    [$success, $error] = editUser($db, $_POST);
+                }
+                if (isset($_POST['delete_user'])) {
+                    [$success, $error] = deleteUser($db, $_POST['delete_user_id']);
+                }
+                break;
+
     }
 }
 
