@@ -96,7 +96,7 @@ include 'header.php';
 
 <section class="flex min-h-[80vh] px-4">
     <!-- Sidebar -->
-    <aside class="w-1/4 bg-white p-4 rounded-xl shadow-lg mr-4">
+    <aside class="w-[200px] bg-white p-4 rounded-xl shadow-lg mr-4">
         <h3 class="text-xl font-bold mb-4">Admin Panel</h3>
         <ul class="flex flex-col gap-2">
             <li><a href="?view=movies" class="<?= $view === 'movies' ? 'text-primary' : 'text-gray-700' ?>">All Movies</a></li>
