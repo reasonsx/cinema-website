@@ -74,9 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-        case 'screening_rooms': // NEW
-            // For now, view-only. Future: add/edit/delete handling here.
-            break;
+        case 'screening_rooms':
+    if (isset($_POST['edit_room'])) {
+        [$success, $error] = editScreeningRoom($db, $_POST);
+    }
+    break;
+
     }
 }
 
