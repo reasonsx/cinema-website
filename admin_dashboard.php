@@ -75,10 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             break;
 
         case 'screening_rooms':
-    if (isset($_POST['edit_room'])) {
-        [$success, $error] = editScreeningRoom($db, $_POST);
-    }
-    break;
+            // Add new room
+            if (isset($_POST['add_room'])) {
+                [$success, $error] = addScreeningRoom($db, $_POST);
+            }
+
+            // Edit existing room
+            if (isset($_POST['edit_room'])) {
+                [$success, $error] = editScreeningRoom($db, $_POST);
+            }
+
+            // Delete room
+            if (isset($_POST['delete_room'])) {
+                [$success, $error] = deleteScreeningRoom($db, $_POST['room_id']);
+            }
+            break;
 
     }
 }

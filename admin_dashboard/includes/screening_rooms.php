@@ -82,4 +82,64 @@ function editScreeningRoom($db, $data) {
 }
 
 
+function addScreeningRoom($db, $data) {
+    try {
+        $name = trim($data['name']);
+        if (!$name) throw new Exception("Room name is required");
+
+        // Insert room
+        $stmt = $db->prepare("INSERT INTO screening_rooms (name) VALUES (?)");
+        $stmt->execute([$name]);
+        $roomId = $db->lastInsertId();
+
+        // Insert seats if provided
+        $rows = (int)($data['rows'] ?? 0);
+        $seatsPerRow = (int)($data['seats_per_row'] ?? 0);
+        $manualSeats = trim($data['seats_text'] ?? '');
+        $mode = $data['seat_edit_mode'] ?? '';
+
+        if ($mode === 'grid' && $rows && $seatsPerRow) {
+            $stmtInsert = $db->prepare("INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES (?, ?, ?)");
+            for ($r = 1; $r <= $rows; $r++) {
+                $rowLetter = chr(64 + $r);
+                for ($s = 1; $s <= $seatsPerRow; $s++) {
+                    $stmtInsert->execute([$roomId, $rowLetter, $s]);
+                }
+            }
+        } elseif ($mode === 'manual' && $manualSeats) {
+            $stmtInsert = $db->prepare("INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES (?, ?, ?)");
+            $seats = preg_split('/\s+/', $manualSeats);
+            foreach ($seats as $seat) {
+                $seat = trim($seat);
+                if ($seat === '') continue;
+                $row = preg_replace('/[0-9]/', '', strtoupper($seat));
+                $num = preg_replace('/[^0-9]/', '', $seat);
+                if ($row && $num) $stmtInsert->execute([$roomId, $row, (int)$num]);
+            }
+        }
+
+        return ['Screening room added successfully!', ''];
+    } catch (Exception $e) {
+        return ['', 'Error adding screening room: ' . $e->getMessage()];
+    }
+}
+
+function deleteScreeningRoom($db, $roomId) {
+    try {
+        $roomId = (int)$roomId;
+        if (!$roomId) throw new Exception("Invalid room ID");
+
+        // Delete seats first
+        $db->prepare("DELETE FROM seats WHERE screening_room_id = ?")->execute([$roomId]);
+
+        // Delete room
+        $db->prepare("DELETE FROM screening_rooms WHERE id = ?")->execute([$roomId]);
+
+        return ['Screening room deleted successfully!', ''];
+    } catch (Exception $e) {
+        return ['', 'Error deleting screening room: ' . $e->getMessage()];
+    }
+}
+
+
 $screeningRooms = getScreeningRooms($db);
