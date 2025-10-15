@@ -146,3 +146,21 @@ INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (3,'A',1),(3,'A',2),(3,'A',3),(3,'A',4),(3,'A',5),(3,'A',6),(3,'A',7),(3,'A',8),(3,'A',9),(3,'A',10),
 (3,'B',1),(3,'B',2),(3,'B',3),(3,'B',4),(3,'B',5),(3,'B',6),(3,'B',7),(3,'B',8),(3,'B',9),(3,'B',10),
 (3,'C',1),(3,'C',2),(3,'C',3),(3,'C',4),(3,'C',5),(3,'C',6),(3,'C',7),(3,'C',8),(3,'C',9),(3,'C',10);
+
+-- Screenings Table
+CREATE TABLE IF NOT EXISTS screenings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    movie_id INT NOT NULL,
+    screening_room_id INT NOT NULL,
+    start_time DATETIME NOT NULL,
+    end_time DATETIME NOT NULL,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
+    FOREIGN KEY (screening_room_id) REFERENCES screening_rooms(id) ON DELETE CASCADE
+);
+
+-- Example screenings
+INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUES
+(1, 1, '2025-10-15 18:00:00', '2025-10-15 20:30:00'), -- Inception in Main Hall
+(2, 2, '2025-10-16 19:00:00', '2025-10-16 21:20:00'), -- The Matrix in VIP Room
+(3, 3, '2025-10-17 14:00:00', '2025-10-17 16:50:00'); -- Interstellar in Kids Room
+

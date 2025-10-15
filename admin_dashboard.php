@@ -7,7 +7,9 @@ require_once 'admin_dashboard/includes/actors.php';
 require_once 'admin_dashboard/includes/directors.php';
 require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/users.php';
-require_once 'admin_dashboard/includes/screening_rooms.php'; // <-- NEW
+require_once 'admin_dashboard/includes/screening_rooms.php';
+require_once 'admin_dashboard/includes/screenings.php';
+
 
 // Redirect non-admins
 if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
@@ -16,7 +18,8 @@ if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
 }
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms']; // <-- NEW
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings'];
+
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
 
@@ -90,6 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$success, $error] = deleteScreeningRoom($db, $_POST['room_id']);
             }
             break;
+            case 'screenings':
+            if (isset($_POST['add_screening'])) {
+                [$success, $error] = addScreening($db, $_POST);
+            }
+            if (isset($_POST['edit_screening'])) {
+                [$success, $error] = editScreening($db, $_POST);
+            }
+            if (isset($_POST['delete_screening'])) {
+                [$success, $error] = deleteScreening($db, $_POST['screening_id']);
+            }
+            break;
+
 
     }
 }
@@ -118,6 +133,8 @@ include 'header.php';
             <li><a href="?view=directors" class="<?= $view === 'directors' ? 'text-primary' : 'text-gray-700' ?>">All Directors</a></li>
             <li><a href="?view=users" class="<?= $view === 'users' ? 'text-primary' : 'text-gray-700' ?>">All Users</a></li>
             <li><a href="?view=screening_rooms" class="<?= $view === 'screening_rooms' ? 'text-primary' : 'text-gray-700' ?>">All Screening Rooms</a></li> <!-- NEW -->
+            <li><a href="?view=screenings" class="<?= $view === 'screenings' ? 'text-primary' : 'text-gray-700' ?>">All Screenings</a></li>
+
         </ul>
     </aside>
 
