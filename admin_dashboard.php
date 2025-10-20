@@ -9,6 +9,7 @@ require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/users.php';
 require_once 'admin_dashboard/includes/screening_rooms.php';
 require_once 'admin_dashboard/includes/screenings.php';
+require_once 'admin_dashboard/includes/bookings.php';
 
 
 // Redirect non-admins
@@ -18,7 +19,7 @@ if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
 }
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings'];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings'];
 
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
@@ -104,7 +105,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 [$success, $error] = deleteScreening($db, $_POST['screening_id']);
             }
             break;
-
+            case 'bookings':
+            if (isset($_POST['add_booking'])) {
+                [$success, $error] = addBooking($db, $_POST);
+                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
+                exit;
+            }
+            if (isset($_POST['edit_booking'])) {
+                [$success, $error] = editBooking($db, $_POST);
+            }
+            if (isset($_POST['delete_booking'])) {
+                [$success, $error] = deleteBooking($db, $_POST['delete_booking']);
+            }
+            break;
 
     }
 }
@@ -134,6 +147,7 @@ include 'header.php';
             <li><a href="?view=users" class="<?= $view === 'users' ? 'text-primary' : 'text-gray-700' ?>">All Users</a></li>
             <li><a href="?view=screening_rooms" class="<?= $view === 'screening_rooms' ? 'text-primary' : 'text-gray-700' ?>">All Screening Rooms</a></li> <!-- NEW -->
             <li><a href="?view=screenings" class="<?= $view === 'screenings' ? 'text-primary' : 'text-gray-700' ?>">All Screenings</a></li>
+            <li><a href="?view=bookings" class="<?= $view === 'bookings' ? 'text-primary' : 'text-gray-700' ?>">All Bookings</a></li>
 
         </ul>
     </aside>

@@ -136,3 +136,5 @@ function deleteScreening($db, $id) {
         return ['', 'Error deleting screening: ' . $e->getMessage()];
     }
 }
+
+$screenings = getScreenings($db);
