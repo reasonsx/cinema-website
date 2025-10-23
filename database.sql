@@ -190,6 +190,11 @@ INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUE
 (4, 4, '2025-10-23 20:00:00', '2025-10-23 22:30:00'),
 (5, 1, '2025-10-24 16:00:00', '2025-10-24 18:45:00'),
 (6, 5, '2025-10-25 20:30:00', '2025-10-25 23:00:00');
+(1, 4, '2025-10-26 17:30:00', '2025-10-26 20:00:00'),
+(2, 5, '2025-10-26 21:00:00', '2025-10-26 23:20:00'),
+(3, 1, '2025-10-27 15:00:00', '2025-10-27 17:45:00'),
+(5, 2, '2025-10-28 19:00:00', '2025-10-28 21:45:00'),
+(6, 3, '2025-10-29 22:00:00', '2025-10-29 00:30:00');
 
 -- BOOKINGS
 CREATE TABLE bookings (
@@ -238,3 +243,21 @@ INSERT INTO bookings (user_id, screening_id, total_price)
 VALUES (6, 5, 160.00);
 SET @b5 = LAST_INSERT_ID();
 INSERT INTO booking_seats VALUES (@b5, 11, 5), (@b5, 12, 5);
+
+
+
+-- NEWS TABLE
+CREATE TABLE news (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- SAMPLE NEWS DATA
+INSERT INTO news (title, content, created_at) VALUES
+('New IMAX Screen Installed!', 'We are excited to announce the installation of a brand new IMAX screen in our cinema for a truly immersive experience.', '2025-10-10 12:00:00'),
+('Halloween Horror Night 2025', 'Join us on October 31st for a special late-night marathon of classic horror movies!', '2025-10-15 09:30:00'),
+('Student Discount Week', 'Show your student ID at the counter and enjoy 30% off all tickets from October 20th to 27th.', '2025-10-18 11:45:00'),
+('Avatar Returns in 3D', 'Experience the magic of Pandora again in our newly upgraded 3D projection room.', '2025-10-19 16:00:00'),
+('Technical Upgrade Completed', 'All screening rooms have been equipped with new Dolby Atmos sound systems for enhanced audio experience.', '2025-10-17 14:20:00');
