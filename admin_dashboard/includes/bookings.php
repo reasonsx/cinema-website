@@ -1,7 +1,8 @@
 <?php
 function getBookings($db) {
     $stmt = $db->prepare("
-        SELECT b.id, u.firstname, u.lastname, u.email, s.id AS screening_id, s.start_time, s.end_time, m.title AS movie_title, r.name AS room_name, b.total_price
+        SELECT b.id, u.firstname,
+            b.user_id,  u.lastname, u.email, s.id AS screening_id, s.start_time, s.end_time, m.title AS movie_title, r.name AS room_name, b.total_price
         FROM bookings b
         JOIN users u ON b.user_id = u.id
         JOIN screenings s ON b.screening_id = s.id
@@ -65,40 +66,46 @@ if (empty($seatIds)) throw new Exception("User, screening, and seats are require
         return ['', 'Error adding booking: '.$e->getMessage()];
     }
 }
-
 function editBooking($db, $data) {
     try {
         $bookingId = (int)$data['booking_id'];
-        $seatIds = $data['seat_ids'] ?? [];
-$seatIds = array_unique($seatIds); // remove duplicates
+        $userId = (int)$data['user_id'];
+        $screeningId = (int)$data['screening_id'];
+        $seatIds = $data['seat_ids'] ?? '';
 
-        if (!$bookingId || empty($seatIds)) throw new Exception("Booking ID and seats are required");
+        // Normalize seat IDs
+        $seatIds = is_string($seatIds) ? explode(',', $seatIds) : $seatIds;
+        $seatIds = array_map('intval', $seatIds);
+        $seatIds = array_filter($seatIds, fn($id) => $id > 0);
+        $seatIds = array_unique($seatIds);
 
-        // Get screening ID
-        $stmt = $db->prepare("SELECT screening_id FROM bookings WHERE id = ?");
-        $stmt->execute([$bookingId]);
-        $screeningId = (int)$stmt->fetchColumn();
-
-        // Delete old seats
-        $db->prepare("DELETE FROM booking_seats WHERE booking_id = ?")->execute([$bookingId]);
-
-        // Insert new seats
-        $stmtInsert = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
-        foreach ($seatIds as $seatId) {
-            $stmtInsert->execute([$bookingId, (int)$seatId, $screeningId]);
+        if (!$bookingId || !$userId || !$screeningId || empty($seatIds)) {
+            throw new Exception("Booking ID, user, screening, and seats are required");
         }
 
-        // Update total price
-        $stmt = $db->prepare("SELECT seat_price FROM screening_rooms r JOIN screenings s ON r.id = s.screening_room_id WHERE s.id = ?");
+        // Calculate total price
+        $stmt = $db->prepare("SELECT seat_price FROM screening_rooms r 
+                              JOIN screenings s ON r.id = s.screening_room_id 
+                              WHERE s.id = ?");
         $stmt->execute([$screeningId]);
         $seatPrice = (float)$stmt->fetchColumn();
         $totalPrice = $seatPrice * count($seatIds);
 
-        $db->prepare("UPDATE bookings SET total_price = ? WHERE id = ?")->execute([$totalPrice, $bookingId]);
+        // Update booking info
+        $stmt = $db->prepare("UPDATE bookings SET user_id = ?, screening_id = ?, total_price = ? WHERE id = ?");
+        $stmt->execute([$userId, $screeningId, $totalPrice, $bookingId]);
+
+        // Delete old seats and insert new ones
+        $db->prepare("DELETE FROM booking_seats WHERE booking_id = ?")->execute([$bookingId]);
+
+        $stmtInsert = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
+        foreach ($seatIds as $seatId) {
+            $stmtInsert->execute([$bookingId, $seatId, $screeningId]);
+        }
 
         return ['Booking updated successfully!', ''];
     } catch (Exception $e) {
-        return ['', 'Error updating booking: '.$e->getMessage()];
+        return ['', 'Error updating booking: ' . $e->getMessage()];
     }
 }
 

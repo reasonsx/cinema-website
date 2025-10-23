@@ -112,11 +112,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             if (isset($_POST['edit_booking'])) {
-                [$success, $error] = editBooking($db, $_POST);
-            }
+    [$successMsg, $errorMsg] = editBooking($db, $_POST);
+    header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
+    exit;
+}
+
             if (isset($_POST['delete_booking'])) {
-                [$success, $error] = deleteBooking($db, $_POST['delete_booking']);
-            }
+    [$successMsg, $errorMsg] = deleteBooking($db, $_POST['delete_booking']);
+    header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
+    exit;
+}
+
             break;
 
     }

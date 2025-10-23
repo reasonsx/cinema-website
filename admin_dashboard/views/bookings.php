@@ -110,14 +110,21 @@
                   <?php endforeach; ?>
                 </div>
 
-                <input type="hidden" name="seat_ids[]" id="edit_selected_seats_<?= $b['id'] ?>">
+                <input type="hidden" name="seat_ids" id="edit_selected_seats_<?= $b['id'] ?>">
 
-                <button type="submit" name="edit_booking" class="bg-[var(--primary)] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] text-lg mt-2">
-                  Save Changes
-                </button>
-                <button type="button" onclick="toggleEditBookingForm(<?= $b['id'] ?>)" class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 text-lg mt-2">
-                  Cancel
-                </button>
+
+                <div class="flex gap-4 mt-4">
+    <button type="submit" name="edit_booking"
+            class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
+        Save Changes
+    </button>
+
+    <button type="button" onclick="toggleEditBookingForm(<?= $b['id'] ?>)"
+            class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-300 font-[Limelight] text-lg">
+        Cancel
+    </button>
+</div>
+
               </form>
             </td>
           </tr>
@@ -221,13 +228,53 @@ document.getElementById('add-booking-form').addEventListener('submit', (e) => {
 });
 
 
-// Edit Booking: update seats when screening changes
+// --- EDIT BOOKING --- //
 document.querySelectorAll('.edit-screening-select').forEach(select => {
-  select.addEventListener('change', function() {
+  select.addEventListener('change', function () {
     const bookingId = this.dataset.bookingId;
-    renderSeats(this.value, `edit-seats-container-${bookingId}`, `edit_selected_seats_${bookingId}`, []);
+    renderSeats(
+      this.value,
+      `edit-seats-container-${bookingId}`,
+      `edit_selected_seats_${bookingId}`,
+      []
+    );
   });
 });
+
+// Handle seat selection and submission for edit booking forms
+document.querySelectorAll('form').forEach(form => {
+  if (form.querySelector('[name="edit_booking"]')) {
+    form.addEventListener('submit', e => {
+      const bookingId = form.querySelector('[name="booking_id"]').value;
+      const container = document.getElementById(`edit-seats-container-${bookingId}`);
+      const input = document.getElementById(`edit_selected_seats_${bookingId}`);
+
+      const selected = [...container.querySelectorAll('.seat.selected')]
+        .map(s => s.dataset.seatId);
+      input.value = selected.join(',');
+
+      if (!input.value) {
+        e.preventDefault();
+        alert('Please select at least one seat.');
+      }
+
+      console.log(`Submitting updated seats for booking #${bookingId}:`, input.value);
+    });
+  }
+});
+
+// Preload seats for each edit form
+<?php foreach ($bookings as $b): 
+    $seatIds = array_map(fn($s) => $s['seat_id'], $b['seats']);
+?>
+renderSeats(
+  <?= $b['screening_id'] ?>,
+  'edit-seats-container-<?= $b['id'] ?>',
+  'edit_selected_seats_<?= $b['id'] ?>',
+  <?= json_encode($seatIds) ?>
+);
+<?php endforeach; ?>
+
 
 </script>
 
