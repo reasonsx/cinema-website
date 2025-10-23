@@ -99,33 +99,44 @@ $newsList = getNews($db);
 
 
 <!-- Contact Us Section -->
+<!-- Contact Us Section -->
 <section id="contact-us" class="py-16 bg-[var(--primary)] text-black">
     <div class="container mx-auto text-center max-w-xl">
         <h2 class="text-5xl font-[Limelight] mb-8 text-[var(--black)]">CONTACT US</h2>
         <form class="flex flex-col gap-4">
-            <input type="text" placeholder="Subject" class="w-full px-4 py-2 rounded border border-gray-300">
-            <input type="email" placeholder="Email" class="w-full px-4 py-2 rounded border border-gray-300">
-            <textarea placeholder="Message Text" class="w-full px-4 py-2 rounded border border-gray-300 h-32"></textarea>
-            <button type="submit" class="bg-black text-white px-6 py-2 rounded hover:bg-[var(--secondary)] transition-colors duration-300">Submit</button>
-        </form>
+    <input type="text" placeholder="Subject"
+        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]">
+    <input type="email" placeholder="Email"
+        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]">
+    <textarea placeholder="Message Text"
+        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black h-32 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"></textarea>
+    <button type="submit"
+        class="bg-black text-[var(--primary)] px-6 py-2 rounded transition-colors duration-300">Submit</button>
+</form>
+
     </div>
 </section>
 
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
-    <div class="container mx-auto max-w-3xl">
-        <h2 class="text-5xl font-[Limelight] mb-8 text-[var(--secondary)]">NEWS</h2>
-        <div class="flex flex-col gap-6">
+    <div class="container mx-auto max-w-4xl">
+        <h2 class="text-5xl font-[Limelight] mb-12 text-[var(--secondary)] text-center">NEWS</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <?php foreach ($newsList as $news): ?>
-                <div class="bg-gray-900 p-4 rounded shadow">
-                    <h3 class="text-xl font-bold mb-1"><?= htmlspecialchars($news['title']) ?></h3>
-                    <p class="text-sm mb-1"><?= date('M d, Y', strtotime($news['date_added'])) ?></p>
-                    <p><?= htmlspecialchars($news['content']) ?></p>
+                <div class="bg-[var(--secondary)] text-black p-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300">
+                    <h3 class="text-2xl font-[Limelight] mb-2"><?= htmlspecialchars($news['title']) ?></h3>
+                    <p class="text-sm text-black/70 mb-4"><?= date('M d, Y', strtotime($news['date_added'])) ?></p>
+                    <p class="text-black leading-relaxed"><?= htmlspecialchars($news['content']) ?></p>
+                    <button class="mt-4 bg-black text-[var(--secondary)] px-4 py-2 rounded-full font-[Limelight] hover:bg-[var(--primary)] transition-colors duration-300">
+                        Read More
+                    </button>
                 </div>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
+
+
 
 <?php include 'footer.php'; ?>
 </body>

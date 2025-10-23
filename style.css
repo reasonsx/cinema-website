@@ -117,3 +117,30 @@ textarea::placeholder {
 }
 
 
+/* Contact Us Inputs Overrides - Thicker Border */
+#contact-us input,
+#contact-us textarea {
+    background-color: var(--primary) !important;
+    color: var(--black) !important;
+    border: 2px solid var(--black) !important; /* thicker border */
+}
+
+#contact-us input::placeholder,
+#contact-us textarea::placeholder {
+    color: var(--black) !important;
+}
+
+
+/* Contact Us Elements - Consistent Border Radius */
+#contact-us input,
+#contact-us textarea,
+#contact-us button {
+    border-radius: 0.75rem; /* same as your global inputs */
+}
+
+/* Optional: make focus/hover consistent */
+#contact-us input:focus,
+#contact-us textarea:focus,
+#contact-us button:hover {
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.2); /* subtle glow */
+}
