@@ -191,7 +191,8 @@ $users = getUsers($db);
 $allActors = getActorsList($db);       // For movie form
 $allDirectors = getDirectorsList($db);    // For movie form
 $screeningRooms = getScreeningRooms($db); // <-- NEW
-
+$screenings = getScreenings($db);
+$bookings = getBookings($db);
 $newsList = getNews($db);
 
 // ------------------- Include Layout -------------------

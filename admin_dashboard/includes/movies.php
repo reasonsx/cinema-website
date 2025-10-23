@@ -157,3 +157,8 @@ function editMovieHandler($db, $data, $files): array {
     }
 }
 
+function getMovieById($db, $movieId) {
+    $stmt = $db->prepare("SELECT * FROM movies WHERE id = ?");
+    $stmt->execute([$movieId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
