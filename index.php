@@ -82,7 +82,7 @@ $newsList = getNews($db);
 <section id="about-us" class="py-16 bg-black text-[#fcb885]">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
         <!-- Image -->
-        <img src="images/cinema-about.png" alt="Our Cinema" class="w-full md:w-1/2 rounded-lg shadow-lg">
+        <img src="images/cinema-about.png" alt="Our Cinema" class="w-full md:w-1/2 ">
 
         <!-- Text -->
         <div class="md:w-1/2">
