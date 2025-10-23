@@ -10,6 +10,7 @@ require_once 'admin_dashboard/includes/users.php';
 require_once 'admin_dashboard/includes/screening_rooms.php';
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/bookings.php';
+require_once 'admin_dashboard/includes/news.php';
 
 
 // Redirect non-admins
@@ -19,7 +20,7 @@ if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
 }
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings'];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news'];
 
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
@@ -33,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'actors':
             if (isset($_POST['add_actor'])) {
                 [$success, $error] = addActorHandler($db, $_POST);
+                
             }
             if (isset($_POST['delete_actor'])) {
                 [$success, $error] = deleteActor($db, $_POST['delete_actor_id']);
@@ -54,15 +56,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             break;
 
-        case 'movies':
+       case 'movies':
             if (isset($_POST['add_movie'])) {
                 [$success, $error] = addMovieHandler($db, $_POST, $_FILES);
+                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
+                exit;
             }
             if (isset($_POST['edit_movie'])) {
                 [$success, $error] = editMovieHandler($db, $_POST, $_FILES);
+                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
+                exit;
             }
             if (isset($_POST['delete_movie'])) {
                 [$success, $error] = deleteMovie($db, $_POST['delete_movie_id']);
+                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
+                exit;
             }
             break;
 
@@ -112,18 +120,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             if (isset($_POST['edit_booking'])) {
-    [$successMsg, $errorMsg] = editBooking($db, $_POST);
-    header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
-    exit;
-}
+                [$successMsg, $errorMsg] = editBooking($db, $_POST);
+                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
+                exit;
+            }
 
             if (isset($_POST['delete_booking'])) {
-    [$successMsg, $errorMsg] = deleteBooking($db, $_POST['delete_booking']);
-    header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
-    exit;
-}
+                [$successMsg, $errorMsg] = deleteBooking($db, $_POST['delete_booking']);
+                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
+                exit;
+            }
 
             break;
+        case 'news':
+            if (isset($_POST['add_news'])) {
+            [$success, $error] = addNews($db, $_POST);
+        }
+        if (isset($_POST['edit_news'])) {
+            [$success, $error] = editNews($db, $_POST);
+        }
+        if (isset($_POST['delete_news'])) {
+            [$success, $error] = deleteNews($db, $_POST['delete_news_id']);
+        }
 
     }
 }
@@ -136,6 +154,8 @@ $users        = getUsers($db);
 $allActors    = getActorsList($db);       // For movie form
 $allDirectors = getDirectorsList($db);    // For movie form
 $screeningRooms = getScreeningRooms($db); // <-- NEW
+
+$newsList = getNews($db);
 
 // ------------------- Include Layout -------------------
 include 'head.php';
@@ -154,7 +174,7 @@ include 'header.php';
             <li><a href="?view=screening_rooms" class="<?= $view === 'screening_rooms' ? 'text-primary' : 'text-gray-700' ?>">All Screening Rooms</a></li> <!-- NEW -->
             <li><a href="?view=screenings" class="<?= $view === 'screenings' ? 'text-primary' : 'text-gray-700' ?>">All Screenings</a></li>
             <li><a href="?view=bookings" class="<?= $view === 'bookings' ? 'text-primary' : 'text-gray-700' ?>">All Bookings</a></li>
-
+            <li><a href="?view=news" class="<?= $view === 'news' ? 'text-primary' : 'text-gray-700' ?>">All News</a></li>
         </ul>
     </aside>
 
