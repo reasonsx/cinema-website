@@ -4,7 +4,7 @@
     <!-- Add News Form -->
     <details class="mb-8">
         <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
-            Add New Article
+            Add News
         </summary>
         <form method="post" class="flex flex-col gap-4 mt-4">
             <input type="text" name="title" placeholder="News Title" required
