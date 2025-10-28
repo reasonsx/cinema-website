@@ -11,6 +11,19 @@ require_once 'admin_dashboard/includes/screenings.php';
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);
 
+function getRatingColor($rating)
+{
+    $rating = strtoupper(trim($rating));
+    return match ($rating) {
+        'G' => 'bg-green-500 text-white',
+        'PG' => 'bg-blue-500 text-white',
+        'PG-13' => 'bg-amber-400 text-black',
+        'R' => 'bg-red-600 text-white',
+        'NC-17' => 'bg-purple-700 text-white',
+        default => 'bg-gray-500 text-white',
+    };
+}
+
 if (!$movie) {
     echo "<h2 class='text-center text-red-600 mt-20'>Movie not found.</h2>";
     exit;
@@ -119,20 +132,58 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
             <main class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8 shadow-2xl">
                 <!-- Meta grid -->
                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
+                    <!-- Cast -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-users text-[var(--secondary)]"></i> Cast</dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($actorNames) ?></dd>
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-users text-[var(--secondary)]"></i> Cast
+                        </dt>
+                        <dd class="mt-2 flex flex-wrap gap-2">
+                            <?php if (!empty($actors)): ?>
+                                <?php foreach ($actors as $a): ?>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
+            <i class="pi pi-user opacity-70"></i>
+            <?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?>
+          </span>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="text-white/50 italic">No cast listed.</span>
+                            <?php endif; ?>
+                        </dd>
                     </div>
+
+                    <!-- Director -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-id-card text-[var(--secondary)]"></i> Director</dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($directorNames) ?></dd>
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-id-card text-[var(--secondary)]"></i> Director
+                        </dt>
+                        <dd class="mt-2 flex flex-wrap gap-2">
+                            <?php if (!empty($directors)): ?>
+                                <?php foreach ($directors as $d): ?>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
+            <i class="pi pi-user-edit opacity-70"></i>
+            <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
+          </span>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="text-white/50 italic">No director listed.</span>
+                            <?php endif; ?>
+                        </dd>
                     </div>
+
+                    <!-- Runtime -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-clock text-[var(--secondary)]"></i> Runtime</dt>
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-clock text-[var(--secondary)]"></i> Runtime
+                        </dt>
                         <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['length']) ?> min</dd>
                     </div>
+
+                    <!-- Release Year -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-calendar text-[var(--secondary)]"></i> Release Year</dt>
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-calendar text-[var(--secondary)]"></i> Release Year
+                        </dt>
                         <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['release_year']) ?></dd>
                     </div>
                 </dl>
