@@ -99,7 +99,6 @@ $newsList = getNews($db);
 
 
 <!-- Contact Us Section -->
-<!-- Contact Us Section -->
 <section id="contact-us" class="py-16 bg-[var(--primary)] text-black">
     <div class="container mx-auto text-center max-w-xl">
         <h2 class="text-5xl font-[Limelight] mb-8 text-[var(--black)]">CONTACT US</h2>
