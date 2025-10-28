@@ -30,7 +30,7 @@
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-6">
                 <a href="index.php" class="hover:text-secondary flex items-center gap-1 transition">Home</a>
-                <a href="movies.php" class="hover:text-secondary flex items-center gap-1 transition">Movies</a>
+                <a href="movies-list.php" class="hover:text-secondary flex items-center gap-1 transition">Movies</a>
                 <a href="schedule.php" class="hover:text-secondary flex items-center gap-1 transition">Schedule</a>
                 <a href="contact.php" class="hover:text-secondary flex items-center gap-1 transition">Contact</a>
 
@@ -58,7 +58,7 @@
         <div id="mobile-menu" class="md:hidden hidden bg-black px-6 pb-4">
             <ul class="flex flex-col gap-4">
                 <li><a href="index.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-home"></i> Home</a></li>
-                <li><a href="movies.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-ticket"></i> Movies</a></li>
+                <li><a href="movies-list.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-ticket"></i> Movies</a></li>
                 <li><a href="schedule.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-calendar"></i> Schedule</a></li>
                 <li><a href="contact.php" class="hover:text-secondary flex items-center gap-2"><i class="pi pi-phone"></i> Contact</a></li>
                 <li>

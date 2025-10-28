@@ -67,8 +67,8 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 <!-- HERO SECTION -->
 <section class="relative w-full">
   <div class="relative h-[350px] md:h-[420px] overflow-hidden">
-    <img src="<?= htmlspecialchars($movie['poster']) ?>" 
-         alt="<?= htmlspecialchars($movie['title']) ?>" 
+    <img src="<?= htmlspecialchars($movie['poster']) ?>"
+         alt="<?= htmlspecialchars($movie['title']) ?>"
          class="object-cover w-full h-full opacity-70">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
   </div>
@@ -77,11 +77,11 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 <!-- MOVIE DETAILS -->
 <section class="px-6 md:px-24 py-12 bg-black text-white">
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
-    
+
     <!-- Poster -->
     <div class="flex justify-center">
-      <img src="<?= htmlspecialchars($movie['poster']) ?>" 
-           alt="<?= htmlspecialchars($movie['title']) ?>" 
+      <img src="<?= htmlspecialchars($movie['poster']) ?>"
+           alt="<?= htmlspecialchars($movie['title']) ?>"
            class="rounded-2xl shadow-lg w-[280px]">
     </div>
 
@@ -102,7 +102,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
         <p class="text-gray-300 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
       </div>
 
-      <a href="book.php?movie_id=<?= $movie['id'] ?>" 
+      <a href="book.php?movie_id=<?= $movie['id'] ?>"
          class="mt-6 inline-block bg-[#F8A15A] hover:bg-[#faaa68] text-black font-semibold py-3 px-8 rounded-full transition">
          BOOK TICKETS
       </a>
@@ -116,7 +116,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
     <h2 class="text-center text-lg font-semibold text-gray-700">No screenings available.</h2>
   <?php else: ?>
     <?php $dates = array_keys($groupedScreenings); ?>
-    
+
     <div id="showtime-container" data-index="0" data-total="<?= count($dates) ?>">
       <div class="flex justify-between items-center mb-6">
         <button id="prevDateBtn" class="text-2xl font-bold opacity-60 hover:opacity-100">&lt;</button>
@@ -131,14 +131,14 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
           <?php $time = date('H:i', strtotime($t['start_time'])); ?>
           <a href="book.php?screening_id=<?= $t['id'] ?>"
              class="bg-black text-[#F8A15A] hover:bg-[#1c1c1c] px-6 py-3 rounded-xl font-semibold transition">
-             <?= $time ?> 
+             <?= $time ?>
              <span class="text-xs opacity-70">(<?= htmlspecialchars($t['room_name']) ?>)</span>
           </a>
         <?php endforeach; ?>
       </div>
 
       <div class="text-center">
-        <a href="book.php?movie_id=<?= $movie['id'] ?>" 
+        <a href="book.php?movie_id=<?= $movie['id'] ?>"
            class="inline-block bg-black text-[#F8A15A] hover:bg-[#1c1c1c] px-10 py-3 rounded-full font-semibold">
            BOOK TICKETS
         </a>
