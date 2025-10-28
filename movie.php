@@ -64,139 +64,224 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
 <?php include 'header.php'; ?>
 
-<!-- HERO SECTION -->
-<section class="relative w-full">
-  <div class="relative h-[350px] md:h-[420px] overflow-hidden">
-    <img src="<?= htmlspecialchars($movie['poster']) ?>"
-         alt="<?= htmlspecialchars($movie['title']) ?>"
-         class="object-cover w-full h-full opacity-70">
-    <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black"></div>
-  </div>
+<!-- HERO -->
+<section class="relative">
+    <div class="relative h-[360px] md:h-[440px] overflow-hidden">
+        <img src="<?= htmlspecialchars($movie['poster']) ?>"
+             alt="<?= htmlspecialchars($movie['title']) ?>"
+             class="object-cover w-full h-full opacity-60">
+        <!-- layered gradients for depth -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black"></div>
+        <div class="absolute inset-x-0 bottom-0 h-24 md:h-28 bg-gradient-to-t from-black to-transparent"></div>
+
+        <!-- Hero content -->
+        <div class="absolute inset-0 flex items-end">
+            <div class="mx-auto w-full max-w-7xl px-6 pb-6 md:pb-10">
+                <div class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3 py-1 text-xs md:text-sm border border-white/15">
+                    <i class="pi pi-calendar"></i>
+                    <span><?= htmlspecialchars($movie['release_year']) ?></span>
+                    <span class="opacity-40">•</span>
+                    <i class="pi pi-clock"></i>
+                    <span><?= htmlspecialchars($movie['length']) ?> min</span>
+                    <span class="opacity-40">•</span>
+                    <span><?= htmlspecialchars($movie['rating']) ?></span>
+                </div>
+                <h1 class="mt-3 text-4xl md:text-6xl font-[Limelight] tracking-wide text-[#F8A15A]">
+                    <?= htmlspecialchars($movie['title']) ?>
+                </h1>
+            </div>
+        </div>
+    </div>
 </section>
 
-<!-- MOVIE DETAILS -->
-<section class="px-6 md:px-24 py-12 bg-black text-white">
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">
+<!-- MOVIE DETAILS CARD -->
+<section class="px-6 md:px-8 py-10">
+    <div class="mx-auto max-w-7xl">
+        <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8">
+            <!-- Poster panel -->
+            <aside class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 md:p-5 shadow-2xl">
+                <img src="<?= htmlspecialchars($movie['poster']) ?>"
+                     alt="<?= htmlspecialchars($movie['title']) ?>"
+                     class="w-full rounded-2xl border border-white/10 shadow">
+                <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-white/70">
+                    <div class="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <div class="uppercase text-[10px] opacity-60">Genre</div>
+                        <div class="truncate"><?= htmlspecialchars($movie['genre'] ?? '—') ?></div>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                        <div class="uppercase text-[10px] opacity-60">Rating</div>
+                        <div><?= htmlspecialchars($movie['rating']) ?></div>
+                    </div>
+                </div>
+            </aside>
 
-    <!-- Poster -->
-    <div class="flex justify-center">
-      <img src="<?= htmlspecialchars($movie['poster']) ?>"
-           alt="<?= htmlspecialchars($movie['title']) ?>"
-           class="rounded-2xl shadow-lg w-[280px]">
+            <!-- Info panel -->
+            <main class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8 shadow-2xl">
+                <!-- Meta grid -->
+                <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-users text-[var(--secondary)]"></i> Cast</dt>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($actorNames) ?></dd>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-id-card text-[var(--secondary)]"></i> Director</dt>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($directorNames) ?></dd>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-clock text-[var(--secondary)]"></i> Runtime</dt>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['length']) ?> min</dd>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold"><i class="pi pi-calendar text-[var(--secondary)]"></i> Release Year</dt>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['release_year']) ?></dd>
+                    </div>
+                </dl>
+
+                <!-- Synopsis -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-2">Synopsis</h3>
+                    <p class="text-white/80 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
+                </div>
+
+                <!-- CTA -->
+                <div class="mt-8 flex flex-wrap items-center gap-3">
+                    <a href="book.php?movie_id=<?= $movie['id'] ?>"
+                       class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                        <i class="pi pi-ticket"></i>
+                        BOOK TICKETS
+                    </a>
+                    <a href="#showtimes"
+                       class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
+                        <i class="pi pi-clock"></i>
+                        See showtimes
+                    </a>
+                </div>
+            </main>
+        </div>
     </div>
-
-    <!-- Info -->
-    <div class="md:col-span-2 flex flex-col gap-6">
-      <h1 class="text-6xl font-[Limelight] text-[#F8A15A] tracking-wide"><?= htmlspecialchars($movie['title']) ?></h1>
-
-      <div class="grid grid-cols-2 gap-y-2 text-sm">
-        <p><span class="font-semibold">Cast:</span> <?= htmlspecialchars($actorNames) ?></p>
-        <p><span class="font-semibold">Director:</span> <?= htmlspecialchars($directorNames) ?></p>
-        <p><span class="font-semibold">Runtime:</span> <?= htmlspecialchars($movie['length']) ?> min</p>
-        <p><span class="font-semibold">Release Year:</span> <?= htmlspecialchars($movie['release_year']) ?></p>
-        <p><span class="font-semibold">Rating:</span> <?= htmlspecialchars($movie['rating']) ?></p>
-      </div>
-
-      <div>
-        <h3 class="text-lg font-semibold mb-1">Synopsis</h3>
-        <p class="text-gray-300 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
-      </div>
-
-      <a href="book.php?movie_id=<?= $movie['id'] ?>"
-         class="mt-6 inline-block bg-[#F8A15A] hover:bg-[#faaa68] text-black font-semibold py-3 px-8 rounded-full transition">
-         BOOK TICKETS
-      </a>
-    </div>
-  </div>
 </section>
 
-<!-- SHOWTIMES SECTION -->
-<section class="bg-[#F8A15A] text-black py-10 px-6 md:px-24">
-  <?php if (empty($groupedScreenings)): ?>
-    <h2 class="text-center text-lg font-semibold text-gray-700">No screenings available.</h2>
-  <?php else: ?>
-    <?php $dates = array_keys($groupedScreenings); ?>
+<!-- SHOWTIMES -->
+<section id="showtimes" class="px-6 md:px-8 pb-14">
+    <div class="mx-auto max-w-7xl">
+        <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl">
+            <!-- Header -->
+            <div class="flex flex-wrap items-center justify-between gap-4 px-6 py-5 border-b border-white/10">
+                <div class="flex items-center gap-2">
+                    <i class="pi pi-clock text-[var(--secondary)]"></i>
+                    <h2 class="text-lg font-semibold">Showtimes</h2>
+                </div>
+                <?php if (empty($groupedScreenings)): ?>
+                    <span class="text-sm text-white/60">No screenings available</span>
+                <?php endif; ?>
+            </div>
 
-    <div id="showtime-container" data-index="0" data-total="<?= count($dates) ?>">
-      <div class="flex justify-between items-center mb-6">
-        <button id="prevDateBtn" class="text-2xl font-bold opacity-60 hover:opacity-100">&lt;</button>
-        <h2 id="showtimeDate" class="text-xl font-semibold">
-          <?= strtoupper(date('D j M', strtotime($dates[0]))) ?>
-        </h2>
-        <button id="nextDateBtn" class="text-2xl font-bold opacity-60 hover:opacity-100">&gt;</button>
-      </div>
+            <?php if (!empty($groupedScreenings)): ?>
+                <?php $dates = array_keys($groupedScreenings); ?>
 
-      <div id="showtimeButtons" class="flex flex-wrap justify-center gap-4 mb-6">
-        <?php foreach ($groupedScreenings[$dates[0]] as $t): ?>
-          <?php $time = date('H:i', strtotime($t['start_time'])); ?>
-          <a href="book.php?screening_id=<?= $t['id'] ?>"
-             class="bg-black text-[#F8A15A] hover:bg-[#1c1c1c] px-6 py-3 rounded-xl font-semibold transition">
-             <?= $time ?>
-             <span class="text-xs opacity-70">(<?= htmlspecialchars($t['room_name']) ?>)</span>
-          </a>
-        <?php endforeach; ?>
-      </div>
+                <!-- Date switcher -->
+                <div class="px-6 py-5">
+                    <div id="showtime-container" data-index="0" data-total="<?= count($dates) ?>" class="space-y-5">
+                        <div class="flex items-center justify-center gap-3">
+                            <button id="prevDateBtn"
+                                    class="h-10 w-10 rounded-full border border-white/15 bg-black/40 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center justify-center"
+                                    aria-label="Previous day">
+                                <i class="pi pi-chevron-left"></i>
+                            </button>
 
-      <div class="text-center">
-        <a href="book.php?movie_id=<?= $movie['id'] ?>"
-           class="inline-block bg-black text-[#F8A15A] hover:bg-[#1c1c1c] px-10 py-3 rounded-full font-semibold">
-           BOOK TICKETS
-        </a>
-      </div>
+                            <div class="min-w-[180px] rounded-full border border-white/15 bg-black/30 px-5 py-2 text-center font-medium" id="showtimeDate">
+                                <?= strtoupper(date('D j M', strtotime($dates[0]))) ?>
+                            </div>
+
+                            <button id="nextDateBtn"
+                                    class="h-10 w-10 rounded-full border border-white/15 bg-black/40 hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center justify-center"
+                                    aria-label="Next day">
+                                <i class="pi pi-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Times -->
+                        <div id="showtimeButtons" class="flex flex-wrap justify-center gap-3">
+                            <?php foreach ($groupedScreenings[$dates[0]] as $t): ?>
+                                <?php $time = date('H:i', strtotime($t['start_time'])); ?>
+                                <a href="book.php?screening_id=<?= $t['id'] ?>"
+                                   class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
+                                    <i class="pi pi-clock"></i>
+                                    <?= $time ?>
+                                    <span class="text-xs opacity-70">· <?= htmlspecialchars($t['room_name']) ?></span>
+                                </a>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Footer CTA -->
+                        <div class="pt-1 pb-6 text-center border-t border-white/10">
+                            <a href="book.php?movie_id=<?= $movie['id'] ?>"
+                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                                <i class="pi pi-ticket"></i>
+                                BOOK TICKETS
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
-
-    <script>
-      const dates = <?= json_encode(array_map(function($d) use ($groupedScreenings) {
-        return [
-          'label' => strtoupper(date('D j M', strtotime($d))),
-          'screenings' => array_map(fn($t) => [
-            'id' => $t['id'],
-            'time' => date('H:i', strtotime($t['start_time'])),
-            'room' => $t['room_name']
-          ], $groupedScreenings[$d])
-        ];
-      }, $dates)) ?>;
-
-      const showtimeContainer = document.getElementById('showtime-container');
-      const showtimeDate = document.getElementById('showtimeDate');
-      const showtimeButtons = document.getElementById('showtimeButtons');
-      const prevBtn = document.getElementById('prevDateBtn');
-      const nextBtn = document.getElementById('nextDateBtn');
-
-      function updateShowtimes(index) {
-        const d = dates[index];
-        showtimeDate.textContent = d.label;
-        showtimeButtons.innerHTML = d.screenings.map(s => `
-          <a href="book.php?screening_id=${s.id}"
-             class="bg-black text-[#F8A15A] hover:bg-[#1c1c1c] px-6 py-3 rounded-xl font-semibold transition">
-             ${s.time} <span class="text-xs opacity-70">(${s.room})</span>
-          </a>
-        `).join('');
-        showtimeContainer.dataset.index = index;
-        prevBtn.disabled = index === 0;
-        nextBtn.disabled = index === dates.length - 1;
-        prevBtn.style.opacity = index === 0 ? "0.3" : "1";
-        nextBtn.style.opacity = index === dates.length - 1 ? "0.3" : "1";
-      }
-
-      prevBtn.addEventListener('click', () => {
-        let i = parseInt(showtimeContainer.dataset.index);
-        if (i > 0) updateShowtimes(i - 1);
-      });
-
-      nextBtn.addEventListener('click', () => {
-        let i = parseInt(showtimeContainer.dataset.index);
-        if (i < dates.length - 1) updateShowtimes(i + 1);
-      });
-
-      // Initialize button states
-      updateShowtimes(0);
-    </script>
-  <?php endif; ?>
 </section>
-
-
 
 <?php include 'footer.php'; ?>
+
+<?php if (!empty($groupedScreenings)): ?>
+    <script>
+        const dates = <?= json_encode(array_map(function($d) use ($groupedScreenings) {
+            return [
+                'label' => strtoupper(date('D j M', strtotime($d))),
+                'screenings' => array_map(fn($t) => [
+                    'id' => $t['id'],
+                    'time' => date('H:i', strtotime($t['start_time'])),
+                    'room' => $t['room_name']
+                ], $groupedScreenings[$d])
+            ];
+        }, array_keys($groupedScreenings))) ?>;
+
+        const showtimeContainer = document.getElementById('showtime-container');
+        const showtimeDate = document.getElementById('showtimeDate');
+        const showtimeButtons = document.getElementById('showtimeButtons');
+        const prevBtn = document.getElementById('prevDateBtn');
+        const nextBtn = document.getElementById('nextDateBtn');
+
+        function updateShowtimes(index) {
+            const d = dates[index];
+            showtimeDate.textContent = d.label;
+            showtimeButtons.innerHTML = d.screenings.map(s => `
+      <a href="book.php?screening_id=${s.id}"
+         class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
+        <i class="pi pi-clock"></i>
+        ${s.time} <span class="text-xs opacity-70">· ${s.room}</span>
+      </a>
+    `).join('');
+
+            showtimeContainer.dataset.index = index;
+
+            const atStart = index === 0;
+            const atEnd = index === dates.length - 1;
+            prevBtn.disabled = atStart;
+            nextBtn.disabled = atEnd;
+        }
+
+        prevBtn.addEventListener('click', () => {
+            let i = parseInt(showtimeContainer.dataset.index, 10);
+            if (i > 0) updateShowtimes(i - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            let i = parseInt(showtimeContainer.dataset.index, 10);
+            if (i < dates.length - 1) updateShowtimes(i + 1);
+        });
+
+        // Initialize
+        updateShowtimes(0);
+    </script>
+<?php endif; ?>
+
 </body>
 </html>

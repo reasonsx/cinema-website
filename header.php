@@ -29,8 +29,7 @@
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-6">
-                <a href="index.php" class="hover:text-secondary flex items-center gap-1 transition">Home</a>
-                <a href="movies-list.php" class="hover:text-secondary flex items-center gap-1 transition">Movies</a>
+                <a href="movies-list.php" class="hover:text-secondary flex items-center gap-1 transition">WHAT'S ON</a>
                 <a href="schedule.php" class="hover:text-secondary flex items-center gap-1 transition">Schedule</a>
                 <a href="contact.php" class="hover:text-secondary flex items-center gap-1 transition">Contact</a>
 
