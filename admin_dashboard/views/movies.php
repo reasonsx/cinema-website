@@ -3,7 +3,7 @@
 
     <!-- Add Movie Form -->
     <details class="mb-8">
-        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
+        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg">
             Add New Movie
         </summary>
         <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4 mt-4">
@@ -43,7 +43,7 @@
             </div>
 
             <button type="submit" name="add_movie"
-                    class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg mt-4">
+                    class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg mt-4">
                 Add Movie
             </button>
         </form>
@@ -114,7 +114,7 @@
                     <!-- Edit Form Row -->
                     <tr id="edit-form-<?= $movie['id'] ?>" class="hidden bg-gray-50">
                         <td colspan="10" class="p-6 border-t-4 border-[var(--primary)]">
-                            <h3 class="text-3xl font-[Limelight] text-[var(--primary)] mb-4">Edit Movie</h3>
+                            <h3 class="text-3x text-[var(--primary)] mb-4">Edit Movie</h3>
 
                             <?php
                                 // Pre-fill current actors
@@ -183,12 +183,12 @@
 
                                 <div class="flex gap-4 mt-4">
                                     <button type="submit" name="edit_movie"
-                                            class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
+                                            class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg">
                                         Save Changes
                                     </button>
 
                                     <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
-                                            class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-300 font-[Limelight] text-lg">
+                                            class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-300 text-lg">
                                         Cancel
                                     </button>
                                 </div>
