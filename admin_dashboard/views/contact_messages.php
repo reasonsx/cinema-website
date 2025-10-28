@@ -6,7 +6,7 @@ include 'components/table.php';
 
 renderTable([
     'title' => 'Contact Messages',
-    'headers' => ['#', 'Status', 'Name', 'Email', 'Subject', 'Message', 'Date', 'Actions'],
+    'headers' => ['ID', 'Status', 'Name', 'Email', 'Subject', 'Message', 'Date', 'Actions'],
     'rows' => $messages,
     'renderRow' => function ($m) {
         $excerpt = mb_strlen($m['message']) > 100 ? mb_substr($m['message'], 0, 100) . '…' : $m['message'];

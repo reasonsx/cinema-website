@@ -245,7 +245,7 @@ include 'header.php';
                 </li>
                 <li>
                     <a href="?view=movies" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
-                        <i class="pi pi-film"></i> All Movies
+                        <i class="pi pi-video"></i> All Movies
                     </a>
                 </li>
                 <li>
@@ -280,7 +280,7 @@ include 'header.php';
                 </li>
                 <li>
                     <a href="?view=news" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'news' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
-                        <i class="pi pi-newspaper"></i> All News
+                        <i class="pi pi-book"></i> All News
                     </a>
                 </li>
             </ul>
