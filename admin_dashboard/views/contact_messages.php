@@ -20,50 +20,54 @@ renderTable([
            </span>';
 
         $actions = '
-        <div class="flex flex-wrap items-center justify-start gap-3">
+<div class="flex flex-col items-stretch justify-stretch w-full" style="grid-auto-columns: 1fr;">
+<div class="flex flex-col gap-3.5">
+ <!-- View Button -->
+  <details class="group relative w-full">
+    <summary class="cursor-pointer flex items-center justify-center gap-1.5 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 text-sm font-medium transition shadow-sm text-center w-full">
+      <i class="pi pi-eye text-gray-600"></i> View
+    </summary>
+    <div class="absolute z-10 mt-2 w-80 right-0 rounded-xl border border-gray-200 bg-white shadow-xl p-4 text-gray-800 text-sm">
+      '.nl2br(htmlspecialchars($m['message'])).'
+      <div class="mt-3 text-xs text-gray-500 border-t pt-2">
+        IP: '.htmlspecialchars($m['ip'] ?? '-').'<br>
+        UA: '.htmlspecialchars($m['user_agent'] ?? '-').'
+      </div>
+    </div>
+  </details>
 
-          <!-- View Button -->
-          <details class="group relative">
-            <summary class="cursor-pointer flex items-center justify-center gap-1.5 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1.5 text-sm font-medium transition shadow-sm min-w-[120px] text-center">
-              <i class="pi pi-eye text-gray-600"></i> View
-            </summary>
-            <div class="absolute z-10 mt-2 w-80 right-0 rounded-xl border border-gray-200 bg-white shadow-xl p-4 text-gray-800 text-sm">
-              '.nl2br(htmlspecialchars($m['message'])).'
-              <div class="mt-3 text-xs text-gray-500 border-t pt-2">
-                IP: '.htmlspecialchars($m['ip'] ?? '-').'<br>
-                UA: '.htmlspecialchars($m['user_agent'] ?? '-').'
-              </div>
-            </div>
-          </details>
-
-          <!-- Status toggle -->
-          '.($m['status'] === 'read'
-                ? '<form method="post" class="inline">
-                   <input type="hidden" name="id" value="'.(int)$m['id'].'">
-                   <button name="mark_new"
-                     class="flex items-center justify-center gap-1.5 rounded-md bg-amber-100 text-amber-800 hover:bg-amber-200 px-4 py-1.5 text-sm font-medium transition shadow-sm min-w-[120px]">
-                     <i class="pi pi-refresh text-amber-700"></i> Mark as New
-                   </button>
-                 </form>'
-                : '<form method="post" class="inline">
-                   <input type="hidden" name="id" value="'.(int)$m['id'].'">
-                   <button name="mark_read"
-                     class="flex items-center justify-center gap-1.5 rounded-md bg-emerald-100 text-emerald-800 hover:bg-emerald-200 px-4 py-1.5 text-sm font-medium transition shadow-sm min-w-[120px]">
-                     <i class="pi pi-check text-emerald-700"></i> Mark as Read
-                   </button>
-                 </form>'
+  <!-- Status toggle -->
+  '.($m['status'] === 'read'
+                ? '<form method="post" class="w-full">
+           <input type="hidden" name="id" value="'.(int)$m['id'].'">
+           <button name="mark_new"
+             class="flex items-center justify-center gap-1.5 rounded-md bg-amber-100 text-amber-800 hover:bg-amber-200 px-4 py-2 text-sm font-medium transition shadow-sm w-full">
+             <i class="pi pi-refresh text-amber-700"></i> Mark as New
+           </button>
+         </form>'
+                : '<form method="post" class="w-full">
+           <input type="hidden" name="id" value="'.(int)$m['id'].'">
+           <button name="mark_read"
+             class="flex items-center justify-center gap-1.5 rounded-md bg-emerald-100 text-emerald-800 hover:bg-emerald-200 px-4 py-2 text-sm font-medium transition shadow-sm w-full">
+             <i class="pi pi-check text-emerald-700"></i> Mark as Read
+           </button>
+         </form>'
             ).'
+</div>
+ 
 
-          <!-- Delete -->
-          <form method="post" class="inline" onsubmit="return confirm(\'Delete this message?\');">
-            <input type="hidden" name="id" value="'.(int)$m['id'].'">
-            <button name="delete_message"
-              class="flex items-center justify-center gap-1.5 rounded-md bg-red-100 text-red-700 hover:bg-red-200 px-4 py-1.5 text-sm font-medium transition shadow-sm min-w-[120px]">
-              <i class="pi pi-trash text-red-600"></i> Delete
-            </button>
-          </form>
+  <!-- Delete -->
+  <form method="post" class="w-full" onsubmit="return confirm(\'Delete this message?\');">
+    <input type="hidden" name="id" value="'.(int)$m['id'].'">
+    <button name="delete_message"
+      class="flex items-center justify-center gap-1.5 rounded-md bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 text-sm font-medium transition shadow-sm w-full">
+      <i class="pi pi-trash text-red-600"></i> Delete
+    </button>
+  </form>
 
-        </div>';
+</div>';
+
+
 
         return [
             (int)$m['id'],
