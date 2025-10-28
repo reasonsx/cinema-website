@@ -115,7 +115,6 @@ $newsList = getNews($db);
 
     </div>
 </section>
-
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
     <div class="mx-auto max-w-7xl px-6">
@@ -138,10 +137,10 @@ $newsList = getNews($db);
                 $content = htmlspecialchars($news['content'] ?? '');
                 $excerpt = mb_strlen($content) > 260 ? mb_substr($content, 0, 260) . '…' : $content;
                 ?>
-                <article class="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
-                    <!-- Card header -->
-                    <div class="px-5 pt-5">
-                        <div class="flex items-start justify-between gap-3">
+                <article class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
+                    <!-- Card content -->
+                    <div class="flex-1 flex flex-col px-5 pt-5 pb-6">
+                        <div class="flex items-start justify-between gap-3 mb-4">
                             <h3 class="text-2xl font-[Limelight] leading-snug text-white group-hover:text-[var(--secondary)] transition">
                                 <?= $title ?>
                             </h3>
@@ -150,29 +149,26 @@ $newsList = getNews($db);
                                 <span><?= $dateAdded ?></span>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="mx-5 my-4 h-px bg-white/10"></div>
+                        <div class="h-px bg-white/10 mb-4"></div>
 
-                    <!-- Excerpt -->
-                    <div class="px-5 pb-6">
-                        <p class="text-white/85 leading-relaxed mb-5"><?= $excerpt ?></p>
+                        <!-- Excerpt -->
+                        <p class="text-white/85 leading-relaxed mb-5 flex-grow"><?= $excerpt ?></p>
 
-                        <a href="news-details.php?id=<?= $id ?>"
-                           class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
-                            <i class="pi pi-angle-right"></i>
-                            Read more
-                        </a>
+                        <!-- Button pinned to bottom -->
+                        <div class="mt-auto">
+                            <a href="news-details.php?id=<?= $id ?>"
+                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
+                                <i class="pi pi-angle-right"></i>
+                                Read more
+                            </a>
+                        </div>
                     </div>
                 </article>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
-
-
-
-
 
 <?php include 'footer.php'; ?>
 </body>
