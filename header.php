@@ -26,8 +26,7 @@ function isActive($page, $current) {
         <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
             <!-- Brand -->
             <a href="index.php" class="flex items-center gap-2">
-                <i class="pi pi-video text-[var(--secondary)] text-2xl md:text-3xl"></i>
-                <span class="text-xl md:text-2xl font-bold tracking-wide text-white">MyCinema</span>
+                <span class="text-xl md:text-2xl font-bold tracking-wide text-white font-[Limelight]">Eclipse Cinema</span>
             </a>
 
             <!-- Desktop Nav -->
