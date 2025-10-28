@@ -14,6 +14,17 @@ function getNews($db): array {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+function getNewsById($db, $id): ?array {
+    try {
+        $stmt = $db->prepare("SELECT * FROM news WHERE id = ?");
+        $stmt->execute([$id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null; // return null if no row found
+    } catch (PDOException $e) {
+        error_log("Database error in getNewsById: " . $e->getMessage());
+        return null;
+    }
+}
 
 function editNews($db, $data): array {
     try {

@@ -11,7 +11,7 @@ function isActive($page, $current) {
         <div class="mx-auto max-w-7xl px-6 py-2 flex justify-between items-center">
             <div class="flex gap-4 md:gap-6">
                 <span class="flex items-center gap-2"><i class="pi pi-clock text-[var(--secondary)]"></i> Mon–Sun: 10:00–24:00</span>
-                <span class="hidden sm:flex items-center gap-2"><i class="pi pi-envelope text-[var(--secondary)]"></i> info@mycinema.com</span>
+                <span class="hidden sm:flex items-center gap-2"><i class="pi pi-envelope text-[var(--secondary)]"></i> info@eclipsecinema.com</span>
             </div>
             <div class="flex gap-3 text-lg">
                 <a href="#" class="text-white/70 hover:text-[var(--secondary)] transition"><i class="pi pi-facebook"></i></a>

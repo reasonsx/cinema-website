@@ -22,7 +22,7 @@ $newsList = getNews($db);
 <!-- Hero Section -->
 <section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
   <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
-    <h1 class="text-6xl font-[Limelight] text-[var(--black)]">MYCINEMA</h1>
+    <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
     <a href="#now-playing" class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
       Explore Now
     </a>
@@ -119,22 +119,59 @@ $newsList = getNews($db);
 
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
-    <div class="container mx-auto max-w-4xl">
-        <h2 class="text-5xl font-[Limelight] mb-12 text-[var(--secondary)] text-center">NEWS</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="mx-auto max-w-7xl px-6">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">NEWS</h2>
+            <div class="mt-4 flex items-center justify-center gap-3">
+                <span class="h-[2px] w-16 bg-white/15"></span>
+                <i class="pi pi-star text-[var(--secondary)]"></i>
+                <span class="h-[2px] w-16 bg-white/15"></span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($newsList as $news): ?>
-                <div class="bg-[var(--secondary)] text-black p-6 rounded-2xl shadow-lg hover:scale-105 transition-transform duration-300">
-                    <h3 class="text-2xl font-[Limelight] mb-2"><?= htmlspecialchars($news['title']) ?></h3>
-                    <p class="text-sm text-black/70 mb-4"><?= date('M d, Y', strtotime($news['date_added'])) ?></p>
-                    <p class="text-black leading-relaxed"><?= htmlspecialchars($news['content']) ?></p>
-                    <button class="mt-4 bg-black text-[var(--secondary)] px-4 py-2 rounded-full font-[Limelight] hover:bg-[var(--primary)] transition-colors duration-300">
-                        Read More
-                    </button>
-                </div>
+                <?php
+                $id = (int)$news['id'];
+                $title = htmlspecialchars($news['title'] ?? 'Untitled');
+                $dateAdded = isset($news['date_added']) ? date('M d, Y', strtotime($news['date_added'])) : '';
+                $content = htmlspecialchars($news['content'] ?? '');
+                $excerpt = mb_strlen($content) > 260 ? mb_substr($content, 0, 260) . '…' : $content;
+                ?>
+                <article class="group rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
+                    <!-- Card header -->
+                    <div class="px-5 pt-5">
+                        <div class="flex items-start justify-between gap-3">
+                            <h3 class="text-2xl font-[Limelight] leading-snug text-white group-hover:text-[var(--secondary)] transition">
+                                <?= $title ?>
+                            </h3>
+                            <div class="shrink-0 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-white/80">
+                                <i class="pi pi-calendar text-[var(--secondary)]"></i>
+                                <span><?= $dateAdded ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mx-5 my-4 h-px bg-white/10"></div>
+
+                    <!-- Excerpt -->
+                    <div class="px-5 pb-6">
+                        <p class="text-white/85 leading-relaxed mb-5"><?= $excerpt ?></p>
+
+                        <a href="news-details.php?id=<?= $id ?>"
+                           class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
+                            <i class="pi pi-angle-right"></i>
+                            Read more
+                        </a>
+                    </div>
+                </article>
             <?php endforeach; ?>
         </div>
     </div>
 </section>
+
+
 
 
 
