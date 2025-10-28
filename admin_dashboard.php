@@ -225,7 +225,7 @@ include 'header.php';
     <aside class="w-64 bg-white p-6 rounded-2xl shadow-xl flex flex-col">
         <div class="mb-8 flex flex-col items-center">
             <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
-            <img src="admin_dashboard/assets/images/admin-avatar.png" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
+            <img src="images/adminProfilePic.jpg" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
             <span class="text-gray-600 mt-2">Administrator</span>
         </div>
 
