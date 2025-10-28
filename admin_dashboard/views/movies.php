@@ -1,137 +1,115 @@
 <section class="mb-10">
-    <h2 class="text-3xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
-        <i class="pi pi-video text-primary text-xl"></i>
-        All Movies
-    </h2>
+    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-6">All Movies</h2>
 
     <!-- Add Movie Form -->
     <details class="mb-8">
-        <summary class="cursor-pointer inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-lg shadow-sm hover:bg-secondary transition text-lg font-medium">
-            <i class="pi pi-plus-circle"></i> Add New Movie
+        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg">
+            Add New Movie
         </summary>
-        <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4 mt-4 bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input type="text" name="title" placeholder="Title" required
-                       class="border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-                <input type="number" name="release_year" placeholder="Release Year" required
-                       class="border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-                <input type="text" name="rating" placeholder="Rating" required
-                       class="border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-                <input type="number" name="length" placeholder="Length (min)" required
-                       class="border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:border-primary focus:ring-1 focus:ring-primary outline-none">
-            </div>
-
+        <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4 mt-4">
+            <input type="text" name="title" placeholder="Title" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+            <input type="number" name="release_year" placeholder="Release Year" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+            <input type="text" name="rating" placeholder="Rating" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+            <input type="number" name="length" placeholder="Length (min)" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
             <textarea name="description" placeholder="Description" rows="3" required
-                      class="border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:border-primary focus:ring-1 focus:ring-primary outline-none"></textarea>
-
+                      class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]"></textarea>
             <input type="file" name="poster" accept="image/*"
-                   class="border border-gray-300 rounded-md px-3 py-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                   class="border-b-2 border-[var(--primary)] bg-transparent px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
-            <div>
-                <label class="font-semibold text-gray-700">Actors</label>
-                <div id="actors-container" class="flex flex-wrap gap-2 mt-2">
-                    <?php foreach ($allActors as $actor): ?>
-                        <div class="actor-btn cursor-pointer px-3 py-1 border border-gray-300 rounded-full hover:bg-primary hover:text-white transition text-sm"
-                             data-id="<?= $actor['id'] ?>">
-                            <?= htmlspecialchars($actor['first_name'].' '.$actor['last_name']) ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+            <!-- Actors -->
+            <label class="text-black font-semibold">Actors:</label>
+            <div id="actors-container" class="flex flex-wrap gap-2">
+                <?php foreach ($allActors as $actor): ?>
+                    <div class="actor-btn cursor-pointer px-3 py-1 border-2 border-[var(--primary)] rounded-lg hover:text-black transition-colors duration-300"
+                         data-id="<?= $actor['id'] ?>">
+                        <?= htmlspecialchars($actor['first_name'].' '.$actor['last_name']) ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
-            <div>
-                <label class="font-semibold text-gray-700">Directors</label>
-                <div id="directors-container" class="flex flex-wrap gap-2 mt-2">
-                    <?php foreach ($allDirectors as $director): ?>
-                        <div class="director-btn cursor-pointer px-3 py-1 border border-gray-300 rounded-full hover:bg-primary hover:text-white transition text-sm"
-                             data-id="<?= $director['id'] ?>">
-                            <?= htmlspecialchars($director['first_name'].' '.$director['last_name']) ?>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
+            <!-- Directors -->
+            <label class="text-black font-semibold">Directors:</label>
+            <div id="directors-container" class="flex flex-wrap gap-2">
+                <?php foreach ($allDirectors as $director): ?>
+                    <div class="director-btn cursor-pointer px-3 py-1 border-2 border-[var(--primary)] rounded-lg hover:text-black transition-colors duration-300"
+                         data-id="<?= $director['id'] ?>">
+                        <?= htmlspecialchars($director['first_name'].' '.$director['last_name']) ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <button type="submit" name="add_movie"
-                    class="bg-primary text-white px-6 py-2 rounded-md shadow-sm hover:bg-secondary transition text-lg font-medium self-start">
+                    class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg mt-4">
                 Add Movie
             </button>
         </form>
     </details>
 
     <!-- Movies Table -->
-    <?php if (empty($movies)): ?>
-        <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-gray-600 text-center shadow-sm">
-            No movies found.
-        </div>
-    <?php else: ?>
-        <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-md">
-            <table class="min-w-full text-sm">
-                <thead class="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 uppercase text-xs font-semibold">
-                <tr>
-                    <th class="px-5 py-3 text-left">#</th>
-                    <th class="px-5 py-3 text-left">Poster</th>
-                    <th class="px-5 py-3 text-left">Title</th>
-                    <th class="px-5 py-3 text-left">Year</th>
-                    <th class="px-5 py-3 text-left">Rating</th>
-                    <th class="px-5 py-3 text-left">Length</th>
-                    <th class="px-5 py-3 text-left">Description</th>
-                    <th class="px-5 py-3 text-left">Actors</th>
-                    <th class="px-5 py-3 text-left">Directors</th>
-                    <th class="px-5 py-3 text-left">Actions</th>
+    <div class="overflow-x-auto">
+        <table class="min-w-full border-t-4 border-[var(--primary)] bg-white shadow-lg rounded-2xl">
+            <thead class="bg-[var(--primary)] text-white text-lg font-[Limelight]">
+            <tr>
+                <th class="px-4 py-3 text-left">ID</th>
+                <th class="px-4 py-3 text-left">Poster</th>
+                <th class="px-4 py-3 text-left">Title</th>
+                <th class="px-4 py-3 text-left">Year</th>
+                <th class="px-4 py-3 text-left">Rating</th>
+                <th class="px-4 py-3 text-left">Length</th>
+                <th class="px-4 py-3 text-left">Description</th>
+                <th class="px-4 py-3 text-left">Actors</th>
+                <th class="px-4 py-3 text-left">Directors</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+            <?php foreach ($movies as $movie): ?>
+                <tr class="hover:bg-gray-50 transition-colors duration-300">
+                    <td class="px-4 py-3"><?= $movie['id'] ?></td>
+                    <td class="px-4 py-3">
+                        <?php if($movie['poster']): ?>
+                            <img src="<?= $movie['poster'] ?>" width="60" class="rounded-lg">
+                        <?php endif; ?>
+                    </td>
+                    <td class="px-4 py-3 font-semibold"><?= htmlspecialchars($movie['title']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['release_year']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['rating']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['length']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['description']) ?></td>
+                    <td class="px-4 py-3">
+                        <?php
+                        $stmt = $db->prepare("SELECT a.first_name, a.last_name FROM actors a JOIN actorAppearIn aa ON a.id=aa.actor_id WHERE aa.movie_id=?");
+                        $stmt->execute([$movie['id']]);
+                        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $a) {
+                            echo htmlspecialchars($a['first_name'].' '.$a['last_name']).'<br>';
+                        }
+                        ?>
+                    </td>
+                    <td class="px-4 py-3">
+                        <?php
+                        $stmt = $db->prepare("SELECT d.first_name, d.last_name FROM directors d JOIN directorDirects dd ON d.id=dd.director_id WHERE dd.movie_id=?");
+                        $stmt->execute([$movie['id']]);
+                        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
+                            echo htmlspecialchars($d['first_name'].' '.$d['last_name']).'<br>';
+                        }
+                        ?>
+                    </td>
+                    <td class="px-4 py-3 flex flex-col gap-2">
+                        <form method="post" onsubmit="return confirm('Are you sure you want to delete this movie?');">
+                            <input type="hidden" name="delete_movie_id" value="<?= $movie['id'] ?>">
+                            <button type="submit"
+                                    class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition">Delete</button>
+                        </form>
+                        <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
+                                class="bg-[var(--primary)] text-white px-4 py-2 rounded-xl hover:bg-[var(--secondary)] transition">
+                            Edit
+                        </button>
+                    </td>
                 </tr>
-                </thead>
-
-                <tbody class="divide-y divide-gray-100">
-                <?php foreach ($movies as $movie): ?>
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-5 py-3 font-medium text-gray-600"><?= $movie['id'] ?></td>
-                        <td class="px-5 py-3">
-                            <?php if($movie['poster']): ?>
-                                <img src="<?= $movie['poster'] ?>" width="60" class="rounded-md shadow-sm">
-                            <?php endif; ?>
-                        </td>
-                        <td class="px-5 py-3 font-medium text-gray-800"><?= htmlspecialchars($movie['title']) ?></td>
-                        <td class="px-5 py-3 text-gray-700"><?= htmlspecialchars($movie['release_year']) ?></td>
-                        <td class="px-5 py-3 text-gray-700"><?= htmlspecialchars($movie['rating']) ?></td>
-                        <td class="px-5 py-3 text-gray-700"><?= htmlspecialchars($movie['length']) ?> min</td>
-                        <td class="px-5 py-3 text-gray-600 italic"><?= htmlspecialchars($movie['description']) ?></td>
-                        <td class="px-5 py-3 text-gray-700">
-                            <?php
-                            $stmt = $db->prepare("SELECT a.first_name, a.last_name FROM actors a JOIN actorAppearIn aa ON a.id=aa.actor_id WHERE aa.movie_id=?");
-                            $stmt->execute([$movie['id']]);
-                            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $a) {
-                                echo '<span class="inline-block bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded-full mr-1 mb-1">'
-                                    . htmlspecialchars($a['first_name'].' '.$a['last_name']) . '</span>';
-                            }
-                            ?>
-                        </td>
-                        <td class="px-5 py-3 text-gray-700">
-                            <?php
-                            $stmt = $db->prepare("SELECT d.first_name, d.last_name FROM directors d JOIN directorDirects dd ON d.id=dd.director_id WHERE dd.movie_id=?");
-                            $stmt->execute([$movie['id']]);
-                            foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $d) {
-                                echo '<span class="inline-block bg-gray-100 text-gray-700 text-xs font-medium px-2 py-1 rounded-full mr-1 mb-1">'
-                                    . htmlspecialchars($d['first_name'].' '.$d['last_name']) . '</span>';
-                            }
-                            ?>
-                        </td>
-                        <td class="px-5 py-3">
-                            <div class="flex flex-wrap gap-3">
-                                <form method="post" onsubmit="return confirm('Delete this movie?');">
-                                    <input type="hidden" name="delete_movie_id" value="<?= $movie['id'] ?>">
-                                    <button type="submit"
-                                            class="flex items-center gap-1.5 rounded-md bg-red-100 text-red-700 hover:bg-red-200 px-4 py-1.5 text-sm font-medium transition shadow-sm">
-                                        <i class="pi pi-trash text-red-600"></i> Delete
-                                    </button>
-                                </form>
-
-                                <button type="button" onclick="toggleEditForm(<?= $movie['id'] ?>)"
-                                        class="flex items-center gap-1.5 rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-1.5 text-sm font-medium transition shadow-sm">
-                                    <i class="pi pi-pencil text-gray-600"></i> Edit
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
 
                     <!-- Edit Form Row -->
                     <tr id="edit-form-<?= $movie['id'] ?>" class="hidden bg-gray-50">
@@ -139,15 +117,15 @@
                             <h3 class="text-3x text-[var(--primary)] mb-4">Edit Movie</h3>
 
                             <?php
-                            // Pre-fill current actors
-                            $stmt = $db->prepare("SELECT actor_id FROM actorAppearIn WHERE movie_id = ?");
-                            $stmt->execute([$movie['id']]);
-                            $selectedActorIds = implode(',', $stmt->fetchAll(PDO::FETCH_COLUMN));
+                                // Pre-fill current actors
+                                $stmt = $db->prepare("SELECT actor_id FROM actorAppearIn WHERE movie_id = ?");
+                                $stmt->execute([$movie['id']]);
+                                $selectedActorIds = implode(',', $stmt->fetchAll(PDO::FETCH_COLUMN));
 
-                            // Pre-fill current directors
-                            $stmt = $db->prepare("SELECT director_id FROM directorDirects WHERE movie_id = ?");
-                            $stmt->execute([$movie['id']]);
-                            $selectedDirectorIds = implode(',', $stmt->fetchAll(PDO::FETCH_COLUMN));
+                                // Pre-fill current directors
+                                $stmt = $db->prepare("SELECT director_id FROM directorDirects WHERE movie_id = ?");
+                                $stmt->execute([$movie['id']]);
+                                $selectedDirectorIds = implode(',', $stmt->fetchAll(PDO::FETCH_COLUMN));
                             ?>
 
                             <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4">
@@ -177,7 +155,7 @@
                                 <div class="flex flex-wrap gap-2">
                                     <?php foreach ($allActors as $actor): ?>
                                         <?php
-                                        $isSelected = in_array($actor['id'], explode(',', $selectedActorIds));
+                                            $isSelected = in_array($actor['id'], explode(',', $selectedActorIds));
                                         ?>
                                         <div class="actor-btn cursor-pointer px-3 py-1 border-2 rounded-lg transition-colors duration-300
                                                     <?= $isSelected ? 'border-[var(--secondary)] bg-[var(--secondary)] text-white' : 'border-[var(--primary)] hover:text-black' ?>"
@@ -193,7 +171,7 @@
                                 <div class="flex flex-wrap gap-2">
                                     <?php foreach ($allDirectors as $director): ?>
                                         <?php
-                                        $isSelected = in_array($director['id'], explode(',', $selectedDirectorIds));
+                                            $isSelected = in_array($director['id'], explode(',', $selectedDirectorIds));
                                         ?>
                                         <div class="director-btn cursor-pointer px-3 py-1 border-2 rounded-lg transition-colors duration-300
                                                     <?= $isSelected ? 'border-[var(--secondary)] bg-[var(--secondary)] text-white' : 'border-[var(--primary)] hover:text-black' ?>"
@@ -217,13 +195,12 @@
                             </form>
                         </td>
                     </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
-</section>
 
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</section>
 
 <script>
 function toggleEditForm(movieId) {
