@@ -75,9 +75,6 @@ $newsList = getNews($db);
     }
 </script>
 
-
-
-<!-- About Us Section -->
 <!-- About Us Section -->
 <section id="about-us" class="py-16 bg-black text-[#fcb885]">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
@@ -97,7 +94,6 @@ $newsList = getNews($db);
     </div>
 </section>
 
-
 <!-- Contact Us Section -->
 <section id="contact-us" class="py-16 bg-[var(--primary)] text-black">
     <div class="container mx-auto text-center max-w-xl">
@@ -115,6 +111,7 @@ $newsList = getNews($db);
 
     </div>
 </section>
+
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
     <div class="mx-auto max-w-7xl px-6">
