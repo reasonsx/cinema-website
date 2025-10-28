@@ -199,57 +199,94 @@ $newsList = getNews($db);
 include 'head.php';
 include 'header.php';
 ?>
-
-<section class="flex min-h-[80vh] px-4">
+<section class="flex min-h-[80vh] bg-gray-100 px-4 py-6">
     <!-- Sidebar -->
-    <aside class="w-[200px] bg-white p-4 rounded-xl shadow-lg mr-4">
-        <h3 class="text-xl font-bold mb-4">Admin Panel</h3>
-        <ul class="flex flex-col gap-2">
-            <li><a href="?view=movies" class="<?= $view === 'movies' ? 'text-primary' : 'text-gray-700' ?>">All
-                    Movies</a></li>
-            <li><a href="?view=actors" class="<?= $view === 'actors' ? 'text-primary' : 'text-gray-700' ?>">All
-                    Actors</a></li>
-            <li><a href="?view=directors" class="<?= $view === 'directors' ? 'text-primary' : 'text-gray-700' ?>">All
-                    Directors</a></li>
-            <li><a href="?view=users" class="<?= $view === 'users' ? 'text-primary' : 'text-gray-700' ?>">All Users</a>
-            </li>
-            <li><a href="?view=screening_rooms"
-                    class="<?= $view === 'screening_rooms' ? 'text-primary' : 'text-gray-700' ?>">All Screening
-                    Rooms</a></li> <!-- NEW -->
-            <li><a href="?view=screenings" class="<?= $view === 'screenings' ? 'text-primary' : 'text-gray-700' ?>">All
-                    Screenings</a></li>
-            <li><a href="?view=bookings" class="<?= $view === 'bookings' ? 'text-primary' : 'text-gray-700' ?>">All
-                    Bookings</a></li>
-            <li><a href="?view=news" class="<?= $view === 'news' ? 'text-primary' : 'text-gray-700' ?>">All News</a>
-            </li>
-        </ul>
+    <aside class="w-64 bg-white p-6 rounded-2xl shadow-xl flex flex-col">
+        <div class="mb-8 flex flex-col items-center">
+            <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
+            <img src="admin_dashboard/assets/images/admin-avatar.png" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
+            <span class="text-gray-600 mt-2">Administrator</span>
+        </div>
+
+        <nav class="flex-1">
+            <ul class="space-y-3">
+                <li>
+                    <a href="?view=movies" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-film"></i> All Movies
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=actors" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'actors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-users"></i> All Actors
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=directors" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'directors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-user-edit"></i> All Directors
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=users" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'users' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-id-card"></i> All Users
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=screening_rooms" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screening_rooms' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-th-large"></i> Screening Rooms
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=screenings" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screenings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-calendar"></i> All Screenings
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=bookings" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'bookings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-ticket"></i> All Bookings
+                    </a>
+                </li>
+                <li>
+                    <a href="?view=news" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'news' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-newspaper"></i> All News
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="mt-6">
+            <a href="logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
+                <i class="pi pi-sign-out"></i> Logout
+            </a>
+        </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+    <main class="flex-1 ml-6 p-6 bg-white rounded-2xl shadow-xl overflow-auto">
+        <!-- Toast Messages -->
         <?php
         // Show success/error messages, either from POST handlers or from GET after redirect
         if (isset($_GET['message'])) {
-            echo '<p class="text-green-500 mb-4">' . htmlspecialchars($_GET['message']) . '</p>';
+            echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($_GET['message']) . '</div>';
         } elseif (!empty($error)) {
-            echo '<p class="text-red-500 mb-4">' . htmlspecialchars($error) . '</p>';
+            echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($error) . '</div>';
         } elseif (!empty($success)) {
-            echo '<p class="text-green-500 mb-4">' . htmlspecialchars($success) . '</p>';
+            echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($success) . '</div>';
         }
         ?>
 
-
+        <!-- Dynamic View Content -->
         <?php
         // Include the proper view dynamically
         $viewFile = __DIR__ . "/admin_dashboard/views/{$view}.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            echo "<p>View not found.</p>";
+            echo "<p class='text-gray-500'>View not found.</p>";
         }
         ?>
     </main>
 </section>
+
 
 <?php include 'footer.php'; ?>
 <script src="admin_dashboard/assets/js/admin.js"></script>
