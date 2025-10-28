@@ -11,6 +11,7 @@ require_once 'admin_dashboard/includes/screening_rooms.php';
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/bookings.php';
 require_once 'admin_dashboard/includes/news.php';
+require_once 'admin_dashboard/includes/contact.php';
 
 
 // Redirect non-admins
@@ -20,7 +21,7 @@ if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
 }
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news'];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'contact_messages'];
 
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
@@ -47,6 +48,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['delete_actor'])) {
                 [$success, $error] = deleteActor($db, $_POST['delete_actor_id']);
                 header("Location: admin_dashboard.php?view=actors&message=" . urlencode($success ?: $error));
+                exit;
+            }
+            break;
+
+        case 'contact_messages':
+            if (isset($_POST['mark_read'])) {
+                markContactAsRead($db, (int)$_POST['id']);
+                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Marked as read."));
+                exit;
+            }
+            if (isset($_POST['mark_new'])) {
+                markContactAsNew($db, (int)$_POST['id']);
+                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Marked as new."));
+                exit;
+            }
+            if (isset($_POST['delete_message'])) {
+                deleteContactMessage($db, (int)$_POST['id']);
+                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Message deleted."));
                 exit;
             }
             break;
@@ -194,6 +213,8 @@ $screeningRooms = getScreeningRooms($db); // <-- NEW
 $screenings = getScreenings($db);
 $bookings = getBookings($db);
 $newsList = getNews($db);
+$newContactMessagesCount = countNewContactMessages($db);
+$contactMessages = listContactMessages($db);
 
 // ------------------- Include Layout -------------------
 include 'head.php';
@@ -210,6 +231,18 @@ include 'header.php';
 
         <nav class="flex-1">
             <ul class="space-y-3">
+                <li>
+                    <a href="?view=contact_messages"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'contact_messages' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-inbox"></i> Messages
+
+                        <?php if (!empty($newContactMessagesCount)): ?>
+                            <span class="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-xs px-2 py-0.5">
+        <?= (int)$newContactMessagesCount ?>
+      </span>
+                        <?php endif; ?>
+                    </a>
+                </li>
                 <li>
                     <a href="?view=movies" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-film"></i> All Movies

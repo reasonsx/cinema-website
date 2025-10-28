@@ -2,7 +2,17 @@
 session_start();
 require_once 'include/connection.php';
 
-// Fetch data
+// Generate CSRF once per session
+// TODO idk we need to think about this and IP for messages
+if (empty($_SESSION['csrf'])) {
+    // PHP 7+ has random_bytes(); fallback shown just in case
+    try {
+        $_SESSION['csrf'] = bin2hex(random_bytes(32));
+    } catch (Throwable $e) {
+        $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
+    }
+}
+
 require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/news.php';
@@ -21,13 +31,13 @@ $newsList = getNews($db);
 
 <!-- Hero Section -->
 <section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
-  <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
-    <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
-    <a href="#now-playing" class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
-      Explore Now
-    </a>
-    <img src="images/film-reel.png" alt="Film Reel" class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
-  </div>
+    <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
+        <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
+        <a href="#now-playing" class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
+            Explore Now
+        </a>
+        <img src="images/film-reel.png" alt="Film Reel" class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
+    </div>
 </section>
 
 <!-- Now Playing Section -->
@@ -37,7 +47,7 @@ $newsList = getNews($db);
 
         <!-- Carousel wrapper with arrows outside -->
         <div class="relative flex items-center">
-            
+
             <!-- Left arrow -->
             <button onclick="scrollCarousel(-1)" class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
                 &#10094;
@@ -93,24 +103,93 @@ $newsList = getNews($db);
         </div>
     </div>
 </section>
-
 <!-- Contact Us Section -->
-<section id="contact-us" class="py-16 bg-[var(--primary)] text-black">
-    <div class="container mx-auto text-center max-w-xl">
-        <h2 class="text-5xl font-[Limelight] mb-8 text-[var(--black)]">CONTACT US</h2>
-        <form class="flex flex-col gap-4">
-    <input type="text" placeholder="Subject"
-        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]">
-    <input type="email" placeholder="Email"
-        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]">
-    <textarea placeholder="Message Text"
-        class="w-full px-4 py-2 rounded border border-black bg-[var(--primary)] text-black placeholder-black h-32 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"></textarea>
-    <button type="submit"
-        class="bg-black text-[var(--primary)] px-6 py-2 rounded transition-colors duration-300">Submit</button>
-</form>
+<section id="contact-us" class="py-20 bg-black text-white">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+        <!-- Header -->
+        <div class="mb-10">
+            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">CONTACT US</h2>
+            <div class="mt-4 flex items-center justify-center gap-3">
+                <span class="h-[2px] w-16 bg-white/15"></span>
+                <i class="pi pi-star text-[var(--secondary)]"></i>
+                <span class="h-[2px] w-16 bg-white/15"></span>
+            </div>
+        </div>
 
+        <!-- Contact Form -->
+        <form
+                action="contact-submit.php"
+                method="post"
+                class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_25px_rgba(248,161,90,0.25)] transition-all duration-300 px-8 py-10 flex flex-col gap-5 text-left"
+        >
+            <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+
+            <!-- Name -->
+            <div>
+                <label class="block text-[var(--secondary)] font-semibold mb-1" for="name">Your Name</label>
+                <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        placeholder="Enter your name"
+                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
+                >
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-[var(--secondary)] font-semibold mb-1" for="email">Email</label>
+                <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        required
+                        placeholder="Enter your email"
+                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
+                >
+            </div>
+
+            <!-- Subject -->
+            <div>
+                <label class="block text-[var(--secondary)] font-semibold mb-1" for="subject">Subject</label>
+                <input
+                        type="text"
+                        id="subject"
+                        name="subject"
+                        required
+                        placeholder="Enter subject"
+                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
+                >
+            </div>
+
+            <!-- Message -->
+            <div>
+                <label class="block text-[var(--secondary)] font-semibold mb-1" for="message">Message</label>
+                <textarea
+                        id="message"
+                        name="message"
+                        rows="5"
+                        required
+                        placeholder="Type your message here..."
+                        class="w-full rounded-2xl bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
+                ></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="text-center pt-2">
+                <button
+                        type="submit"
+                        class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-8 py-3 font-[Limelight] tracking-wide text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition-all duration-300"
+                >
+                    <i class="pi pi-send"></i> Send Message
+                </button>
+            </div>
+        </form>
     </div>
 </section>
+
 
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
