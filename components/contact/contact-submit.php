@@ -22,6 +22,47 @@ $email   = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
+session_start();
+require_once 'include/connection.php';
+
+// Basic spam honeypot
+if (!empty($_POST['website'])) {
+    header('Location: contact.php?status=spam');
+    exit;
+}
+
+// Validate CSRF
+if (empty($_POST['csrf']) || $_POST['csrf'] !== ($_SESSION['csrf'] ?? '')) {
+    header('Location: contact.php?status=csrf');
+    exit;
+}
+
+// Sanitize inputs
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$subject = trim($_POST['subject'] ?? '');
+$message = trim($_POST['message'] ?? '');
+
+if ($name === '' || $email === '' || $subject === '' || $message === '') {
+    header('Location: contact.php?status=invalid');
+    exit;
+}
+
+// Example: store message in database
+try {
+    $stmt = $db->prepare("
+        INSERT INTO contact_messages (name, email, subject, message, created_at)
+        VALUES (?, ?, ?, ?, NOW())
+    ");
+    $stmt->execute([$name, $email, $subject, $message]);
+
+    header('Location: contact.php?status=success');
+    exit;
+} catch (PDOException $e) {
+    header('Location: contact.php?status=error');
+    exit;
+}
+
 $errors = [];
 if (mb_strlen($name) < 2 || mb_strlen($name) > 100)         $errors[] = "Name must be 2–100 characters.";
 if (!filter_var($email, FILTER_VALIDATE_EMAIL))              $errors[] = "Please enter a valid email.";

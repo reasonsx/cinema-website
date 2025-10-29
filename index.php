@@ -1,18 +1,6 @@
 <?php
 session_start();
 require_once 'include/connection.php';
-
-// Generate CSRF once per session
-// TODO idk we need to think about this and IP for messages
-if (empty($_SESSION['csrf'])) {
-    // PHP 7+ has random_bytes(); fallback shown just in case
-    try {
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-    } catch (Throwable $e) {
-        $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
-    }
-}
-
 require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/news.php';
@@ -33,7 +21,8 @@ $newsList = getNews($db);
 <section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
     <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
         <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
-        <a href="#now-playing" class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
+        <a href="#now-playing"
+           class="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full font-[Limelight] hover:bg-[var(--secondary)] transition-colors duration-300">
             Explore Now
         </a>
         <img src="images/film-reel.png" alt="Film Reel" class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
@@ -49,7 +38,8 @@ $newsList = getNews($db);
         <div class="relative flex items-center">
 
             <!-- Left arrow -->
-            <button onclick="scrollCarousel(-1)" class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
+            <button onclick="scrollCarousel(-1)"
+                    class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
                 &#10094;
             </button>
 
@@ -58,14 +48,17 @@ $newsList = getNews($db);
                 <?php foreach ($movies as $movie): ?>
                     <div class="w-60 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
                         <a href="movie.php?id=<?= $movie['id'] ?>">
-                            <img src="<?= htmlspecialchars($movie['poster']) ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="w-full h-80 object-cover rounded-lg">
+                            <img src="<?= htmlspecialchars($movie['poster']) ?>"
+                                 alt="<?= htmlspecialchars($movie['title']) ?>"
+                                 class="w-full h-80 object-cover rounded-lg">
                         </a>
                     </div>
                 <?php endforeach; ?>
             </div>
 
             <!-- Right arrow -->
-            <button onclick="scrollCarousel(1)" class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
+            <button onclick="scrollCarousel(1)"
+                    class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
                 &#10095;
             </button>
 
@@ -95,14 +88,18 @@ $newsList = getNews($db);
         <div class="md:w-1/2">
             <h2 class="text-5xl font-[Limelight] uppercase mb-6">Our Cinema</h2>
             <p class="mb-4 leading-relaxed">
-                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi At Magna Tempus Facilisis. Quisque Euismod, Turpis Id Lacinia Elementum, Nibh Libero Cursus Nulla, Non Interdum Risus Mi Vel Massa.
+                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi
+                At Magna Tempus Facilisis. Quisque Euismod, Turpis Id Lacinia Elementum, Nibh Libero Cursus Nulla, Non
+                Interdum Risus Mi Vel Massa.
             </p>
             <p class="leading-relaxed">
-                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi At.
+                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi
+                At.
             </p>
         </div>
     </div>
 </section>
+
 <!-- Contact Us Section -->
 <section id="contact-us" class="py-20 bg-black text-white">
     <div class="mx-auto max-w-3xl px-6 text-center">
@@ -116,80 +113,10 @@ $newsList = getNews($db);
             </div>
         </div>
 
-        <!-- Contact Form -->
-        <form
-                action="contact-submit.php"
-                method="post"
-                class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_25px_rgba(248,161,90,0.25)] transition-all duration-300 px-8 py-10 flex flex-col gap-5 text-left"
-        >
-            <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
-            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+        <?php include 'components/contact/contact-form.php'; ?>
 
-            <!-- Name -->
-            <div>
-                <label class="block text-[var(--secondary)] font-semibold mb-1" for="name">Your Name</label>
-                <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        placeholder="Enter your name"
-                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-                >
-            </div>
-
-            <!-- Email -->
-            <div>
-                <label class="block text-[var(--secondary)] font-semibold mb-1" for="email">Email</label>
-                <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        required
-                        placeholder="Enter your email"
-                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-                >
-            </div>
-
-            <!-- Subject -->
-            <div>
-                <label class="block text-[var(--secondary)] font-semibold mb-1" for="subject">Subject</label>
-                <input
-                        type="text"
-                        id="subject"
-                        name="subject"
-                        required
-                        placeholder="Enter subject"
-                        class="w-full rounded-full bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-                >
-            </div>
-
-            <!-- Message -->
-            <div>
-                <label class="block text-[var(--secondary)] font-semibold mb-1" for="message">Message</label>
-                <textarea
-                        id="message"
-                        name="message"
-                        rows="5"
-                        required
-                        placeholder="Type your message here..."
-                        class="w-full rounded-2xl bg-black/40 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-                ></textarea>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center pt-2">
-                <button
-                        type="submit"
-                        class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-8 py-3 font-[Limelight] tracking-wide text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition-all duration-300"
-                >
-                    <i class="pi pi-send"></i> Send Message
-                </button>
-            </div>
-        </form>
     </div>
 </section>
-
 
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
@@ -213,7 +140,8 @@ $newsList = getNews($db);
                 $content = htmlspecialchars($news['content'] ?? '');
                 $excerpt = mb_strlen($content) > 260 ? mb_substr($content, 0, 260) . '…' : $content;
                 ?>
-                <article class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
+                <article
+                        class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
                     <!-- Card content -->
                     <div class="flex-1 flex flex-col px-5 pt-5 pb-6">
                         <div class="flex items-start justify-between gap-3 mb-4">
