@@ -43,18 +43,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <h2 class="text-3xl font-header mb-6 text-center text-primary">Log in</h2>
-                    <?php
-            if (isset($_SESSION['error'])) {
-                echo '<p class="text-red-500 text-center mb-4">'.$_SESSION['error'].'</p>';
-                unset($_SESSION['error']);
-            }
-            if (isset($_SESSION['success'])) {
-                echo '<p class="text-green-500 text-center mb-4">'.$_SESSION['success'].'</p>';
-                unset($_SESSION['success']);
-            }
-            ?>
+        <?php
+        if (isset($_SESSION['error'])) {
+            echo '<p class="text-red-500 text-center mb-4">' . $_SESSION['error'] . '</p>';
+            unset($_SESSION['error']);
+        }
+        if (isset($_SESSION['success'])) {
+            echo '<p class="text-green-500 text-center mb-4">' . $_SESSION['success'] . '</p>';
+            unset($_SESSION['success']);
+        }
+        ?>
 
-       <form action="" method="POST" class="flex flex-col gap-4">
+        <form action="" method="POST" class="flex flex-col gap-4">
 
             <!-- Email -->
             <div class="flex flex-col">
@@ -76,7 +76,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <!-- Forgot Password Link -->
             <div class="text-right">
-                <a href="forgot_password.php" class="text-sm text-primary hover:text-secondary">Forgot your password?</a>
+                <a href="forgot_password.php" class="text-sm text-primary hover:text-secondary">Forgot your
+                    password?</a>
             </div>
 
             <!-- Submit Button -->
