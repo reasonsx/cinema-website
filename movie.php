@@ -37,11 +37,11 @@ $directors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // --- Fetch screenings for this movie ---
 $stmt = $db->prepare("
-    SELECT s.id, s.start_time, s.end_time, r.name AS room_name
-    FROM screenings s
-    JOIN screening_rooms r ON s.screening_room_id = r.id
-    WHERE s.movie_id = ?
-    ORDER BY s.start_time
+    SELECT s.id, s.start_time, s.end_time, s.screening_room_id, r.name AS room_name
+FROM screenings s
+JOIN screening_rooms r ON s.screening_room_id = r.id
+WHERE s.movie_id = ?
+
 ");
 $stmt->execute([$movieId]);
 $screenings = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -276,14 +276,18 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                             <?php endforeach; ?>
                         </div>
 
-                        <!-- Footer CTA -->
-                        <div class="pt-1 pb-6 text-center border-t border-white/10">
-                            <a href="book.php?movie_id=<?= $movie['id'] ?>"
-                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
-                                <i class="pi pi-ticket"></i>
-                                BOOK TICKETS
-                            </a>
-                        </div>
+                       <!-- Footer CTA -->
+<div class="pt-1 pb-6 text-center border-t border-white/10">
+    <?php if (!empty($groupedScreenings[$dates[0]])): ?>
+        <?php $firstScreening = $groupedScreenings[$dates[0]][0]; ?>
+        <a href="book.php?screening_id=<?= $firstScreening['id'] ?>"
+           class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+            <i class="pi pi-ticket"></i>
+            BOOK TICKETS
+        </a>
+    <?php endif; ?>
+</div>
+
                     </div>
                 </div>
             <?php endif; ?>

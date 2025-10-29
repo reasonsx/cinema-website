@@ -138,3 +138,16 @@ function deleteScreening($db, $id) {
 }
 
 $screenings = getScreenings($db);
+
+function getScreeningById($db, $screeningId) {
+    $stmt = $db->prepare("
+        SELECT s.id, s.movie_id, s.screening_room_id, s.start_time, s.end_time,
+               m.title AS movie_title, r.name AS room_name
+        FROM screenings s
+        JOIN movies m ON s.movie_id = m.id
+        JOIN screening_rooms r ON s.screening_room_id = r.id
+        WHERE s.id = ?
+    ");
+    $stmt->execute([$screeningId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
