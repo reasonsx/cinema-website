@@ -42,41 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($selectedSeats)) {
         $errors[] = "Please select at least one seat.";
     } else {
-        // Conflict check
-        $placeholders = implode(',', array_fill(0, count($selectedSeats), '?'));
-        $checkStmt = $db->prepare("
-            SELECT COUNT(*) FROM booking_seats 
-            WHERE screening_id = ? AND seat_id IN ($placeholders)
-        ");
-        $checkStmt->execute(array_merge([$screeningId], $selectedSeats));
-
-        if ($checkStmt->fetchColumn() > 0) {
-            $errors[] = "One or more selected seats are already booked.";
-        } else {
-            // Calculate total price
-            $stmtPrice = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
-            $stmtPrice->execute([$screening['screening_room_id']]);
-            $seatPrice = $stmtPrice->fetchColumn();
-            $totalPrice = $seatPrice * count($selectedSeats);
-
-            // Create booking
-            $stmtBooking = $db->prepare("INSERT INTO bookings (user_id, screening_id, total_price) VALUES (?, ?, ?)");
-            $stmtBooking->execute([$userId, $screeningId, $totalPrice]);
-            $bookingId = $db->lastInsertId();
-
-            // Insert booked seats
-            $stmtSeats = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
-            foreach ($selectedSeats as $seatId) {
-                $stmtSeats->execute([$bookingId, $seatId, $screeningId]);
-            }
-
-            $success = "🎉 Booking successful! Total: $" . number_format($totalPrice, 2);
-            // Refresh booked seats
-            $stmt->execute([$screeningId]);
-            $bookedSeats = $stmt->fetchAll(PDO::FETCH_COLUMN);
-        }
+        $_SESSION['selected_seats'] = $selectedSeats;
+        $_SESSION['selected_screening'] = $screeningId;
+        header("Location: checkout.php");
+        exit;
     }
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
