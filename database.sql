@@ -23,22 +23,23 @@ INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
 
 -- MOVIES
 CREATE TABLE movies (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    release_year YEAR NOT NULL,
-    rating VARCHAR(10),
-    description TEXT,
-    length INT,
-    poster VARCHAR(255)
+id INT AUTO_INCREMENT PRIMARY KEY,
+title VARCHAR(255) NOT NULL,
+release_year YEAR NOT NULL,
+rating VARCHAR(10),
+description TEXT,
+length INT,
+poster VARCHAR(255),
+trailer_url VARCHAR(255) DEFAULT NULL
 );
 
-INSERT INTO movies (title, release_year, rating, description, length, poster) VALUES
-('Inception', 2010, 'PG-13', 'A thief who steals corporate secrets through dream-sharing technology.', 148, 'images/inception.jpg'),
-('The Matrix', 1999, 'R', 'A hacker discovers the truth about his reality and fights against machines.', 136, 'images/matrix.jpg'),
-('Interstellar', 2014, 'PG-13', 'Explorers travel through a wormhole to ensure humanity''s survival.', 169, 'images/interstellar.jpg'),
-('The Dark Knight', 2008, 'PG-13', 'Batman battles the Joker in Gotham City.', 152, 'images/darkknight.jpg'),
-('Avatar', 2009, 'PG-13', 'Humans exploit Pandora while a soldier joins the Na''vi.', 162, 'images/avatar.jpg'),
-('Pulp Fiction', 1994, 'R', 'Crime stories intersect in Tarantino''s classic.', 154, 'images/pulpfiction.jpg');
+INSERT INTO movies (title, release_year, rating, description, length, poster, trailer_url) VALUES
+('Inception', 2010, 'PG-13', 'A thief who steals corporate secrets through dream-sharing technology.', 148, 'images/inception.jpg', 'https://www.youtube.com/watch?v=YoHD9XEInc0'),
+('The Matrix', 1999, 'R', 'A hacker discovers the truth about his reality and fights against machines.', 136, 'images/matrix.jpg', 'https://www.youtube.com/watch?v=vKQi3bBA1y8'),
+('Interstellar', 2014, 'PG-13', 'Explorers travel through a wormhole to ensure humanity''s survival.', 169, 'images/interstellar.jpg', 'https://www.youtube.com/watch?v=zSWdZVtXT7E'),
+('The Dark Knight', 2008, 'PG-13', 'Batman battles the Joker in Gotham City.', 152, 'images/darkknight.jpg', 'https://www.youtube.com/watch?v=EXeTwQWrcwY'),
+('Avatar', 2009, 'PG-13', 'Humans exploit Pandora while a soldier joins the Na''vi.', 162, 'images/avatar.jpg', 'https://www.youtube.com/watch?v=5PSNL1qE6VY'),
+('Pulp Fiction', 1994, 'R', 'Crime stories intersect in Tarantino''s classic.', 154, 'images/pulpfiction.jpg', 'https://www.youtube.com/watch?v=s7EdQ4FqbhY');
 
 -- ACTORS
 CREATE TABLE actors (

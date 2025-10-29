@@ -17,6 +17,8 @@
                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
             <textarea name="description" placeholder="Description" rows="3" required
                       class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]"></textarea>
+            <textarea name="trailer_url" placeholder="Trailer URL" rows="3" required
+                      class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]"></textarea>
             <input type="file" name="poster" accept="image/*"
                    class="border-b-2 border-[var(--primary)] bg-transparent px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
@@ -61,6 +63,7 @@
                 <th class="px-4 py-3 text-left">Rating</th>
                 <th class="px-4 py-3 text-left">Length</th>
                 <th class="px-4 py-3 text-left">Description</th>
+                <th class="px-4 py-3 text-left">Trailer URL</th>
                 <th class="px-4 py-3 text-left">Actors</th>
                 <th class="px-4 py-3 text-left">Directors</th>
                 <th class="px-4 py-3 text-left">Actions</th>
@@ -80,6 +83,15 @@
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['rating']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['length']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['description']) ?></td>
+                    <td class="px-4 py-3">
+                        <?php if (!empty($movie['trailer_url'])): ?>
+                            <a href="<?= htmlspecialchars($movie['trailer_url']) ?>" target="_blank"
+                               class="text-blue-600 hover:underline">[URL]</a>
+                        <?php else: ?>
+                            <span class="text-gray-400 italic">None</span>
+                        <?php endif; ?>
+                    </td>
+
                     <td class="px-4 py-3">
                         <?php
                         $stmt = $db->prepare("SELECT a.first_name, a.last_name FROM actors a JOIN actorAppearIn aa ON a.id=aa.actor_id WHERE aa.movie_id=?");
@@ -131,21 +143,32 @@
                             <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4">
                                 <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
 
+                                <label class="text-black font-semibold">Title:</label>
                                 <input type="text" name="title" value="<?= htmlspecialchars($movie['title']) ?>" required
                                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
+                                <label class="text-black font-semibold">Release year:</label>
                                 <input type="number" name="release_year" value="<?= htmlspecialchars($movie['release_year']) ?>" required
                                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
+                                <label class="text-black font-semibold">Rating:</label>
                                 <input type="text" name="rating" value="<?= htmlspecialchars($movie['rating']) ?>" required
                                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
+                                <label class="text-black font-semibold">Length:</label>
                                 <input type="number" name="length" value="<?= htmlspecialchars($movie['length']) ?>" required
                                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
+                                <label class="text-black font-semibold">Description:</label>
                                 <textarea name="description" rows="3" required
                                           class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]"><?= htmlspecialchars($movie['description']) ?></textarea>
 
+                                <label class="text-black font-semibold">Trailer URL:</label>
+                                <textarea name="trailer_url" rows="3"
+                                          class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]"><?= htmlspecialchars($movie['trailer_url'] ?? '') ?>
+</textarea>
+
+                                <label class="text-black font-semibold">Poster:</label>
                                 <input type="file" name="poster" accept="image/*"
                                        class="border-b-2 border-[var(--primary)] bg-transparent px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 

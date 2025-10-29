@@ -6,6 +6,7 @@ function addMovieHandler($db, $data, $files): array {
     $length = trim($data['length']);
     $description = trim($data['description']);
     $posterPath = '';
+    $trailer_url = trim($data['trailer_url']);
 
     // Handle poster upload
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
@@ -30,8 +31,11 @@ function addMovieHandler($db, $data, $files): array {
 
     try {
         // Insert movie
-        $stmt = $db->prepare("INSERT INTO movies (title, release_year, rating, length, description, poster) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath]);
+        $stmt = $db->prepare("
+            INSERT INTO movies (title, release_year, rating, length, description, poster, trailer_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath, $trailer_url]);
         $movie_id = $db->lastInsertId();
 
         // Link actors
@@ -88,6 +92,7 @@ function editMovieHandler($db, $data, $files): array {
     $rating = trim($data['rating']);
     $length = trim($data['length']);
     $description = trim($data['description']);
+    $trailer_url = trim($data['trailer_url'] ?? '');
     $posterPath = null;
 
     // Handle new poster upload (optional)
@@ -114,11 +119,19 @@ function editMovieHandler($db, $data, $files): array {
     try {
         // Update movie info
         if ($posterPath) {
-            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, length=?, description=?, poster=? WHERE id=?");
-            $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath, $movie_id]);
+            $stmt = $db->prepare("
+                UPDATE movies 
+                SET title=?, release_year=?, rating=?, length=?, description=?, poster=?, trailer_url=? 
+                WHERE id=?
+            ");
+            $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath, $trailer_url, $movie_id]);
         } else {
-            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, length=?, description=? WHERE id=?");
-            $stmt->execute([$title, $release_year, $rating, $length, $description, $movie_id]);
+            $stmt = $db->prepare("
+                UPDATE movies 
+                SET title=?, release_year=?, rating=?, length=?, description=?, trailer_url=? 
+                WHERE id=?
+            ");
+            $stmt->execute([$title, $release_year, $rating, $length, $description, $trailer_url, $movie_id]);
         }
 
         // Update actor links

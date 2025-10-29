@@ -193,6 +193,19 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                     <h3 class="text-lg font-semibold mb-2">Synopsis</h3>
                     <p class="text-white/80 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
                 </div>
+                <?php if (!empty($movie['trailer_url'])): ?>
+                    <div class="mt-8">
+                        <h3 class="text-lg font-semibold mb-2 text-[var(--secondary)]">Trailer</h3>
+                        <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shadow-xl">
+                            <iframe src="<?= preg_replace('/watch\?v=([^\&]+)/', 'embed/$1', htmlspecialchars($movie['trailer_url'])) ?>"
+                                    class="w-full h-full"
+                                    title="Movie Trailer"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                <?php endif; ?>
 
                 <!-- CTA -->
                 <div class="mt-8 flex flex-wrap items-center gap-3">
