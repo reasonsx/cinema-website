@@ -1,11 +1,12 @@
-<section class="mb-10">
-    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-6">All Movies</h2>
+<section class="flex flex-col gap-3">
+    <h2 class="text-3xl font-[Limelight] text-[var(--primary)]">All Movies</h2>
 
     <!-- Add Movie Form -->
-    <details class="mb-8">
-        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg">
-            Add New Movie
+    <details>
+        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-3 py-2 rounded-lg hover:bg-[var(--secondary)] text-md">
+            <i class="pi pi-plus"></i> Add New Movie
         </summary>
+
         <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4 mt-4">
             <input type="text" name="title" placeholder="Title" required
                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
@@ -54,6 +55,8 @@
                     class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg mt-4">
                 Add Movie
             </button>
+
+
         </form>
     </details>
 
