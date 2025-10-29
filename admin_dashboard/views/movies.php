@@ -1,64 +1,138 @@
 <section class="flex flex-col gap-3">
     <h2 class="text-3xl font-[Limelight] text-[var(--primary)]">All Movies</h2>
 
-    <!-- Add Movie Form -->
-    <details>
-        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-3 py-2 rounded-lg hover:bg-[var(--secondary)] text-md">
-            <i class="pi pi-plus"></i> Add New Movie
-        </summary>
+    <div class="flex flex-wrap items-center gap-3">
+        <!-- Search -->
+        <div class="relative inline-flex items-center">
+            <input
+                    type="text"
+                    id="movieSearch"
+                    placeholder="Search movies..."
+                    class="w-64 md:w-80 py-2.5 !rounded-lg"
+            >
+        </div>
 
-        <form method="post" enctype="multipart/form-data" class="flex flex-col gap-4 mt-4">
-            <input type="text" name="title" placeholder="Title" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
-            <input type="number" name="release_year" placeholder="Release Year" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
-            <input type="text" name="rating" placeholder="Rating" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
-            <input type="text" name="genre" placeholder="Genre (e.g. Action, Drama)" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
 
-            <input type="text" name="language" placeholder="Language (e.g. English)" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+        <!-- Add Movie Form -->
+        <details class="group w-full">
+            <summary
+                    class="cursor-pointer inline-flex items-center gap-2 bg-[var(--primary)] text-white px-5 py-2.5 rounded-lg
+           hover:bg-[var(--secondary)] text-md font-medium shadow-md transition-all duration-300 select-none">
+                <i class="pi pi-plus"></i> Add New Movie
+            </summary>
 
-            <input type="number" name="length" placeholder="Length (min)" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
-            <textarea name="description" placeholder="Description" rows="3" required
-                      class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]"></textarea>
-            <textarea name="trailer_url" placeholder="Trailer URL" rows="3" required
-                      class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]"></textarea>
-            <input type="file" name="poster" accept="image/*"
-                   class="border-b-2 border-[var(--primary)] bg-transparent px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-
-            <!-- Actors -->
-            <label class="text-black font-semibold">Actors:</label>
-            <div id="actors-container" class="flex flex-wrap gap-2">
-                <?php foreach ($allActors as $actor): ?>
-                    <div class="actor-btn cursor-pointer px-3 py-1 border-2 border-[var(--primary)] rounded-lg hover:text-black transition-colors duration-300"
-                         data-id="<?= $actor['id'] ?>">
-                        <?= htmlspecialchars($actor['first_name'].' '.$actor['last_name']) ?>
+            <form
+                    method="post"
+                    enctype="multipart/form-data"
+                    class="mt-5 flex flex-col gap-6 p-6 bg-white/90 rounded-2xl shadow-lg border border-gray-200 text-gray-900"
+            >
+                <!-- 🎬 Basic Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Title</label>
+                        <input type="text" name="title" required placeholder="Movie title"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
                     </div>
-                <?php endforeach; ?>
-            </div>
 
-            <!-- Directors -->
-            <label class="text-black font-semibold">Directors:</label>
-            <div id="directors-container" class="flex flex-wrap gap-2">
-                <?php foreach ($allDirectors as $director): ?>
-                    <div class="director-btn cursor-pointer px-3 py-1 border-2 border-[var(--primary)] rounded-lg hover:text-black transition-colors duration-300"
-                         data-id="<?= $director['id'] ?>">
-                        <?= htmlspecialchars($director['first_name'].' '.$director['last_name']) ?>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Release Year</label>
+                        <input type="number" name="release_year" required placeholder="2025"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
                     </div>
-                <?php endforeach; ?>
-            </div>
 
-            <button type="submit" name="add_movie"
-                    class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 text-lg mt-4">
-                Add Movie
-            </button>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Rating</label>
+                        <input type="text" name="rating" required placeholder="PG-13"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
+                    </div>
 
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Length (min)</label>
+                        <input type="number" name="length" required placeholder="148"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
+                    </div>
 
-        </form>
-    </details>
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Genre</label>
+                        <input type="text" name="genre" required placeholder="Action, Drama"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Language</label>
+                        <input type="text" name="language" required placeholder="English"
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <!-- 📝 Description -->
+                <div>
+                    <label class="block font-semibold text-sm mb-1 text-gray-700">Description</label>
+                    <textarea name="description" rows="3" required placeholder="Brief summary of the movie..."
+                              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition"></textarea>
+                </div>
+
+                <!-- 🎞️ Media -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Trailer URL</label>
+                        <input type="text" name="trailer_url" placeholder="https://www.youtube.com/watch?v=..."
+                               class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition">
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-sm mb-1 text-gray-700">Poster Image</label>
+                        <input type="file" name="poster" accept="image/*"
+                               class="w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full
+                 file:border-0 file:text-sm file:font-semibold file:bg-[var(--secondary)] file:text-black
+                 hover:file:bg-[var(--primary)] file:transition">
+                    </div>
+                </div>
+
+                <!-- 👥 People -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block font-semibold text-sm mb-2 text-gray-700">Actors</label>
+                        <div id="actors-container"
+                             class="flex flex-wrap gap-2 bg-white border border-gray-200 rounded-lg p-3 shadow-inner">
+                            <?php foreach ($allActors as $actor): ?>
+                                <div class="actor-btn cursor-pointer px-3 py-1 border border-[var(--primary)] rounded-full text-sm
+                        text-[var(--primary)] hover:bg-[var(--secondary)] hover:text-black transition-colors duration-200"
+                                     data-id="<?= $actor['id'] ?>">
+                                    <?= htmlspecialchars($actor['first_name'].' '.$actor['last_name']) ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-semibold text-sm mb-2 text-gray-700">Directors</label>
+                        <div id="directors-container"
+                             class="flex flex-wrap gap-2 bg-white border border-gray-200 rounded-lg p-3 shadow-inner">
+                            <?php foreach ($allDirectors as $director): ?>
+                                <div class="director-btn cursor-pointer px-3 py-1 border border-[var(--primary)] rounded-full text-sm
+                        text-[var(--primary)] hover:bg-[var(--secondary)] hover:text-black transition-colors duration-200"
+                                     data-id="<?= $director['id'] ?>">
+                                    <?= htmlspecialchars($director['first_name'].' '.$director['last_name']) ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ Submit -->
+                <div class="text-right pt-4">
+                    <button type="submit" name="add_movie"
+                            class="inline-flex items-center gap-2 bg-[var(--primary)] text-white px-6 py-2.5 rounded-lg shadow-md
+               hover:bg-[var(--secondary)] transition-all duration-300 font-semibold">
+                        <i class="pi pi-check"></i> Add Movie
+                    </button>
+                </div>
+            </form>
+        </details>
+
+    </div>
+
 
     <!-- Movies Table -->
     <div class="overflow-x-auto">
@@ -292,4 +366,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+// --- Movie Search Filter ---
+document.getElementById('movieSearch').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('tbody tr').forEach(row => {
+        // Skip hidden edit forms
+        if (row.id.startsWith('edit-form-')) return;
+
+        const titleCell = row.querySelector('td:nth-child(3)');
+        if (!titleCell) return;
+
+        const title = titleCell.textContent.toLowerCase();
+        row.style.display = title.includes(query) ? '' : 'none';
+    });
+});
+
 </script>
