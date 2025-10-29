@@ -4,30 +4,16 @@ require_once 'include/connection.php';
 require_once 'admin_dashboard/includes/movies.php';
 require_once 'admin_dashboard/includes/actors.php';
 require_once 'admin_dashboard/includes/directors.php';
-
-// ✅ NEW: screenings include
 require_once 'admin_dashboard/includes/screenings.php';
+require_once 'include/helpers.php';
 
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);
 
-function getRatingColor($rating)
-{
-    $rating = strtoupper(trim($rating));
-    return match ($rating) {
-        'G' => 'bg-green-500 text-white',
-        'PG' => 'bg-blue-500 text-white',
-        'PG-13' => 'bg-amber-400 text-black',
-        'R' => 'bg-red-600 text-white',
-        'NC-17' => 'bg-purple-700 text-white',
-        default => 'bg-gray-500 text-white',
-    };
+if (!$movie) {
+    showError(404, 'Movie not found.');
 }
 
-if (!$movie) {
-    echo "<h2 class='text-center text-red-600 mt-20'>Movie not found.</h2>";
-    exit;
-}
 
 // --- Fetch linked actors ---
 $stmt = $db->prepare("
@@ -126,24 +112,52 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                         <div><?= htmlspecialchars($movie['rating']) ?></div>
                     </div>
                 </div>
+
+
+                <!-- CTA -->
+                <div class="mt-8 flex flex-col items-center gap-3">
+                    <a href="book.php?movie_id=<?= $movie['id'] ?>"
+                       class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black">
+                        <i class="pi pi-ticket"></i>
+                        BOOK TICKETS
+                    </a>
+
+                    <a href="#showtimes"
+                       class="w-full inline-flex items-center justify-center gap-2 rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
+                        <i class="pi pi-clock"></i>
+                        See showtimes
+                    </a>
+                </div>
             </aside>
 
             <!-- Info panel -->
-            <main class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8 shadow-2xl">
+            <main class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-4 shadow-2xl flex flex-col gap-4">
+
+                <!-- Trailer -->
+                <?php if (!empty($movie['trailer_url'])): ?>
+                    <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shadow-xl">
+                        <iframe src="<?= preg_replace('/watch\?v=([^\&]+)/', 'embed/$1', htmlspecialchars($movie['trailer_url'])) ?>"
+                                class="w-full h-full"
+                                title="Movie Trailer"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Meta grid -->
                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+
                     <!-- Director -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold">
-                            <i class="pi pi-id-card text-[var(--secondary)]"></i> Director
+                        <dt class="flex items-center gap-2 font-semibold"><i
+                                    class="pi pi-id-card text-[var(--secondary)]"></i> Director
                         </dt>
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if (!empty($directors)): ?>
                                 <?php foreach ($directors as $d): ?>
                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
-            <i class="pi pi-user-edit opacity-70"></i>
-            <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
-          </span>
+                         <i class="pi pi-user-edit opacity-70"></i><?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?></span>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <span class="text-white/50 italic">No director listed.</span>
@@ -153,16 +167,14 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
                     <!-- Cast -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold">
-                            <i class="pi pi-users text-[var(--secondary)]"></i> Cast
+                        <dt class="flex items-center gap-2 font-semibold"><i
+                                    class="pi pi-users text-[var(--secondary)]"></i> Cast
                         </dt>
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if (!empty($actors)): ?>
                                 <?php foreach ($actors as $a): ?>
                                     <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
-            <i class="pi pi-user opacity-70"></i>
-            <?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?>
-          </span>
+                        <i class="pi pi-user opacity-70"></i><?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?></span>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <span class="text-white/50 italic">No cast listed.</span>
@@ -203,38 +215,9 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                     </div>
                 </dl>
 
-                <!-- Synopsis -->
-                <div class="mt-6">
-                    <h3 class="text-lg font-semibold mb-2">Synopsis</h3>
-                    <p class="text-white/80 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
-                </div>
-                <?php if (!empty($movie['trailer_url'])): ?>
-                    <div class="mt-8">
-                        <h3 class="text-lg font-semibold mb-2 text-[var(--secondary)]">Trailer</h3>
-                        <div class="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black shadow-xl">
-                            <iframe src="<?= preg_replace('/watch\?v=([^\&]+)/', 'embed/$1', htmlspecialchars($movie['trailer_url'])) ?>"
-                                    class="w-full h-full"
-                                    title="Movie Trailer"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                            </iframe>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                <!-- Description -->
+                <p class="text-white/80 leading-relaxed"><?= nl2br(htmlspecialchars($movie['description'])) ?></p>
 
-                <!-- CTA -->
-                <div class="mt-8 flex flex-wrap items-center gap-3">
-                    <a href="book.php?movie_id=<?= $movie['id'] ?>"
-                       class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
-                        <i class="pi pi-ticket"></i>
-                        BOOK TICKETS
-                    </a>
-                    <a href="#showtimes"
-                       class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-transparent px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition">
-                        <i class="pi pi-clock"></i>
-                        See showtimes
-                    </a>
-                </div>
             </main>
         </div>
     </div>

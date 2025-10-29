@@ -1,0 +1,11 @@
+# Enable Apache rewrite engine
+RewriteEngine On
+
+# Handle missing pages (404)
+ErrorDocument 404 /cinema-website/error.php?code=404&message=Page+not+found
+
+# Handle forbidden pages (403)
+ErrorDocument 403 /cinema-website/error.php?code=403&message=Access+denied
+
+# Handle server errors (500)
+ErrorDocument 500 /cinema-website/error.php?code=500&message=Internal+server+error
