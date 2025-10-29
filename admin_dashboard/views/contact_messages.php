@@ -8,7 +8,6 @@ renderTable([
     'headers' => ['ID', 'Status', 'Name', 'Email', 'Subject', 'Message', 'Date', 'Actions'],
     'rows' => $messages,
     'searchable' => true,   // ✅ enable built-in search input
-    'highlight' => true,    // optional: adds hover color
     'compact' => false,
     'renderRow' => function ($m) {
         $excerpt = mb_strlen($m['message']) > 100

@@ -101,7 +101,7 @@ if (!function_exists('renderTable')) {
                         <tbody class="divide-y divide-gray-100">
                         <?php foreach ($rows as $row): ?>
                             <?php $cols = $renderRow ? $renderRow($row) : $row; ?>
-                            <tr class="<?= $highlight ? 'hover:bg-[var(--secondary)]/10' : 'hover:bg-gray-50' ?> transition">
+                            <tr class="hover:bg-gray-50 transition">
                                 <?php foreach ($cols as $col): ?>
                                     <td class="px-5 py-3 text-gray-700"><?= $col ?></td>
                                 <?php endforeach; ?>
