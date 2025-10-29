@@ -25,23 +25,23 @@ function isActive($page, $current) {
     <div class="bg-black/70 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-b border-white/10">
         <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
             <!-- Brand -->
-            <a href="index.php" class="flex items-center gap-2">
+            <a href="/cinema-website/index.php" class="flex items-center gap-2">
                 <span class="text-xl md:text-2xl font-bold tracking-wide text-white font-[Limelight]">Eclipse Cinema</span>
             </a>
 
             <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center gap-6">
-                <a href="movies-list.php"
+                <a href="/cinema-website/movies-list.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
                   <?= isActive('movies-list.php', $current) ?>">
                     WHAT'S ON
                 </a>
-                <a href="schedule.php"
+                <a href="/cinema-website/schedule.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
                   <?= isActive('schedule.php', $current) ?>">
                     Schedule
                 </a>
-                <a href="contact.php"
+                <a href="/cinema-website/contact.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
                   <?= isActive('contact.php', $current) ?>">
                     Contact
@@ -56,11 +56,11 @@ function isActive($page, $current) {
 
                 <!-- Auth -->
                 <div class="flex items-center gap-2 ml-2">
-                    <a href="login.php"
+                    <a href="/cinema-website/auth/login.php"
                        class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition">
                         Login
                     </a>
-                    <a href="signup.php"
+                    <a href="/cinema-website/auth/signup.php"
                        class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">
                         Sign Up
                     </a>
@@ -77,10 +77,10 @@ function isActive($page, $current) {
         <div id="mobile-menu"
              class="md:hidden max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out bg-black/85 border-t border-white/10">
             <div class="px-6 py-4 space-y-4">
-                <a href="index.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-home"></i> Home</a>
-                <a href="movies-list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
-                <a href="schedule.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-calendar"></i> Schedule</a>
-                <a href="contact.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-phone"></i> Contact</a>
+                <a href="/cinema-website/index.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-home"></i> Home</a>
+                <a href="/cinema-website/movies-list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
+                <a href="/cinema-website/schedule.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-calendar"></i> Schedule</a>
+                <a href="/cinema-website/contact.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-phone"></i> Contact</a>
 
                 <div class="relative group pt-2">
                     <input type="text" placeholder="Search movies…"
@@ -89,8 +89,8 @@ function isActive($page, $current) {
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <a href="login.php" class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">Login</a>
-                    <a href="signup.php" class="flex-1 px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold text-center border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">Sign Up</a>
+                    <a href="/cinema-website/auth/login.php" class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">Login</a>
+                    <a href="/cinema-website/auth/signup.php" class="flex-1 px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold text-center border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">Sign Up</a>
                 </div>
             </div>
         </div>

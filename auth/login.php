@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'include/connection.php';
+require_once '../include/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
@@ -35,10 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include '../head.php'; ?>
 <body class="bg-light text-black font-sans">
 
-<?php include 'header.php'; ?>
+<?php include '../header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
@@ -124,6 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include '../footer.php'; ?>
 </body>
 </html>

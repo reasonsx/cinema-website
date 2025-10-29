@@ -287,7 +287,7 @@ include 'header.php';
         </nav>
 
         <div class="mt-6">
-            <a href="logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
+            <a href="auth/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
                 <i class="pi pi-sign-out"></i> Logout
             </a>
         </div>
