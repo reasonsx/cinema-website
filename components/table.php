@@ -38,25 +38,28 @@ if (!function_exists('renderTable')) {
 
         <section class="flex flex-col gap-4">
             <?php if ($title): ?>
-                <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex flex-col items-start gap-2">
+                    <!-- Title -->
                     <h2 class="text-3xl font-[Limelight] text-[var(--primary)]">
                         <?= htmlspecialchars($title) ?>
                     </h2>
 
+                    <!-- Search input below the title -->
                     <?php if ($searchable): ?>
-                        <div class="relative">
-                            <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--secondary)] opacity-70"></i>
+                        <div class="relative mt-1">
                             <input
                                     type="text"
                                     id="<?= $id ?>_search"
                                     placeholder="Search..."
                                     class="pl-9 pr-3 py-2 rounded-lg border border-gray-300 bg-white/90 text-gray-700
-                                       focus:ring-2 focus:ring-[var(--secondary)] focus:outline-none w-64 md:w-80 transition"
+                                       focus:ring-2 focus:ring-[var(--secondary)] focus:outline-none w-64 md:w-80 transition
+                                       shadow-sm placeholder-gray-400"
                             >
                         </div>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
+
 
             <?php if (empty($rows)): ?>
                 <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-gray-600 text-center shadow-sm">
