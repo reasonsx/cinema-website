@@ -1,7 +1,6 @@
 <?php
 // Safety
 $messages = $contactMessages ?? [];
-
 include 'components/table.php';
 
 renderTable([
