@@ -4,7 +4,7 @@ require_once 'include/connection.php';
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/screening_rooms.php';
 
-// Check if user is logged in
+// Redirect if user not logged in
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
@@ -18,25 +18,22 @@ if (!$screeningId) {
     exit;
 }
 
-// Fetch screening info
+// Fetch screening
 $screening = getScreeningById($db, $screeningId);
 if (!$screening) {
     echo "<p class='text-center text-red-500 mt-10'>Invalid screening selected.</p>";
     exit;
 }
 
-// Fetch all seats for the room
+// Get seats for room
 $seats = getSeatsByRoom($db, $screening['screening_room_id']);
 
-// Fetch already booked seats
-$stmt = $db->prepare("
-    SELECT seat_id FROM booking_seats 
-    WHERE screening_id = ?
-");
+// Get already booked seats
+$stmt = $db->prepare("SELECT seat_id FROM booking_seats WHERE screening_id = ?");
 $stmt->execute([$screeningId]);
 $bookedSeats = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Handle booking submission
+// Booking logic
 $errors = [];
 $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -45,13 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($selectedSeats)) {
         $errors[] = "Please select at least one seat.";
     } else {
-        // Check for conflicts (seat already booked)
+        // Conflict check
         $placeholders = implode(',', array_fill(0, count($selectedSeats), '?'));
         $checkStmt = $db->prepare("
             SELECT COUNT(*) FROM booking_seats 
             WHERE screening_id = ? AND seat_id IN ($placeholders)
         ");
         $checkStmt->execute(array_merge([$screeningId], $selectedSeats));
+
         if ($checkStmt->fetchColumn() > 0) {
             $errors[] = "One or more selected seats are already booked.";
         } else {
@@ -61,45 +59,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $seatPrice = $stmtPrice->fetchColumn();
             $totalPrice = $seatPrice * count($selectedSeats);
 
-            // Insert booking
+            // Create booking
             $stmtBooking = $db->prepare("INSERT INTO bookings (user_id, screening_id, total_price) VALUES (?, ?, ?)");
             $stmtBooking->execute([$userId, $screeningId, $totalPrice]);
             $bookingId = $db->lastInsertId();
 
-            // Insert seats
+            // Insert booked seats
             $stmtSeats = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
             foreach ($selectedSeats as $seatId) {
                 $stmtSeats->execute([$bookingId, $seatId, $screeningId]);
             }
 
-            $success = "Booking successful! Total: $" . number_format($totalPrice, 2);
+            $success = "🎉 Booking successful! Total: $" . number_format($totalPrice, 2);
             // Refresh booked seats
             $stmt->execute([$screeningId]);
             $bookedSeats = $stmt->fetchAll(PDO::FETCH_COLUMN);
         }
     }
 }
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
 <body class="bg-black text-white font-sans">
 <?php include 'header.php'; ?>
 
-<!-- BOOKING HERO -->
 <section class="px-6 md:px-8 py-10">
     <div class="mx-auto max-w-7xl">
-
         <h1 class="text-4xl md:text-5xl font-[Limelight] text-[#F8A15A] mb-4">
-            Book: <?= htmlspecialchars($screening['movie_title']) ?>
+            Select Seats for <?= htmlspecialchars($screening['movie_title']) ?>
         </h1>
-
         <p class="mb-6 text-white/80">
             Room: <?= htmlspecialchars($screening['room_name']) ?> |
-            Start: <?= $screening['start_time'] ?> |
-            End: <?= $screening['end_time'] ?>
+            Start: <?= htmlspecialchars($screening['start_time']) ?> |
+            End: <?= htmlspecialchars($screening['end_time']) ?>
         </p>
 
         <?php if ($errors): ?>
@@ -114,37 +107,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 mb-6">
+        <form method="POST" id="seatForm" class="space-y-6">
+            <div class="flex justify-center flex-col items-center">
+                <div class="mb-3 text-sm text-white/70">Screen</div>
+                <div class="h-2 w-80 bg-gradient-to-r from-white/10 via-white/30 to-white/10 rounded-full mb-8"></div>
+            </div>
+
+            <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 justify-center">
                 <?php foreach ($seats as $seat): 
-                    $seatId = $seat['id'] ?? null;
-                    $seatCode = $seat['row_number'] . $seat['seat_number'];
-                    $class = in_array($seatId, $bookedSeats) ? 'booked' : 'available';
-                ?>
-                    <label class="seat flex items-center justify-center h-10 w-10 rounded-lg cursor-pointer text-sm font-semibold <?= $class === 'booked' ? 'bg-red-600 text-white cursor-not-allowed' : 'bg-green-600 text-white' ?>">
-                        <input type="checkbox" name="seats[]" value="<?= $seatId ?>" <?= $class==='booked' ? 'disabled' : '' ?> hidden>
-                        <?= $seatCode ?>
-                    </label>
+    // Safely get seat fields (some DBs might return seat_id instead of id)
+    $seatId = $seat['id'] ?? $seat['seat_id'] ?? null;
+    $row = $seat['row_number'] ?? $seat['row'] ?? '';
+    $number = $seat['seat_number'] ?? $seat['number'] ?? '';
+    $seatCode = htmlspecialchars($row . $number);
+
+    if (!$seatId) continue; // skip malformed rows
+
+    $isBooked = in_array($seatId, $bookedSeats);
+?>
+
+                <label 
+                    class="seat relative flex items-center justify-center h-10 w-10 rounded-lg text-sm font-semibold 
+                        <?= $isBooked 
+                            ? 'bg-red-600/70 text-white cursor-not-allowed opacity-70' 
+                            : 'bg-green-600 text-white cursor-pointer hover:bg-green-500 transition' ?>">
+                    <input type="checkbox" name="seats[]" value="<?= $seatId ?>" <?= $isBooked ? 'disabled' : '' ?> hidden>
+                    <?= $seatCode ?>
+                </label>
                 <?php endforeach; ?>
             </div>
 
-            <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
-                <i class="pi pi-ticket"></i>
-                Book Selected Seats
-            </button>
+            <div class="flex justify-center mt-8">
+                <button type="submit"
+                        class="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-8 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                    <i class="pi pi-ticket"></i>
+                    Book Selected Seats
+                </button>
+            </div>
         </form>
-
     </div>
 </section>
 
 <script>
-    const seatLabels = document.querySelectorAll('.seat.bg-green-600');
-    seatLabels.forEach(label => {
+    const seatLabels = document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)');
+    seatLabels.forEach(checkbox => {
+        const label = checkbox.closest('.seat');
         label.addEventListener('click', () => {
-            const checkbox = label.querySelector('input');
+            if (checkbox.disabled) return;
             checkbox.checked = !checkbox.checked;
-            label.classList.toggle('bg-orange-500');
-            label.classList.toggle('text-black');
+            label.classList.toggle('bg-orange-400', checkbox.checked);
+            label.classList.toggle('text-black', checkbox.checked);
+            label.classList.toggle('bg-green-600', !checkbox.checked);
+            label.classList.toggle('text-white', !checkbox.checked);
         });
     });
 </script>

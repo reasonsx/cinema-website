@@ -1,7 +1,12 @@
 <?php
-function getSeatsByRoom($db, $roomId) {
-    // Add backticks around `row_number`
-    $stmt = $db->prepare("SELECT `row_number`, seat_number FROM seats WHERE screening_room_id = ? ORDER BY `row_number`, seat_number");
+function getSeatsByRoom(PDO $db, int $roomId): array
+{
+    $stmt = $db->prepare("
+        SELECT id, `row_number`, seat_number
+        FROM seats
+        WHERE screening_room_id = ?
+        ORDER BY `row_number`, seat_number
+    ");
     $stmt->execute([$roomId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
