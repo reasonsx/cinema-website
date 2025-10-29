@@ -3,6 +3,8 @@ function addMovieHandler($db, $data, $files): array {
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
     $rating = trim($data['rating']);
+    $genre = trim($data['genre']);
+    $language = trim($data['language']);
     $length = trim($data['length']);
     $description = trim($data['description']);
     $posterPath = '';
@@ -30,12 +32,12 @@ function addMovieHandler($db, $data, $files): array {
     }
 
     try {
-        // Insert movie
+        // Insert movie with genre & language
         $stmt = $db->prepare("
-            INSERT INTO movies (title, release_year, rating, length, description, poster, trailer_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath, $trailer_url]);
+        $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url]);
         $movie_id = $db->lastInsertId();
 
         // Link actors
@@ -68,14 +70,14 @@ function getMovies($db) {
 
 function deleteMovie($db, $movieId): array {
     try {
-        // Optionally, delete related actor/director links first
+        // Remove actor/director links first
         $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id = ?");
         $stmt->execute([$movieId]);
 
         $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id = ?");
         $stmt->execute([$movieId]);
 
-        // Delete the movie itself
+        // Delete movie
         $stmt = $db->prepare("DELETE FROM movies WHERE id = ?");
         $stmt->execute([$movieId]);
 
@@ -90,12 +92,14 @@ function editMovieHandler($db, $data, $files): array {
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
     $rating = trim($data['rating']);
+    $genre = trim($data['genre']);
+    $language = trim($data['language']);
     $length = trim($data['length']);
     $description = trim($data['description']);
     $trailer_url = trim($data['trailer_url'] ?? '');
     $posterPath = null;
 
-    // Handle new poster upload (optional)
+    // Handle new poster upload
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         $fileType = $files['poster']['type'];
@@ -117,52 +121,50 @@ function editMovieHandler($db, $data, $files): array {
     }
 
     try {
-        // Update movie info
+        // Update movie data
         if ($posterPath) {
             $stmt = $db->prepare("
                 UPDATE movies 
-                SET title=?, release_year=?, rating=?, length=?, description=?, poster=?, trailer_url=? 
+                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=? 
                 WHERE id=?
             ");
-            $stmt->execute([$title, $release_year, $rating, $length, $description, $posterPath, $trailer_url, $movie_id]);
+            $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url, $movie_id]);
         } else {
             $stmt = $db->prepare("
                 UPDATE movies 
-                SET title=?, release_year=?, rating=?, length=?, description=?, trailer_url=? 
+                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=? 
                 WHERE id=?
             ");
-            $stmt->execute([$title, $release_year, $rating, $length, $description, $trailer_url, $movie_id]);
+            $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $trailer_url, $movie_id]);
         }
 
-        // Update actor links
+        // Update actors
         $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?");
         $stmt->execute([$movie_id]);
 
         if (!empty($data['actors'])) {
-    $actorIds = explode(',', $data['actors']);
-    $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
-    foreach ($actorIds as $actor_id) {
-        if (trim($actor_id) !== '') {
-            $stmt->execute([$actor_id, $movie_id]);
+            $actorIds = explode(',', $data['actors']);
+            $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
+            foreach ($actorIds as $actor_id) {
+                if (trim($actor_id) !== '') {
+                    $stmt->execute([$actor_id, $movie_id]);
+                }
+            }
         }
-    }
-}
- 
 
-        // Update director links
+        // Update directors
         $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id=?");
         $stmt->execute([$movie_id]);
 
-       if (!empty($data['directors'])) {
-    $directorIds = explode(',', $data['directors']);
-    $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
-    foreach ($directorIds as $director_id) {
-        if (trim($director_id) !== '') {
-            $stmt->execute([$director_id, $movie_id]);
+        if (!empty($data['directors'])) {
+            $directorIds = explode(',', $data['directors']);
+            $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
+            foreach ($directorIds as $director_id) {
+                if (trim($director_id) !== '') {
+                    $stmt->execute([$director_id, $movie_id]);
+                }
+            }
         }
-    }
-}
-
 
         return ["Movie updated successfully!", ""];
     } catch (PDOException $e) {

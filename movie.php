@@ -132,6 +132,24 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
             <main class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-6 md:p-8 shadow-2xl">
                 <!-- Meta grid -->
                 <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <!-- Director -->
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-id-card text-[var(--secondary)]"></i> Director
+                        </dt>
+                        <dd class="mt-2 flex flex-wrap gap-2">
+                            <?php if (!empty($directors)): ?>
+                                <?php foreach ($directors as $d): ?>
+                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
+            <i class="pi pi-user-edit opacity-70"></i>
+            <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
+          </span>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="text-white/50 italic">No director listed.</span>
+                            <?php endif; ?>
+                        </dd>
+                    </div>
 
                     <!-- Cast -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
@@ -152,23 +170,20 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                         </dd>
                     </div>
 
-                    <!-- Director -->
+                    <!-- Genre -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
                         <dt class="flex items-center gap-2 font-semibold">
-                            <i class="pi pi-id-card text-[var(--secondary)]"></i> Director
+                            <i class="pi pi-tag text-[var(--secondary)]"></i> Genre
                         </dt>
-                        <dd class="mt-2 flex flex-wrap gap-2">
-                            <?php if (!empty($directors)): ?>
-                                <?php foreach ($directors as $d): ?>
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-xs px-3 py-1">
-            <i class="pi pi-user-edit opacity-70"></i>
-            <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
-          </span>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-white/50 italic">No director listed.</span>
-                            <?php endif; ?>
-                        </dd>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['genre'] ?? '—') ?></dd>
+                    </div>
+
+                    <!-- Language -->
+                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-globe text-[var(--secondary)]"></i> Language
+                        </dt>
+                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['language'] ?? '—') ?></dd>
                     </div>
 
                     <!-- Runtime -->

@@ -13,6 +13,12 @@
                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
             <input type="text" name="rating" placeholder="Rating" required
                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+            <input type="text" name="genre" placeholder="Genre (e.g. Action, Drama)" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+
+            <input type="text" name="language" placeholder="Language (e.g. English)" required
+                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+
             <input type="number" name="length" placeholder="Length (min)" required
                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
             <textarea name="description" placeholder="Description" rows="3" required
@@ -61,6 +67,8 @@
                 <th class="px-4 py-3 text-left">Title</th>
                 <th class="px-4 py-3 text-left">Year</th>
                 <th class="px-4 py-3 text-left">Rating</th>
+                <th class="px-4 py-3 text-left">Genre</th>
+                <th class="px-4 py-3 text-left">Language</th>
                 <th class="px-4 py-3 text-left">Length</th>
                 <th class="px-4 py-3 text-left">Description</th>
                 <th class="px-4 py-3 text-left">Trailer URL</th>
@@ -81,6 +89,8 @@
                     <td class="px-4 py-3 font-semibold"><?= htmlspecialchars($movie['title']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['release_year']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['rating']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['genre']) ?></td>
+                    <td class="px-4 py-3"><?= htmlspecialchars($movie['language']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['length']) ?></td>
                     <td class="px-4 py-3"><?= htmlspecialchars($movie['description']) ?></td>
                     <td class="px-4 py-3">
@@ -153,6 +163,14 @@
 
                                 <label class="text-black font-semibold">Rating:</label>
                                 <input type="text" name="rating" value="<?= htmlspecialchars($movie['rating']) ?>" required
+                                       class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+
+                                <label class="text-black font-semibold">Genre:</label>
+                                <input type="text" name="genre" value="<?= htmlspecialchars($movie['genre']) ?>"
+                                       class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+
+                                <label class="text-black font-semibold">Language:</label>
+                                <input type="text" name="language" value="<?= htmlspecialchars($movie['language']) ?>"
                                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
 
                                 <label class="text-black font-semibold">Length:</label>
