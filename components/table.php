@@ -36,11 +36,11 @@ if (!function_exists('renderTable')) {
             <?php endif; ?>
 
             <?php if (empty($rows)): ?>
-                <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-gray-600 text-center shadow-sm">
+                <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 text-gray-600 text-center">
                     No data available.
                 </div>
             <?php else: ?>
-                <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-md">
+                <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
                     <table class="min-w-full text-sm">
                         <thead class="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 uppercase text-xs font-semibold">
                         <tr>
