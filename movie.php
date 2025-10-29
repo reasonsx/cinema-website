@@ -67,8 +67,8 @@ foreach ($screenings as $s) {
     $groupedScreenings[$date][] = $s;
 }
 
-$actorNames = $actors ? implode(', ', array_map(fn($a) => $a['first_name'].' '.$a['last_name'], $actors)) : 'N/A';
-$directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name'].' '.$d['last_name'], $directors)) : 'N/A';
+$actorNames = $actors ? implode(', ', array_map(fn($a) => $a['first_name'] . ' ' . $a['last_name'], $actors)) : 'N/A';
+$directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name'] . ' ' . $d['last_name'], $directors)) : 'N/A';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,6 +90,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
         <!-- Hero content -->
         <div class="absolute inset-0 flex items-end">
             <div class="mx-auto w-full max-w-7xl px-6 pb-6 md:pb-10">
+                <h1 class="mt-3 mb-3 text-4xl md:text-6xl font-[Limelight] tracking-wide text-[#F8A15A]"><?= htmlspecialchars($movie['title']) ?></h1>
                 <div class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3 py-1 text-xs md:text-sm border border-white/15">
                     <i class="pi pi-calendar"></i>
                     <span><?= htmlspecialchars($movie['release_year']) ?></span>
@@ -99,9 +100,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                     <span class="opacity-40">•</span>
                     <span><?= htmlspecialchars($movie['rating']) ?></span>
                 </div>
-                <h1 class="mt-3 text-4xl md:text-6xl font-[Limelight] tracking-wide text-[#F8A15A]">
-                    <?= htmlspecialchars($movie['title']) ?>
-                </h1>
+
             </div>
         </div>
     </div>
@@ -111,6 +110,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 <section class="px-6 md:px-8 py-10">
     <div class="mx-auto max-w-7xl">
         <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8">
+
             <!-- Poster panel -->
             <aside class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 md:p-5 shadow-2xl">
                 <img src="<?= htmlspecialchars($movie['poster']) ?>"
@@ -253,7 +253,8 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                                 <i class="pi pi-chevron-left"></i>
                             </button>
 
-                            <div class="min-w-[180px] rounded-full border border-white/15 bg-black/30 px-5 py-2 text-center font-medium" id="showtimeDate">
+                            <div class="min-w-[180px] rounded-full border border-white/15 bg-black/30 px-5 py-2 text-center font-medium"
+                                 id="showtimeDate">
                                 <?= strtoupper(date('D j M', strtotime($dates[0]))) ?>
                             </div>
 
@@ -296,7 +297,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
 <?php if (!empty($groupedScreenings)): ?>
     <script>
-        const dates = <?= json_encode(array_map(function($d) use ($groupedScreenings) {
+        const dates = <?= json_encode(array_map(function ($d) use ($groupedScreenings) {
             return [
                 'label' => strtoupper(date('D j M', strtotime($d))),
                 'screenings' => array_map(fn($t) => [

@@ -46,6 +46,16 @@
       </button>
     </form>
   </details>
+    <!-- Search -->
+    <div class="flex justify-between items-center mb-6">
+        <input
+                type="text"
+                id="roomSearch"
+                placeholder="Search screening rooms..."
+                class="border-2 border-[var(--primary)] rounded-lg px-4 py-2 w-full max-w-md focus:outline-none focus:border-[var(--secondary)] placeholder-gray-500"
+                oninput="filterRooms()"
+        >
+    </div>
 
   <div class="overflow-x-auto">
     <table class="min-w-full border-t-4 border-[var(--primary)] text-black">
@@ -169,6 +179,20 @@
 </section>
 
 <script>
+        function filterRooms() {
+        const input = document.getElementById('roomSearch').value.toLowerCase();
+        const rows = document.querySelectorAll('tbody tr:not([id^="edit-room-"])');
+
+        rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
+
+        // also hide edit forms if their parent is hidden
+        const editRow = document.getElementById(`edit-room-${row.querySelector('td')?.textContent.trim()}`);
+        if (editRow) editRow.style.display = text.includes(input) ? '' : 'none';
+    });
+    }
+
 function toggleEditRoomForm(roomId) {
   const form = document.getElementById(`edit-room-${roomId}`);
   form.classList.toggle('hidden');
