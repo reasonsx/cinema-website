@@ -84,59 +84,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Book: <?= htmlspecialchars($screening['movie_title']) ?></title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .seat { display:inline-block; width:30px; height:30px; margin:3px; text-align:center; vertical-align:middle; line-height:30px; border-radius:4px; cursor:pointer; }
-        .available { background-color:#4caf50; color:white; }
-        .booked { background-color:#f44336; color:white; cursor:not-allowed; }
-        .selected { background-color:#ff9800; color:white; }
-    </style>
-</head>
-<body>
-    <h1>Book Screening: <?= htmlspecialchars($screening['movie_title']) ?></h1>
-    <p>Room: <?= htmlspecialchars($screening['room_name']) ?> | Start: <?= $screening['start_time'] ?> | End: <?= $screening['end_time'] ?></p>
+<?php include 'head.php'; ?>
+<body class="bg-black text-white font-sans">
+<?php include 'header.php'; ?>
 
-    <?php if ($errors): ?>
-        <div class="errors" style="color:red;">
-            <?php foreach ($errors as $e) echo "<p>$e</p>"; ?>
-        </div>
-    <?php endif; ?>
+<!-- BOOKING HERO -->
+<section class="px-6 md:px-8 py-10">
+    <div class="mx-auto max-w-7xl">
 
-    <?php if ($success): ?>
-        <div class="success" style="color:green;">
-            <p><?= $success ?></p>
-        </div>
-    <?php endif; ?>
+        <h1 class="text-4xl md:text-5xl font-[Limelight] text-[#F8A15A] mb-4">
+            Book: <?= htmlspecialchars($screening['movie_title']) ?>
+        </h1>
 
-    <form method="POST">
-        <div class="seats-container">
-            <?php foreach ($seats as $seat): 
-                $seatId = $seat['id'] ?? null; // ensure seat has ID
-                $seatCode = $seat['row_number'] . $seat['seat_number'];
-                $class = in_array($seatId, $bookedSeats) ? 'booked' : 'available';
-            ?>
-                <label class="seat <?= $class ?>">
-                    <input type="checkbox" name="seats[]" value="<?= $seatId ?>" <?= $class==='booked' ? 'disabled' : '' ?> hidden>
-                    <?= $seatCode ?>
-                </label>
-            <?php endforeach; ?>
-        </div>
-        <br>
-        <button type="submit">Book Selected Seats</button>
-    </form>
+        <p class="mb-6 text-white/80">
+            Room: <?= htmlspecialchars($screening['room_name']) ?> |
+            Start: <?= $screening['start_time'] ?> |
+            End: <?= $screening['end_time'] ?>
+        </p>
 
-    <script>
-        const seatLabels = document.querySelectorAll('.seat.available');
-        seatLabels.forEach(label => {
-            label.addEventListener('click', () => {
-                const checkbox = label.querySelector('input');
-                checkbox.checked = !checkbox.checked;
-                label.classList.toggle('selected');
-            });
+        <?php if ($errors): ?>
+            <div class="rounded-lg bg-red-800/40 p-4 mb-4">
+                <?php foreach ($errors as $e) echo "<p class='text-red-300'>$e</p>"; ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="rounded-lg bg-green-800/40 p-4 mb-4">
+                <p class="text-green-300"><?= $success ?></p>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-2 mb-6">
+                <?php foreach ($seats as $seat): 
+                    $seatId = $seat['id'] ?? null;
+                    $seatCode = $seat['row_number'] . $seat['seat_number'];
+                    $class = in_array($seatId, $bookedSeats) ? 'booked' : 'available';
+                ?>
+                    <label class="seat flex items-center justify-center h-10 w-10 rounded-lg cursor-pointer text-sm font-semibold <?= $class === 'booked' ? 'bg-red-600 text-white cursor-not-allowed' : 'bg-green-600 text-white' ?>">
+                        <input type="checkbox" name="seats[]" value="<?= $seatId ?>" <?= $class==='booked' ? 'disabled' : '' ?> hidden>
+                        <?= $seatCode ?>
+                    </label>
+                <?php endforeach; ?>
+            </div>
+
+            <button type="submit" class="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                <i class="pi pi-ticket"></i>
+                Book Selected Seats
+            </button>
+        </form>
+
+    </div>
+</section>
+
+<script>
+    const seatLabels = document.querySelectorAll('.seat.bg-green-600');
+    seatLabels.forEach(label => {
+        label.addEventListener('click', () => {
+            const checkbox = label.querySelector('input');
+            checkbox.checked = !checkbox.checked;
+            label.classList.toggle('bg-orange-500');
+            label.classList.toggle('text-black');
         });
-    </script>
+    });
+</script>
+
+<?php include 'footer.php'; ?>
 </body>
 </html>
