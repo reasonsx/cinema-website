@@ -8,7 +8,6 @@
  *
  * ✅ Features:
  * - Optional search input (real-time filtering)
- * - Optional row hover highlight
  * - Clean and modern Tailwind CSS design
  * - Flexible row rendering using callbacks
  *
@@ -29,7 +28,6 @@
  *   ],
  *   'emptyText' => 'No movies available',
  *   'searchable' => true,
- *   'highlight' => true,
  *   'compact' => false,
  * ]);
  * ------------------------------------------------------------------------
@@ -46,7 +44,6 @@ if (!function_exists('renderTable')) {
         $renderRow  = $options['renderRow']  ?? null;
         $emptyText  = $options['emptyText']  ?? 'No data available.';
         $searchable = $options['searchable'] ?? false;
-        $highlight  = $options['highlight']  ?? false;
         $compact    = $options['compact']    ?? false;
         ?>
 
