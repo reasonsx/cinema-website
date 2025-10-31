@@ -1,117 +1,79 @@
 <?php
+session_start();
+require_once 'include/connection.php';
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+require_once 'admin_dashboard/includes/screenings.php';
+require_once 'admin_dashboard/includes/screening_rooms.php';
+
+$userId = $_SESSION['user_id'];
+$screeningId = $_SESSION['selected_screening'] ?? null;
+$selectedSeats = $_SESSION['selected_seats'] ?? [];
+
+if (!$screeningId || empty($selectedSeats)) {
+    header("Location: index.php");
+    exit;
+}
+
+$screening = getScreeningById($db, $screeningId);
+
+// Get seat price
+$stmt = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
+$stmt->execute([$screening['screening_room_id']]);
+$seatPrice = $stmt->fetchColumn();
+$totalPrice = $seatPrice * count($selectedSeats);
+
+// Simulate payment success
 // payment.php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pay'])) {
+    // Here handle the actual payment
+    // Only after payment success, insert booking
+    $stmtBooking = $db->prepare("INSERT INTO bookings (user_id, screening_id, total_price) VALUES (?, ?, ?)");
+    $stmtBooking->execute([$userId, $screeningId, $totalPrice]);
+    $bookingId = $db->lastInsertId();
 
-// Retrieve booking data from confirm_booking.php
-$movie_id = $_POST['movie_id'] ?? 1;
-$venue = $_POST['venue'] ?? 'Cinema 1';
-$day = $_POST['day'] ?? '2025-10-05';
-$time = $_POST['time'] ?? '20:00';
-$seats = $_POST['seats'] ?? '';
-$adult = $_POST['adult'] ?? 0;
-$child = $_POST['child'] ?? 0;
-$senior = $_POST['senior'] ?? 0;
+    $stmtSeats = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
+    foreach ($selectedSeats as $seatId) {
+        $stmtSeats->execute([$bookingId, $seatId, $screeningId]);
+    }
 
-$total = ($adult * 100) + ($child * 70) + ($senior * 80);
+    unset($_SESSION['selected_screening'], $_SESSION['selected_seats']);
+
+    header("Location: success.php?booking_id=$bookingId");
+    exit;
+}
+
+// Else show payment form (GET request)
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
-<body class="bg-light text-black font-sans">
-
+<body class="bg-black text-white">
 <?php include 'header.php'; ?>
 
-<section class="py-12 px-6 md:px-16 bg-white">
-    <div class="max-w-3xl mx-auto bg-light rounded-2xl shadow-lg p-8">
-        <h2 class="text-2xl font-header text-primary mb-6 text-center">Payment</h2>
+<section class="px-6 md:px-8 py-10 max-w-2xl mx-auto">
+    <h1 class="text-3xl font-[Limelight] text-[#F8A15A] mb-6">Payment</h1>
 
-        <!-- Booking Summary -->
-        <div class="mb-8">
-            <h3 class="text-xl font-header text-secondary mb-2">Booking Summary</h3>
-            <ul class="text-gray-700 space-y-1">
-                <li><strong>Movie:</strong> Movie Title (placeholder)</li>
-                <li><strong>Venue:</strong> <?= htmlspecialchars($venue) ?></li>
-                <li><strong>Date:</strong> <?= htmlspecialchars($day) ?></li>
-                <li><strong>Time:</strong> <?= htmlspecialchars($time) ?></li>
-                <li><strong>Seats:</strong> <?= htmlspecialchars($seats) ?></li>
-                <li><strong>Tickets:</strong>
-                    <?= $adult ?> Adult, <?= $child ?> Child, <?= $senior ?> Senior
-                </li>
-                <li><strong>Total Price:</strong> <?= $total ?> DKK</li>
-            </ul>
+    <form method="POST">
+        <div class="space-y-4 mb-6">
+            <input type="text" name="card_name" placeholder="Name on card" required class="w-full p-2 rounded text-black">
+            <input type="text" name="card_number" placeholder="Card number" required class="w-full p-2 rounded text-black">
+            <div class="flex gap-2">
+                <input type="text" name="expiry" placeholder="MM/YY" required class="w-1/2 p-2 rounded text-black">
+                <input type="text" name="cvc" placeholder="CVC" required class="w-1/2 p-2 rounded text-black">
+            </div>
         </div>
-
-        <!-- Payment Options -->
-        <form action="confirmation.php" method="POST" class="flex flex-col gap-6">
-            <h3 class="text-xl font-header text-secondary mb-2">Choose Payment Method</h3>
-
-            <div class="flex flex-col gap-3">
-                <label class="flex items-center gap-2">
-                    <input type="radio" name="payment_method" value="card" required>
-                    <span>Credit / Debit Card</span>
-                </label>
-                <label class="flex items-center gap-2">
-                    <input type="radio" name="payment_method" value="mobilepay">
-                    <span>MobilePay</span>
-                </label>
-                <label class="flex items-center gap-2">
-                    <input type="radio" name="payment_method" value="paypal">
-                    <span>PayPal</span>
-                </label>
-            </div>
-
-            <!-- Mock Card Details -->
-            <div id="card-details" class="hidden mt-4">
-                <label class="block mb-2">Card Number</label>
-                <input type="text" name="card_number" placeholder="1234 5678 9012 3456"
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary w-full">
-
-                <div class="grid grid-cols-2 gap-4 mt-3">
-                    <div>
-                        <label class="block mb-2">Expiry</label>
-                        <input type="text" name="expiry" placeholder="MM/YY"
-                               class="px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary w-full">
-                    </div>
-                    <div>
-                        <label class="block mb-2">CVC</label>
-                        <input type="text" name="cvc" placeholder="123"
-                               class="px-4 py-2 rounded-xl border border-gray-300 focus:ring-2 focus:ring-primary w-full">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hidden fields to pass booking -->
-            <input type="hidden" name="movie_id" value="<?= htmlspecialchars($movie_id) ?>">
-            <input type="hidden" name="venue" value="<?= htmlspecialchars($venue) ?>">
-            <input type="hidden" name="day" value="<?= htmlspecialchars($day) ?>">
-            <input type="hidden" name="time" value="<?= htmlspecialchars($time) ?>">
-            <input type="hidden" name="seats" value="<?= htmlspecialchars($seats) ?>">
-            <input type="hidden" name="adult" value="<?= htmlspecialchars($adult) ?>">
-            <input type="hidden" name="child" value="<?= htmlspecialchars($child) ?>">
-            <input type="hidden" name="senior" value="<?= htmlspecialchars($senior) ?>">
-            <input type="hidden" name="total" value="<?= htmlspecialchars($total) ?>">
-
-            <!-- Pay button -->
-            <button type="submit" class="btn w-full text-center justify-center items-center mt-6">
-                <i class="pi pi-check-circle"></i> Confirm & Pay <?= $total ?> DKK
-            </button>
-        </form>
-    </div>
+        <button type="submit"
+            class="w-full bg-[var(--secondary)] text-black font-semibold py-3 rounded-full hover:shadow-[0_0_25px_var(--secondary)] transition">
+            Pay $<?= number_format($totalPrice, 2) ?>
+        </button>
+    </form>
 </section>
-
-<script>
-    const radios = document.querySelectorAll('input[name="payment_method"]');
-    const cardDetails = document.getElementById('card-details');
-
-    radios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            if (radio.value === 'card') {
-                cardDetails.classList.remove('hidden');
-            } else {
-                cardDetails.classList.add('hidden');
-            }
-        });
-    });
-</script>
 
 <?php include 'footer.php'; ?>
 </body>

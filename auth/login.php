@@ -18,10 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['isAdmin'] = $user['isAdmin'];
 
             if ($user['isAdmin']) {
-                header('Location: admin_dashboard.php');
-            } else {
-                header('Location: user_dashboard.php');
-            }
+    header('Location: /cinema-website/profile.php');
+} else {
+    header('Location: /cinema-website/profile.php');
+}
+
             exit;
         } else {
             $_SESSION['error'] = 'Invalid email or password!';

@@ -1,10 +1,29 @@
-<!-- header.php -->
 <?php
+// No session_start() here; must be called in main page
 $current = basename($_SERVER['PHP_SELF']);
-function isActive($page, $current) {
-    return $current === $page ? 'text-[var(--secondary)] after:scale-x-100' : 'text-white/90 hover:text-[var(--secondary)]';
+
+if (!function_exists('isActive')) {
+    function isActive($page, $current) {
+        return $current === $page ? 'text-[var(--secondary)] after:scale-x-100' : 'text-white/90 hover:text-[var(--secondary)]';
+    }
+}
+
+// Default user variables
+$userName = null;
+
+// If logged in, fetch user first name
+if (isset($_SESSION['user_id'])) {
+    require_once 'include/connection.php';
+    $stmt = $db->prepare("SELECT firstname FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($user && isset($user['firstname'])) {
+        $userName = $user['firstname'];
+    }
 }
 ?>
+
+
 <header class="sticky top-0 z-50">
     <!-- Top Info Bar -->
     <div class="bg-black/90 text-gray-300 text-xs md:text-sm border-b border-white/10">
@@ -56,14 +75,21 @@ function isActive($page, $current) {
 
                 <!-- Auth -->
                 <div class="flex items-center gap-2 ml-2">
-                    <a href="/cinema-website/auth/login.php"
-                       class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition">
-                        Login
-                    </a>
-                    <a href="/cinema-website/auth/signup.php"
-                       class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">
-                        Sign Up
-                    </a>
+                    <?php if ($userName): ?>
+                        <a href="/cinema-website/profile.php"
+                           class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition flex items-center gap-2">
+                            <i class="pi pi-user"></i> <?= $userName ?>
+                        </a>
+                    <?php else: ?>
+                        <a href="/cinema-website/auth/login.php"
+                           class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition">
+                            Login
+                        </a>
+                        <a href="/cinema-website/auth/signup.php"
+                           class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">
+                            Sign Up
+                        </a>
+                    <?php endif; ?>
                 </div>
             </nav>
 
@@ -89,8 +115,12 @@ function isActive($page, $current) {
                 </div>
 
                 <div class="flex gap-2 pt-2">
-                    <a href="/cinema-website/auth/login.php" class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">Login</a>
-                    <a href="/cinema-website/auth/signup.php" class="flex-1 px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold text-center border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">Sign Up</a>
+                    <?php if ($userName): ?>
+                        <a href="/cinema-website/profile.php" class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition"><i class="pi pi-user"></i> <?= $userName ?></a>
+                    <?php else: ?>
+                        <a href="/cinema-website/auth/login.php" class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">Login</a>
+                        <a href="/cinema-website/auth/signup.php" class="flex-1 px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold text-center border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">Sign Up</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -109,7 +139,6 @@ function isActive($page, $current) {
 
         menuButton.addEventListener('click', toggleMenu);
 
-        // Close menu on route change (optional improvement if using Turbolinks/partial reloads)
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 768) {
                 mobileMenu.style.maxHeight = '0px';
