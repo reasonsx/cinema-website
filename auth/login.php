@@ -1,6 +1,41 @@
 <?php
+// --- Secure session setup ---
+$sessionLifetime = 3600; // session cookie valid for 1 hour
+session_set_cookie_params([
+    'lifetime' => $sessionLifetime,
+    'path' => '/',
+    'domain' => '',
+    'secure' => isset($_SERVER['HTTPS']),
+    'httponly' => true,
+    'samesite' => 'Strict'
+]);
 session_start();
+
 require_once '../include/connection.php';
+
+// --- Handle session timeout (30 min inactivity) ---
+$timeoutDuration = 1800;
+if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeoutDuration) {
+    session_unset();
+    session_destroy();
+}
+$_SESSION['LAST_ACTIVITY'] = time();
+
+// --- Auto-login using remember_token ---
+if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
+    $stmt = $db->prepare("SELECT * FROM users WHERE remember_token = ?");
+    $stmt->execute([$_COOKIE['remember_token']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['firstname'] = $user['firstname'];
+        $_SESSION['lastname'] = $user['lastname'];
+        $_SESSION['isAdmin'] = $user['isAdmin'];
+        header('Location: /cinema-website/profile.php');
+        exit;
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
@@ -17,12 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['lastname'] = $user['lastname'];
             $_SESSION['isAdmin'] = $user['isAdmin'];
 
-            if ($user['isAdmin']) {
-    header('Location: /cinema-website/profile.php');
-} else {
-    header('Location: /cinema-website/profile.php');
-}
+            // Handle "remember me"
+            if (!empty($_POST['remember_me'])) {
+                $token = bin2hex(random_bytes(16));
+                setcookie('remember_token', $token, time() + (86400 * 7), "/", "", isset($_SERVER['HTTPS']), true);
+                $stmt = $db->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+                $stmt->execute([$token, $user['id']]);
+            }
 
+            header('Location: /cinema-website/profile.php');
             exit;
         } else {
             $_SESSION['error'] = 'Invalid email or password!';
@@ -33,40 +71,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../head.php'; ?>
 <body class="bg-light text-black font-sans">
-
 <?php include '../header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
     <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
         <h2 class="text-3xl font-header mb-6 text-center text-primary">Log in</h2>
-        <?php
-        if (isset($_SESSION['error'])) {
-            echo '<p class="text-red-500 text-center mb-4">' . $_SESSION['error'] . '</p>';
-            unset($_SESSION['error']);
-        }
-        if (isset($_SESSION['success'])) {
-            echo '<p class="text-green-500 text-center mb-4">' . $_SESSION['success'] . '</p>';
-            unset($_SESSION['success']);
-        }
-        ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <p class="text-red-500 text-center mb-4"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
+        <?php endif; ?>
 
         <form action="" method="POST" class="flex flex-col gap-4">
 
-            <!-- Email -->
-            <div class="flex flex-col">
-                <label for="login-email" class="sr-only">Email</label>
-                <input id="login-email" type="email" name="email" placeholder="Email" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-            </div>
+            <input type="email" name="email" placeholder="Email" required
+                   class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
 
-            <!-- Password -->
-            <div class="flex flex-col relative">
-                <label for="login-password" class="sr-only">Password</label>
+            <div class="relative">
                 <input id="login-password" type="password" name="password" placeholder="Password" required
                        class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary w-full">
                 <button type="button" id="toggle-login-password"
@@ -75,50 +99,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </div>
 
-            <!-- Forgot Password Link -->
-            <div class="text-right">
-                <a href="forgot_password.php" class="text-sm text-primary hover:text-secondary">Forgot your
-                    password?</a>
-            </div>
+            <label class="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="remember_me" class="w-4 h-4">
+                Remember me
+            </label>
 
-            <!-- Submit Button -->
-            <button id="login-button" type="submit"
-                    class="btn w-full text-center justify-center items-center opacity-50 cursor-not-allowed"
-                    disabled>
+            <button type="submit"
+                    class="btn w-full text-center justify-center items-center bg-primary text-white hover:bg-secondary">
                 <i class="pi pi-sign-in"></i> Login
             </button>
-
         </form>
-
-        <script>
-            const loginInputs = [
-                document.getElementById('login-email'),
-                document.getElementById('login-password')
-            ];
-            const loginButton = document.getElementById('login-button');
-
-            function checkLoginInputs() {
-                const allFilled = loginInputs.every(input => input.value.trim() !== '');
-                loginButton.disabled = !allFilled;
-
-                if (allFilled) {
-                    loginButton.classList.remove('opacity-50', 'cursor-not-allowed');
-                } else {
-                    loginButton.classList.add('opacity-50', 'cursor-not-allowed');
-                }
-            }
-
-            loginInputs.forEach(input => input.addEventListener('input', checkLoginInputs));
-
-            // Toggle password visibility
-            const loginPassword = document.getElementById('login-password');
-            const toggleLogin = document.getElementById('toggle-login-password');
-            toggleLogin.addEventListener('click', () => {
-                const type = loginPassword.type === 'password' ? 'text' : 'password';
-                loginPassword.type = type;
-                toggleLogin.innerHTML = type === 'password' ? '<i class="pi pi-eye"></i>' : '<i class="pi pi-eye-slash"></i>';
-            });
-        </script>
 
         <p class="text-center text-sm text-gray-500 mt-4">
             Don't have an account? <a href="signup.php" class="text-primary hover:text-secondary">Sign Up</a>
@@ -127,5 +117,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <?php include '../footer.php'; ?>
+
+<script>
+    const loginPassword = document.getElementById('login-password');
+    const toggleLogin = document.getElementById('toggle-login-password');
+    toggleLogin.addEventListener('click', () => {
+        const type = loginPassword.type === 'password' ? 'text' : 'password';
+        loginPassword.type = type;
+        toggleLogin.innerHTML = type === 'password'
+            ? '<i class="pi pi-eye"></i>'
+            : '<i class="pi pi-eye-slash"></i>';
+    });
+</script>
 </body>
 </html>
