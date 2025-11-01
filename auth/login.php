@@ -21,22 +21,6 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 }
 $_SESSION['LAST_ACTIVITY'] = time();
 
-// --- Auto-login using remember_token ---
-if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
-    $stmt = $db->prepare("SELECT * FROM users WHERE remember_token = ?");
-    $stmt->execute([$_COOKIE['remember_token']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($user) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['firstname'] = $user['firstname'];
-        $_SESSION['lastname'] = $user['lastname'];
-        $_SESSION['isAdmin'] = $user['isAdmin'];
-        header('Location: /cinema-website/profile.php');
-        exit;
-    }
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -51,14 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['firstname'] = $user['firstname'];
             $_SESSION['lastname'] = $user['lastname'];
             $_SESSION['isAdmin'] = $user['isAdmin'];
-
-            // Handle "remember me"
-            if (!empty($_POST['remember_me'])) {
-                $token = bin2hex(random_bytes(16));
-                setcookie('remember_token', $token, time() + (86400 * 7), "/", "", isset($_SERVER['HTTPS']), true);
-                $stmt = $db->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
-                $stmt->execute([$token, $user['id']]);
-            }
 
             header('Location: /cinema-website/profile.php');
             exit;
@@ -98,11 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="pi pi-eye"></i>
                 </button>
             </div>
-
-            <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" name="remember_me" class="w-4 h-4">
-                Remember me
-            </label>
 
             <button type="submit"
                     class="btn w-full text-center justify-center items-center bg-primary text-white hover:bg-secondary">

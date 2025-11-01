@@ -1,8 +1,6 @@
 <?php
-session_start();
-require_once 'include/connection.php'; // DB connection
-
 // Include modules
+require_once 'include/connection.php'; // DB connection
 require_once 'admin_dashboard/includes/actors.php';
 require_once 'admin_dashboard/includes/directors.php';
 require_once 'admin_dashboard/includes/movies.php';
@@ -12,13 +10,17 @@ require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/bookings.php';
 require_once 'admin_dashboard/includes/news.php';
 require_once 'admin_dashboard/includes/contact.php';
+require_once 'auth/session.php';
 
+$session = new SessionManager($db);
+$session->requireLogin(); // ensures user is logged in
 
-// Redirect non-admins
-if (!isset($_SESSION['isAdmin']) || !$_SESSION['isAdmin']) {
-    header('Location: login.php');
+if (!$session->isAdmin()) {
+    header('Location: /cinema-website/profile.php'); // redirect non-admins to profile
     exit;
 }
+
+$userId = $session->getUserId();
 
 // ------------------- Determine view -------------------
 $allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'contact_messages'];
@@ -288,8 +290,9 @@ include 'header.php';
 
         <div class="mt-6">
             <a href="auth/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
-                <i class="pi pi-sign-out"></i> Logout
-            </a>
+    <i class="pi pi-sign-out"></i> Logout
+</a>
+
         </div>
     </aside>
 

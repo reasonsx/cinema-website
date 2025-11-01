@@ -27,7 +27,7 @@ class SessionManager {
     }
 
     private function autoLogin() {
-        if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
+    /*     if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
             $stmt = $this->db->prepare("SELECT id, firstname, lastname, isAdmin FROM users WHERE remember_token = ?");
             $stmt->execute([$_COOKIE['remember_token']]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,7 +40,7 @@ class SessionManager {
             } else {
                 setcookie('remember_token', '', time() - 3600);
             }
-        }
+        } */
     }
 
     public function requireLogin() {
@@ -50,12 +50,17 @@ class SessionManager {
         }
     }
 
-    public function logout() {
-        session_unset();
-        session_destroy();
-        setcookie(session_name(), '', time() - 3600);
-        setcookie('remember_token', '', time() - 3600);
-    }
+public function logout(): void
+{
+    // Clear PHP session
+    $_SESSION = [];
+    session_unset();
+    session_destroy();
+
+    // Remove old cookie code (optional)
+    setcookie('remember_token', '', time() - 3600, '/', '', isset($_SERVER['HTTPS']), true);
+}
+
 
     public function getUserId(): ?int {
         return $_SESSION['user_id'] ?? null;

@@ -1,18 +1,20 @@
 <?php
-session_start();
 require_once 'include/connection.php';
+require_once 'auth/session.php'; // <-- your SessionManager class
 require_once 'admin_dashboard/includes/screenings.php';
 require_once 'admin_dashboard/includes/screening_rooms.php';
 
-// Redirect if user not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit;
-}
+// Initialize session manager
+$session = new SessionManager($db);
 
-$userId = $_SESSION['user_id'];
+// Require login
+$session->requireLogin();
+
+// Get logged-in user ID
+$userId = $session->getUserId();
+
+// Fetch screening ID from GET
 $screeningId = $_GET['screening_id'] ?? null;
-
 if (!$screeningId) {
     echo "<p class='text-center text-red-500 mt-10'>No screening selected.</p>";
     exit;
@@ -48,9 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
