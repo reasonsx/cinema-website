@@ -123,4 +123,19 @@ function deleteBooking($db, $bookingId) {
     }
 }
 
+function getBookingsByUserId(PDO $db, int $userId): array {
+    $stmt = $db->prepare("
+        SELECT b.id, b.total_price, s.start_time, m.title
+        FROM bookings b
+        JOIN screenings s ON b.screening_id = s.id
+        JOIN movies m ON s.movie_id = m.id
+        WHERE b.user_id = ?
+        ORDER BY s.start_time DESC
+    ");
+    $stmt->execute([$userId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
 $bookings = getBookings($db);
