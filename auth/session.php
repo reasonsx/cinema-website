@@ -43,12 +43,13 @@ class SessionManager {
         } */
     }
 
-    public function requireLogin() {
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /cinema-website/auth/login.php");
-            exit;
-        }
+   public function requireLogin(string $redirectUrl = '/cinema-website/profile.php'): void {
+    if (!isset($_SESSION['user_id'])) {
+        // Redirect to login page with `redirect` parameter
+        header("Location: /cinema-website/auth/login.php?redirect=" . urlencode($redirectUrl));
+        exit;
     }
+}
 
 public function logout(): void
 {

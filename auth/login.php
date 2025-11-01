@@ -21,6 +21,16 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 }
 $_SESSION['LAST_ACTIVITY'] = time();
 
+// --- Determine redirect after login ---
+$redirect = '/cinema-website/profile.php'; // default redirect
+if (isset($_GET['redirect']) && !empty($_GET['redirect'])) {
+    // sanitize redirect URL
+    $redirectPath = filter_var($_GET['redirect'], FILTER_SANITIZE_URL);
+    if (str_starts_with($redirectPath, '/')) {
+        $redirect = $redirectPath;
+    }
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -36,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['lastname'] = $user['lastname'];
             $_SESSION['isAdmin'] = $user['isAdmin'];
 
-            header('Location: /cinema-website/profile.php');
+            // Redirect to the previous page
+            header("Location: $redirect");
             exit;
         } else {
             $_SESSION['error'] = 'Invalid email or password!';
@@ -46,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../head.php'; ?>
@@ -62,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php endif; ?>
 
         <form action="" method="POST" class="flex flex-col gap-4">
-
             <input type="email" name="email" placeholder="Email" required
                    class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
 

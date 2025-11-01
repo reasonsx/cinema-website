@@ -7,8 +7,10 @@ require_once 'admin_dashboard/includes/screening_rooms.php';
 // Initialize session manager
 $session = new SessionManager($db);
 
-// Require login
-$session->requireLogin();
+// Require login, redirect back to current page if not logged in
+$currentUrl = $_SERVER['REQUEST_URI']; // includes query string
+$session->requireLogin($currentUrl);
+
 
 // Get logged-in user ID
 $userId = $session->getUserId();
