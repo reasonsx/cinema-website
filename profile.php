@@ -1,23 +1,21 @@
 <?php
-session_start();
 require_once 'include/connection.php';
+require_once 'auth/session.php';
 require_once 'admin_dashboard/includes/users.php';
 require_once 'admin_dashboard/includes/bookings.php';
 
-// Redirect if not logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: /cinema-website/auth/login.php");
-    exit;
-}
+// Initialize session manager and require login
+$session = new SessionManager($db);
+$session->requireLogin();
 
-$userId = $_SESSION['user_id'];
-$isAdmin = $_SESSION['isAdmin'] ?? false;
+$userId = $session->getUserId();
+$isAdmin = $session->isAdmin();
 
 // Fetch user info
 $user = getUserById($db, $userId);
-
 if (!$user) {
-    header("Location: /cinema-website/auth/logout.php");
+    $session->logout();
+    header("Location: /cinema-website/auth/login.php");
     exit;
 }
 
@@ -40,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) 
         $_SESSION['firstname'] = $_POST['firstname'];
         $_SESSION['lastname']  = $_POST['lastname'];
         $user = getUserById($db, $userId); // refresh updated info
-        $isEditing = false; // return to view mode after saving
+        $isEditing = false; // return to view mode
     } else {
         $updateMessage = '<p class="text-red-400">' . htmlspecialchars($errorMsg) . '</p>';
     }
@@ -54,6 +52,7 @@ $firstname = htmlspecialchars($user['firstname']);
 $lastname  = htmlspecialchars($user['lastname']);
 $email     = htmlspecialchars($user['email']);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <?php include 'head.php'; ?>
