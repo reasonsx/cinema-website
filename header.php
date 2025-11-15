@@ -25,16 +25,6 @@ if (isset($_SESSION['user_id'])) {
 
 
 <header class="sticky top-0 z-50">
-    <!-- Top Info Bar -->
-    <div class="bg-black/90 text-gray-300 text-xs md:text-sm border-b border-white/10">
-        <div class="mx-auto max-w-7xl px-6 py-2 flex justify-between items-center">
-            <div class="flex gap-4 md:gap-6">
-                <span class="flex items-center gap-2"><i class="pi pi-clock text-[var(--secondary)]"></i> Mon–Sun: 10:00–24:00</span>
-                <span class="hidden sm:flex items-center gap-2"><i class="pi pi-envelope text-[var(--secondary)]"></i> info@eclipsecinema.com</span>
-            </div>
-           
-        </div>
-    </div>
 
     <!-- Main Navigation -->
     <div class="bg-black/70 backdrop-blur supports-[backdrop-filter]:backdrop-blur-md border-b border-white/10">

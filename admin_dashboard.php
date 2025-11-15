@@ -324,5 +324,4 @@ include 'header.php';
 </section>
 
 
-<?php include 'footer.php'; ?>
 <script src="admin_dashboard/assets/js/admin.js"></script>
