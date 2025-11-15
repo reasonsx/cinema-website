@@ -2,8 +2,8 @@
 :root {
     --primary: #ED6044;
     --secondary: #FFAF7F;
-    --white: #ffffff;
-    --black: #000000;
+    --white: #fafafa;
+    --black: #191102;
     --primary-font: 'Limelight', cursive;
     --body-font: 'Inter', sans-serif;
 }

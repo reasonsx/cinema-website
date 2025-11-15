@@ -141,11 +141,11 @@ $newsList = getNews($db);
                 $excerpt = mb_strlen($content) > 260 ? mb_substr($content, 0, 260) . '…' : $content;
                 ?>
                 <article
-                        class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl hover:shadow-[0_0_30px_rgba(248,161,90,0.25)] transition overflow-hidden">
+                        class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl overflow-hidden">
                     <!-- Card content -->
                     <div class="flex-1 flex flex-col px-5 pt-5 pb-6">
                         <div class="flex items-start justify-between gap-3 mb-4">
-                            <h3 class="text-2xl font-[Limelight] leading-snug text-white group-hover:text-[var(--secondary)] transition">
+                            <h3 class="text-2xl font-[Limelight] leading-snug text-white transition">
                                 <?= $title ?>
                             </h3>
                             <div class="shrink-0 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1 text-xs text-white/80">
@@ -162,7 +162,7 @@ $newsList = getNews($db);
                         <!-- Button pinned to bottom -->
                         <div class="mt-auto">
                             <a href="news-details.php?id=<?= $id ?>"
-                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
+                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
                                 <i class="pi pi-angle-right"></i>
                                 Read more
                             </a>

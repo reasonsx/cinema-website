@@ -32,11 +32,7 @@ if (isset($_SESSION['user_id'])) {
                 <span class="flex items-center gap-2"><i class="pi pi-clock text-[var(--secondary)]"></i> Mon–Sun: 10:00–24:00</span>
                 <span class="hidden sm:flex items-center gap-2"><i class="pi pi-envelope text-[var(--secondary)]"></i> info@eclipsecinema.com</span>
             </div>
-            <div class="flex gap-3 text-lg">
-                <a href="#" class="text-white/70 hover:text-[var(--secondary)] transition"><i class="pi pi-facebook"></i></a>
-                <a href="#" class="text-white/70 hover:text-[var(--secondary)] transition"><i class="pi pi-instagram"></i></a>
-                <a href="#" class="text-white/70 hover:text-[var(--secondary)] transition"><i class="pi pi-twitter"></i></a>
-            </div>
+           
         </div>
     </div>
 
@@ -86,7 +82,7 @@ if (isset($_SESSION['user_id'])) {
                             Login
                         </a>
                         <a href="/cinema-website/auth/signup.php"
-                           class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">
+                           class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60">
                             Sign Up
                         </a>
                     <?php endif; ?>
