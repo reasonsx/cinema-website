@@ -32,7 +32,7 @@ if (isset($_SESSION['user_id'])) {
                 <span class="flex items-center gap-2"><i class="pi pi-clock text-[var(--secondary)]"></i> Mon–Sun: 10:00–24:00</span>
                 <span class="hidden sm:flex items-center gap-2"><i class="pi pi-envelope text-[var(--secondary)]"></i> info@eclipsecinema.com</span>
             </div>
-           
+
         </div>
     </div>
 

@@ -1,128 +1,135 @@
-/* style.css - Cinema Website Colors */
+/* ========================================= */
+/* Cinema Website Theme - Clean + Consistent */
+/* ========================================= */
+
 :root {
-    --primary: #ED6044;
-    --secondary: #FFAF7F;
-    --white: #fafafa;
-    --black: #191102;
+    --primary: #ED6044;     /* Main accent (warm red-orange) */
+    --secondary: #FFB892;   /* Softer peach for contrast */
+    --white: #f8f8f8;       /* Balanced off-white */
+    --black: #111111;       /* Clean deep charcoal */
+
     --primary-font: 'Limelight', cursive;
     --body-font: 'Inter', sans-serif;
 }
 
-/* Headers */
+/* ======================= */
+/* Typography               */
+/* ======================= */
+
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--primary-font);
 }
 
-/* Body */
 body, p, li, a {
     font-family: var(--body-font);
 }
 
-/* Background helpers */
+/* ======================= */
+/* Utility Classes          */
+/* ======================= */
+
 .bg-primary { background-color: var(--primary); }
 .bg-secondary { background-color: var(--secondary); }
 .bg-white { background-color: var(--white); }
 .bg-black { background-color: var(--black); }
 
-/* Text helpers */
 .text-primary { color: var(--primary); }
 .text-secondary { color: var(--secondary); }
 .text-white { color: var(--white); }
 .text-black { color: var(--black); }
 
-/* Border helpers */
 .border-primary { border-color: var(--primary); }
 .border-secondary { border-color: var(--secondary); }
 .border-white { border-color: var(--white); }
 .border-black { border-color: var(--black); }
 
-/* style.css - Reusable Button Styles */
+/* ======================= */
+/* Buttons                  */
+/* ======================= */
 
 .btn {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem; /* space between icon and text */
+    gap: 0.5rem;
     background-color: var(--primary);
     color: var(--white);
-    padding: 0.5rem 1rem;  /* smaller size */
-    border-radius: 0.75rem; /* fully rounded pill shape */
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
     font-weight: 600;
     font-size: 0.95rem;
-    transition: background-color 0.2s ease;
     text-decoration: none;
+    transition: background-color 0.15s ease;
 }
 
-/* Hover tint effect */
 .btn:hover {
-    background-color: #d9543a; /* slightly darker than #ED6044 */
+    background-color: #d9583d;
 }
 
 .btn:active {
-    background-color: #c74730; /* even darker for click */
+    background-color: #bd4c34;
 }
 
-/* style.css - Global Input Styles */
+/* ======================= */
+/* Form Inputs              */
+/* ======================= */
 
-/* Base styles for all inputs and textareas */
 input[type="text"],
 input[type="email"],
 input[type="password"],
 textarea {
     font-family: var(--body-font);
-    padding: 0.5rem 1rem;           /* consistent padding */
-    border-radius: 0.75rem;         /* rounded corners */
-    border: 1px solid #d1d5db;      /* default gray border */
-    outline: none;
-    transition: all 0.3s ease-in-out; /* smooth transition */
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #d0d0d0;
+    background-color: var(--white);
+    color: var(--black);
     font-size: 0.95rem;
     width: 100%;
     box-sizing: border-box;
-    background-color: var(--white);
-    color: var(--black);
+    outline: none;
+    transition: border-color 0.15s ease;
 }
 
-/* Hover state */
-input[type="text"]:hover,
-input[type="email"]:hover,
-input[type="password"]:hover,
+input:hover,
 textarea:hover {
-    border-color: var(--black);          /* darken border on hover */
-    box-shadow: 0 0 0 1px rgba(0,0,0,0.1); /* subtle glow effect */
+    border-color: var(--black);
 }
 
-/* Focus state with smooth animation */
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
+input:focus,
 textarea:focus {
-    border-color: var(--black);         /* change border to black */
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.2); /* subtle black glow */
+    border-color: var(--black);
 }
 
-/* Placeholder styling */
 input::placeholder,
 textarea::placeholder {
-    color: #9ca3af; /* gray-400 */
-    opacity: 1;
+    color: #999;
 }
-.actor-btn.selected,
-.director-btn.selected {
-    background-color: #ED6044; /* Blue background when selected */
-    color: white;              /* White text */
-    border-color: #ED6044;     /* Optional: border matches background */
-}
+
+/* ======================= */
+/* Actor / Director Buttons */
+/* ======================= */
+
 .actor-btn,
 .director-btn {
-    transition: all 0.2s ease; /* Smooth color change */
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
+.actor-btn.selected,
+.director-btn.selected {
+    background-color: var(--primary);
+    color: var(--white);
+    border-color: var(--primary);
+}
 
-/* Contact Us Inputs Overrides - Thicker Border */
+/* ======================= */
+/* Contact Form Overrides   */
+/* ======================= */
+
 #contact-us input,
 #contact-us textarea {
-    background-color: var(--primary) !important;
+    background-color: var(--secondary) !important;
     color: var(--black) !important;
-    border: 2px solid var(--black) !important; /* thicker border */
+    border: 2px solid var(--black) !important;
 }
 
 #contact-us input::placeholder,
@@ -130,17 +137,15 @@ textarea::placeholder {
     color: var(--black) !important;
 }
 
-
-/* Contact Us Elements - Consistent Border Radius */
 #contact-us input,
 #contact-us textarea,
 #contact-us button {
-    border-radius: 0.75rem; /* same as your global inputs */
+    border-radius: 0.75rem;
 }
 
-/* Optional: make focus/hover consistent */
+/* Optional: minimal hover/focus */
 #contact-us input:focus,
 #contact-us textarea:focus,
 #contact-us button:hover {
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.2); /* subtle glow */
+    border-color: var(--black) !important;
 }
