@@ -10,7 +10,7 @@ function addActorHandler($db, $data): array {
 }
 
 function getActors($db) {
-    $stmt = $db->prepare("SELECT * FROM actors ORDER BY last_name");
+    $stmt = $db->prepare("SELECT * FROM actors ORDER BY id DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

@@ -4,6 +4,18 @@ require_once __DIR__ . '/../../components/table.php';
 function e($value) {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
+
+function genderBadge(string $gender): string {
+    $colors = [
+        'Male'   => 'bg-blue-100 text-blue-700',
+        'Female' => 'bg-pink-100 text-pink-700',
+        'Other'  => 'bg-gray-200 text-gray-700',
+    ];
+
+    $class = $colors[$gender] ?? 'bg-gray-200 text-gray-700';
+
+    return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold $class\">" . e($gender) . "</span>";
+}
 ?>
 
 <?php
@@ -13,124 +25,156 @@ renderTable([
     'headers' => ['ID', 'Name', 'DOB', 'Gender', 'Description'],
     'rows' => $actors,
     'searchable' => true,
+
+    // CLEAN RENDER ROW
     'renderRow' => function ($actor) {
         return [
             $actor['id'],
             e($actor['first_name'] . ' ' . $actor['last_name']),
             e($actor['date_of_birth']),
-            e($actor['gender']),
+            genderBadge($actor['gender']),
             e($actor['description']),
         ];
     },
+
+    // CLEAN ACTION BUTTONS
     'actions' => function ($actor) {
         ob_start(); ?>
-
         <div class="flex items-center gap-2">
 
-            <!-- EDIT BUTTON -->
             <button onclick="toggleEditRow(<?= $actor['id'] ?>)"
                     class="flex items-center justify-center gap-2
-                   px-4 py-2 rounded-lg
-                   bg-blue-600 text-white text-sm font-semibold
-                   hover:bg-blue-700 transition">
+                           px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold
+                           hover:bg-blue-700 transition">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
-            <!-- DELETE BUTTON -->
             <form method="post"
                   onsubmit="return confirm('Delete this actor?')"
                   class="flex items-center justify-center p-0 m-0 leading-none">
-            <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
+                <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
+
                 <button type="submit" name="delete_actor"
                         class="flex items-center justify-center gap-2
-                       px-4 py-2 rounded-lg
-                       bg-red-500 text-white text-sm font-semibold
-                       hover:bg-red-600 transition">
+                               px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold
+                               hover:bg-red-600 transition">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
 
         </div>
-
-
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     },
+
+    // CLEAN INLINE EDIT FORM
     'renderEditRow' => function ($actor) {
         ob_start(); ?>
         <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
             <input type="hidden" name="actor_id" value="<?= $actor['id'] ?>">
 
-            <!-- First Name -->
+            <!-- FIRST NAME -->
             <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">First Name</label>
-                <input type="text" name="first_name"
-                       value="<?= e($actor['first_name']) ?>"
-                       class="input-edit">
+                <label class="text-sm text-gray-600">First Name</label>
+                <input type="text" name="first_name" value="<?= e($actor['first_name']) ?>" class="input-edit">
             </div>
 
-            <!-- Last Name -->
+            <!-- LAST NAME -->
             <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Last Name</label>
-                <input type="text" name="last_name"
-                       value="<?= e($actor['last_name']) ?>"
-                       class="input-edit">
+                <label class="text-sm text-gray-600">Last Name</label>
+                <input type="text" name="last_name" value="<?= e($actor['last_name']) ?>" class="input-edit">
             </div>
 
-            <!-- Date of Birth -->
+            <!-- DOB -->
             <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Date of Birth</label>
-                <input type="date" name="date_of_birth"
-                       value="<?= e($actor['date_of_birth']) ?>"
-                       class="input-edit">
+                <label class="text-sm text-gray-600">Date of Birth</label>
+                <input type="date" name="date_of_birth" value="<?= e($actor['date_of_birth']) ?>" class="input-edit">
             </div>
 
-            <!-- Gender -->
+            <!-- GENDER -->
             <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Gender</label>
+                <label class="text-sm text-gray-600">Gender</label>
                 <select name="gender" class="input-edit-select">
-                    <option <?= $actor['gender']==='Male' ? 'selected' : '' ?>>Male</option>
-                    <option <?= $actor['gender']==='Female' ? 'selected' : '' ?>>Female</option>
-                    <option <?= $actor['gender']==='Other' ? 'selected' : '' ?>>Other</option>
+                    <?php foreach (['Male', 'Female', 'Other'] as $g): ?>
+                        <option <?= $actor['gender'] === $g ? 'selected' : '' ?>><?= $g ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
-            <!-- Description -->
+            <!-- DESCRIPTION -->
             <div class="md:col-span-2 flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Description</label>
-                <textarea name="description" rows="3"
-                          class="input-edit-textarea"><?= e($actor['description']) ?></textarea>
+                <label class="text-sm text-gray-600">Description</label>
+                <textarea name="description" class="input-edit-textarea"><?= e($actor['description']) ?></textarea>
             </div>
 
-            <!-- Buttons -->
+            <!-- BUTTONS -->
             <div class="md:col-span-2 flex gap-4 mt-2">
-
-                <!-- SAVE -->
                 <button type="submit" name="edit_actor"
-                        class="flex items-center justify-center gap-2
-                       px-4 py-2 rounded-lg
-                       bg-green-500 text-white text-sm font-semibold
-                       hover:bg-green-600 transition">
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition">
                     <i class="pi pi-check"></i> Save
                 </button>
 
-                <!-- CANCEL -->
                 <button type="button"
                         onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                        class="flex items-center justify-center gap-2
-                       px-4 py-2 rounded-lg
-                       bg-gray-300 text-white text-sm font-semibold
-                       hover:bg-gray-400 transition">
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-400 transition">
                     <i class="pi pi-times"></i> Cancel
                 </button>
-
             </div>
 
-
         </form>
-        <?php
-        return ob_get_clean();
-    }
+        <?php return ob_get_clean();
+    },
+
+    // CLEAN ADD FORM
+    'addLabel' => 'Add Actor',
+    'addForm' => (function () {
+        ob_start(); ?>
+        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="hidden" name="add_actor" value="1">
+
+            <?php foreach ([
+                               'first_name' => 'First Name',
+                               'last_name' => 'Last Name',
+                               'date_of_birth' => 'DOB'
+                           ] as $field => $label): ?>
+                <div class="flex flex-col gap-1">
+                    <label><?= $label ?></label>
+                    <input type="<?= $field === 'date_of_birth' ? 'date' : 'text' ?>"
+                           name="<?= $field ?>" class="input-edit" required>
+                </div>
+            <?php endforeach; ?>
+
+            <div class="flex flex-col gap-1">
+                <label>Gender</label>
+                <select name="gender" class="input-edit-select">
+                    <?php foreach (['Male','Female','Other'] as $g): ?>
+                        <option><?= $g ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="md:col-span-2 flex flex-col gap-1">
+                <label>Description</label>
+                <textarea name="description" class="input-edit-textarea"></textarea>
+            </div>
+
+            <div class="md:col-span-2 flex gap-4 mt-2">
+                <button type="submit"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition">
+                    <i class="pi pi-check"></i> Save
+                </button>
+
+                <button type="button" onclick="toggleAddForm_actorsTable()"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg
+                               bg-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-400 transition">
+                    <i class="pi pi-times"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <?php return ob_get_clean();
+    })(),
 ]);
 ?>

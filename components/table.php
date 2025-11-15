@@ -9,19 +9,40 @@ if (!function_exists('renderTable')) {
         $renderRow      = $options['renderRow']  ?? null;
         $renderEditRow  = $options['renderEditRow'] ?? null;
         $actions        = $options['actions']    ?? null;     // ⭐ NEW REUSABLE ACTIONS SLOT
-
+        $addLabel       = $options['addLabel']   ?? 'Add New';
+        $addForm        = $options['addForm']    ?? null;
         $emptyText      = $options['emptyText']  ?? 'No data available.';
         $searchable     = $options['searchable'] ?? false;
         $compact        = $options['compact']    ?? false;
         ?>
         <section class="flex flex-col gap-4">
 
-            <?php if ($title): ?>
-                <h2 class="text-3xl text-[var(--primary)] font-bold">
-                    <?= htmlspecialchars($title) ?>
-                </h2>
+            <!-- TITLE + ADD BUTTON -->
+            <div class="flex items-center justify-between">
+                <?php if ($title): ?>
+                    <h2 class="text-3xl text-[var(--primary)] font-bold">
+                        <?= htmlspecialchars($title) ?>
+                    </h2>
+                <?php endif; ?>
+
+                <?php if ($addForm): ?>
+                    <button onclick="toggleAddForm_<?= $id ?>()"
+                            class="flex items-center gap-2 px-4 py-2 rounded-lg
+                                   bg-green-600 text-white text-sm font-semibold
+                                   hover:bg-green-700 transition">
+                        <i class="pi pi-plus"></i> <?= htmlspecialchars($addLabel) ?>
+                    </button>
+                <?php endif; ?>
+            </div>
+
+            <!-- ADD FORM -->
+            <?php if ($addForm): ?>
+                <div id="add-form-<?= $id ?>" class="hidden p-6 bg-gray-50 border rounded-lg shadow-inner">
+                    <?= $addForm ?>
+                </div>
             <?php endif; ?>
 
+            <!-- SEARCH -->
             <?php if ($searchable): ?>
                 <input id="<?= $id ?>_search"
                        type="text"
@@ -119,12 +140,24 @@ if (!function_exists('renderTable')) {
         </script>
     <?php endif; ?>
 
+        <!-- EDIT TOGGLE -->
         <script>
             function toggleEditRow(id) {
                 const row = document.getElementById("edit-row-" + id);
                 row.classList.toggle("hidden");
                 if (!row.classList.contains("hidden")) {
                     row.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+            }
+        </script>
+
+        <!-- ADD FORM TOGGLE -->
+        <script>
+            function toggleAddForm_<?= $id ?>() {
+                const form = document.getElementById("add-form-<?= $id ?>");
+                form.classList.toggle("hidden");
+                if (!form.classList.contains("hidden")) {
+                    form.scrollIntoView({ behavior: "smooth", block: "center" });
                 }
             }
         </script>
