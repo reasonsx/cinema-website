@@ -1,115 +1,136 @@
-<section class="mb-10">
-    <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-6">All Users</h2>
+<?php
+require_once __DIR__ . '/../../components/table.php';
+require_once __DIR__ . '/../../include/helpers.php';
 
-    <!-- Add User Form -->
-    <details class="mb-8">
-        <summary class="cursor-pointer inline-block bg-[var(--primary)] text-[var(--white)] px-6 py-3 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
-            Add New User
-        </summary>
-        <form method="post" class="flex flex-col gap-4 mt-4">
-            <input type="text" name="firstname" placeholder="First Name" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-            <input type="text" name="lastname" placeholder="Last Name" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-            <input type="email" name="email" placeholder="Email" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-            <input type="password" name="password" placeholder="Password" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-            <label class="flex items-center gap-2 text-black font-semibold">
-                <input type="checkbox" name="isAdmin" class="accent-[var(--primary)]"> Admin
-            </label>
-            <button type="submit" name="add_user"
-                    class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
-                Add User
+renderTable([
+    'id'        => 'usersTable',
+    'title'     => 'All Users',
+    'headers'   => ['ID', 'First Name', 'Last Name', 'Email', 'Role'],
+    'rows'      => $users,
+    'searchable'=> true,
+    'renderRow' => function ($user) {
+        return [
+            $user['id'],
+            e($user['firstname']),
+            e($user['lastname']),
+            e($user['email']),
+            $user['isAdmin'] ?
+                '<span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 border border-green-300">Admin</span>' :
+                '<span class="px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700 border border-gray-300">User</span>'
+        ];
+    },
+
+    // Action buttons
+    'actions' => function ($user) {
+        ob_start(); ?>
+        <div class="flex items-center gap-2">
+
+            <button onclick="toggleEditRow(<?= $user['id'] ?>)"
+                    class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                <i class="pi pi-pencil"></i> Edit
             </button>
-        </form>
-    </details>
 
-    <?php if (!empty($users)) : ?>
-        <div class="overflow-x-auto">
-            <table class="min-w-full border-t-4 border-[var(--primary)] text-black">
-                <thead class="font-[Limelight] text-[var(--primary)] text-lg">
-                    <tr>
-                        <th class="px-4 py-2 text-left">ID</th>
-                        <th class="px-4 py-2 text-left">First Name</th>
-                        <th class="px-4 py-2 text-left">Last Name</th>
-                        <th class="px-4 py-2 text-left">Email</th>
-                        <th class="px-4 py-2 text-left">Admin</th>
-                        <th class="px-4 py-2 text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user) : ?>
-                        <tr>
-                            <td class="px-4 py-2"><?= htmlspecialchars($user['id']) ?></td>
-                            <td class="px-4 py-2"><?= htmlspecialchars($user['firstname']) ?></td>
-                            <td class="px-4 py-2"><?= htmlspecialchars($user['lastname']) ?></td>
-                            <td class="px-4 py-2"><?= htmlspecialchars($user['email']) ?></td>
-                            <td class="px-4 py-2"><?= $user['isAdmin'] ? 'Yes' : 'No' ?></td>
-                            <td class="px-4 py-2">
-                                <form method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                                    <input type="hidden" name="delete_user_id" value="<?= $user['id'] ?>">
-                                    <button type="submit" name="delete_user"
-                                            class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
-                                        Delete
-                                    </button>
-                                </form>
+            <form method="post" onsubmit="return confirm('Delete this user?')" class="m-0 p-0">
+                <input type="hidden" name="delete_user_id" value="<?= $user['id'] ?>">
+                <button type="submit" name="delete_user"
+                        class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition">
+                    <i class="pi pi-trash"></i> Delete
+                </button>
+            </form>
 
-                                <button type="button" onclick="toggleUserEditForm(<?= $user['id'] ?>)"
-                                       class="bg-[var(--primary)] text-[var(--white)] px-3 py-1 rounded shadow hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-sm">
-                                Edit
-                                </button>
-                            </td>
-                        </tr>
-
-                        <!-- ✅ Inline Edit Form -->
-                        <tr id="edit-user-form-<?= $user['id'] ?>" class="hidden bg-gray-50">
-                            <td colspan="6" class="p-6 border-t-4 border-[var(--primary)]">
-                                <h3 class="text-3xl font-[Limelight] text-[var(--primary)] mb-4">Edit User</h3>
-
-                                <form method="post" class="flex flex-col gap-4">
-                                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-
-                                    <input type="text" name="firstname" value="<?= htmlspecialchars($user['firstname']) ?>" required
-                                           class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-                                    <input type="text" name="lastname" value="<?= htmlspecialchars($user['lastname']) ?>" required
-                                           class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
-                                    <input type="email" value="<?= htmlspecialchars($user['email']) ?>" disabled
-                                           class="border-b-2 border-gray-400 bg-gray-100 text-gray-600 px-2 py-1 cursor-not-allowed">
-                                    
-                                    <label class="flex items-center gap-2 text-black font-semibold">
-                                        <input type="checkbox" name="isAdmin" class="accent-[var(--primary)]" <?= $user['isAdmin'] ? 'checked' : '' ?>> Admin
-                                    </label>
-
-                                    <div class="flex gap-4 mt-4">
-                                        <button type="submit" name="edit_user"
-                                                class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
-                                            Save Changes
-                                        </button>
-
-                                        <button type="button" onclick="toggleUserEditForm(<?= $user['id'] ?>)"
-                                                class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 transition-colors duration-300 font-[Limelight] text-lg">
-                                            Cancel
-                                        </button>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
         </div>
-    <?php else : ?>
-        <p class="text-black font-semibold mt-4">No users found.</p>
-    <?php endif; ?>
-</section>
+        <?php return ob_get_clean();
+    },
 
-<script>
-function toggleUserEditForm(userId) {
-    const form = document.getElementById(`edit-user-form-${userId}`);
-    form.classList.toggle('hidden');
-    if (!form.classList.contains('hidden')) {
-        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-}
-</script>
+    // Inline edit row
+    'renderEditRow' => function ($user) {
+        ob_start(); ?>
+        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+
+            <div class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">First Name</label>
+                <input type="text" name="firstname" value="<?= e($user['firstname']) ?>" class="input-edit">
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">Last Name</label>
+                <input type="text" name="lastname" value="<?= e($user['lastname']) ?>" class="input-edit">
+            </div>
+
+            <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="text-sm text-gray-600">Email</label>
+                <input type="email" disabled value="<?= e($user['email']) ?>"
+                       class="input-edit bg-gray-200 cursor-not-allowed">
+            </div>
+
+            <label class="flex items-center gap-2 text-gray-700 font-medium">
+                <input type="checkbox" name="isAdmin" <?= $user['isAdmin'] ? 'checked' : '' ?> class="accent-[var(--primary)]">
+                Admin
+            </label>
+
+            <div class="md:col-span-2 flex gap-4 mt-2">
+                <button type="submit" name="edit_user"
+                        class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">
+                    <i class="pi pi-check"></i> Save
+                </button>
+
+                <button type="button"
+                        onclick="toggleEditRow(<?= $user['id'] ?>)"
+                        class="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 hover:bg-gray-400 transition">
+                    <i class="pi pi-times"></i> Cancel
+                </button>
+            </div>
+        </form>
+        <?php return ob_get_clean();
+    },
+
+    // Add user button + form
+    'addLabel' => 'Add User',
+    'addForm' => (function () {
+        ob_start(); ?>
+        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <input type="hidden" name="add_user" value="1">
+
+            <div class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">First Name</label>
+                <input type="text" name="firstname" class="input-edit" required>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">Last Name</label>
+                <input type="text" name="lastname" class="input-edit" required>
+            </div>
+
+            <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="text-sm text-gray-600">Email</label>
+                <input type="email" name="email" class="input-edit" required>
+            </div>
+
+            <div class="flex flex-col gap-1 md:col-span-2">
+                <label class="text-sm text-gray-600">Password</label>
+                <input type="password" name="password" class="input-edit" required>
+            </div>
+
+            <label class="flex items-center gap-2 text-gray-700 font-medium">
+                <input type="checkbox" name="isAdmin" class="accent-[var(--primary)]">
+                Admin
+            </label>
+
+            <div class="md:col-span-2 flex gap-4 mt-2">
+                <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">
+                    <i class="pi pi-check"></i> Add User
+                </button>
+
+                <button type="button" onclick="toggleAddForm_usersTable()"
+                        class="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 hover:bg-gray-400 transition">
+                    <i class="pi pi-times"></i> Cancel
+                </button>
+            </div>
+
+        </form>
+        <?php return ob_get_clean();
+    })(),
+]);

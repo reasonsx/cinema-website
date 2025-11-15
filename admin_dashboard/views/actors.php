@@ -1,10 +1,6 @@
 <?php
 require_once __DIR__ . '/../../components/table.php';
-
-function e($value) {
-    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
-}
-
+require_once __DIR__ . '/../../include/helpers.php';
 function genderBadge(string $gender): string {
     $colors = [
         'Male'   => 'bg-blue-100 text-blue-700',
