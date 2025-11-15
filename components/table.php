@@ -17,14 +17,16 @@ if (!function_exists('renderTable')) {
         <section class="flex flex-col gap-4">
 
             <?php if ($title): ?>
-                <h2 class="text-3xl font-[Limelight] text-[var(--primary)]"><?= htmlspecialchars($title) ?></h2>
+                <h2 class="text-3xl text-[var(--primary)] font-bold">
+                    <?= htmlspecialchars($title) ?>
+                </h2>
             <?php endif; ?>
 
             <?php if ($searchable): ?>
                 <input id="<?= $id ?>_search"
                        type="text"
                        placeholder="Search..."
-                       class="px-3 py-2 border rounded w-64">
+                       class="px-3 py-2 border rounded-md w-64">
             <?php endif; ?>
 
             <?php if (empty($rows)): ?>
@@ -85,9 +87,34 @@ if (!function_exists('renderTable')) {
         <script>
             document.getElementById("<?= $id ?>_search").addEventListener("input", e => {
                 const q = e.target.value.toLowerCase();
-                document.querySelectorAll("#<?= $id ?> tbody tr").forEach(row => {
-                    row.style.display = row.innerText.toLowerCase().includes(q) ? "" : "none";
+                const rows = document.querySelectorAll("#<?= $id ?> tbody tr:not(.no-results-row)");
+                let visibleCount = 0;
+
+                rows.forEach(row => {
+                    const match = row.innerText.toLowerCase().includes(q);
+                    row.style.display = match ? "" : "none";
+                    if (match) visibleCount++;
                 });
+
+                // Show "No results" when nothing matches
+                let noResultsRow = document.querySelector("#<?= $id ?> tbody .no-results-row");
+
+                if (visibleCount === 0) {
+                    if (!noResultsRow) {
+                        const tbody = document.querySelector("#<?= $id ?> tbody");
+                        noResultsRow = document.createElement("tr");
+                        noResultsRow.className = "no-results-row";
+                        noResultsRow.innerHTML = `
+                <td colspan="<?= count($headers) + 1 ?>"
+                    class="text-center py-6 text-gray-500 italic">
+                    No results found
+                </td>
+            `;
+                        tbody.appendChild(noResultsRow);
+                    }
+                } else {
+                    if (noResultsRow) noResultsRow.remove();
+                }
             });
         </script>
     <?php endif; ?>

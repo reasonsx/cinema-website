@@ -25,26 +25,33 @@ renderTable([
     'actions' => function ($actor) {
         ob_start(); ?>
 
-        <!-- EDIT BUTTON -->
-        <button onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                class="inline-flex items-center px-4 py-2 rounded-full
-                       bg-blue-600 text-white text-sm font-semibold
-                       hover:bg-blue-700 transition">
-            Edit
-        </button>
+        <div class="flex items-center gap-2">
 
-        <!-- DELETE BUTTON -->
-        <form method="post"
-              onsubmit="return confirm('Delete this actor?')"
-              class="inline-flex items-center">
-            <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
-            <button type="submit" name="delete_actor"
-                    class="inline-flex items-center px-4 py-2 rounded-full
-                           bg-red-600 text-white text-sm font-semibold
-                           hover:bg-red-700 transition">
-                Delete
+            <!-- EDIT BUTTON -->
+            <button onclick="toggleEditRow(<?= $actor['id'] ?>)"
+                    class="flex items-center justify-center gap-2
+                   px-4 py-2 rounded-lg
+                   bg-blue-600 text-white text-sm font-semibold
+                   hover:bg-blue-700 transition">
+                <i class="pi pi-pencil"></i> Edit
             </button>
-        </form>
+
+            <!-- DELETE BUTTON -->
+            <form method="post"
+                  onsubmit="return confirm('Delete this actor?')"
+                  class="flex items-center justify-center p-0 m-0 leading-none">
+            <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
+                <button type="submit" name="delete_actor"
+                        class="flex items-center justify-center gap-2
+                       px-4 py-2 rounded-lg
+                       bg-red-500 text-white text-sm font-semibold
+                       hover:bg-red-600 transition">
+                    <i class="pi pi-trash"></i> Delete
+                </button>
+            </form>
+
+        </div>
+
 
         <?php
         return ob_get_clean();
@@ -101,24 +108,25 @@ renderTable([
 
                 <!-- SAVE -->
                 <button type="submit" name="edit_actor"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
-                               font-semibold text-sm
-                               bg-green-500 text-white
-                               hover:bg-green-600 transition">
-                    Save
+                        class="flex items-center justify-center gap-2
+                       px-4 py-2 rounded-lg
+                       bg-green-500 text-white text-sm font-semibold
+                       hover:bg-green-600 transition">
+                    <i class="pi pi-check"></i> Save
                 </button>
 
                 <!-- CANCEL -->
                 <button type="button"
                         onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full
-                               font-semibold text-sm
-                               bg-gray-300 text-gray-700
-                               hover:bg-gray-400 transition">
-                    Cancel
+                        class="flex items-center justify-center gap-2
+                       px-4 py-2 rounded-lg
+                       bg-gray-300 text-white text-sm font-semibold
+                       hover:bg-gray-400 transition">
+                    <i class="pi pi-times"></i> Cancel
                 </button>
 
             </div>
+
 
         </form>
         <?php
