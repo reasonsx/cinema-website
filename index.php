@@ -35,19 +35,19 @@ $newsList   = getNews($db);
 
 
 <!-- Now Playing -->
-<?php include 'components/now-playing/now-playing-section.php'; ?>
+<?php include 'components/frontpage/now-playing/now-playing-section.php'; ?>
 
 
 <!-- About Us -->
-<?php include 'components/about/about-section.php'; ?>
+<?php include 'components/frontpage/about/about-section.php'; ?>
 
 
 <!-- News -->
-<?php include 'components/news/news-section.php'; ?>
+<?php include 'components/frontpage/news/news-section.php'; ?>
 
 
 <!-- Contact -->
-<?php include 'components/contact/contact-form.php'; ?>
+<?php include 'components/frontpage/contact/contact-form.php'; ?>
 
 
 <?php include 'footer.php'; ?>
