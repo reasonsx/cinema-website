@@ -29,24 +29,31 @@ $newsList = getNews($db);
     </div>
 </section>
 
-<!-- Now Playing Section -->
-<section id="now-playing" class="bg-[var(--secondary)] py-16">
+<!-- "Now Playing" SECTION -->
+<!-- "Now Playing" SECTION -->
+<section id="now-playing" class="bg-black py-16">
     <div class="max-w-7xl mx-auto text-center relative px-6">
-        <h2 class="text-5xl font-[Limelight] text-[var(--primary)] mb-12">NOW PLAYING</h2>
+        <div class="text-center mb-12">
+            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">NOW PLAYING</h2>
+            <div class="mt-4 flex items-center justify-center gap-3">
+                <span class="h-[2px] w-16 bg-white/15"></span>
+                <i class="pi pi-star text-[var(--secondary)]"></i>
+                <span class="h-[2px] w-16 bg-white/15"></span>
+            </div>
+        </div>
 
-        <!-- Carousel wrapper with arrows outside -->
-        <div class="relative flex items-center">
+        <div class="relative flex items-center px-4">
 
-            <!-- Left arrow -->
+            <!-- LEFT ARROW -->
             <button onclick="scrollCarousel(-1)"
-                    class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
-                &#10094;
+                    class="w-12 h-12 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black transition z-10">
+                <i class="pi pi-angle-left text-2xl"></i>
             </button>
 
-            <!-- Carousel items -->
-            <div id="movies-carousel" class="flex gap-6 overflow-hidden mx-4 flex-1">
+            <!-- Carousel -->
+            <div id="movies-carousel" class="flex gap-6 overflow-hidden mx-4 flex-1 p-2">
                 <?php foreach ($movies as $movie): ?>
-                    <div class="w-60 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+                    <div class="w-60 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 overflow-visible">
                         <a href="movie.php?id=<?= $movie['id'] ?>">
                             <img src="<?= htmlspecialchars($movie['poster']) ?>"
                                  alt="<?= htmlspecialchars($movie['title']) ?>"
@@ -56,15 +63,24 @@ $newsList = getNews($db);
                 <?php endforeach; ?>
             </div>
 
-            <!-- Right arrow -->
+            <!-- RIGHT ARROW -->
             <button onclick="scrollCarousel(1)"
-                    class="bg-black/50 text-white p-4 rounded-full hover:bg-black transition z-10">
-                &#10095;
+                    class="w-12 h-12 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-black transition z-10">
+                <i class="pi pi-angle-right text-2xl"></i>
             </button>
-
         </div>
+
+        <!-- ALL MOVIES BUTTON -->
+        <div class="mt-10 flex justify-center">
+            <a href="/cinema-website/movies-list.php"
+               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black transition">
+                All Movies
+            </a>
+        </div>
+
     </div>
 </section>
+
 
 <script>
     const carousel = document.getElementById('movies-carousel');
@@ -100,23 +116,6 @@ $newsList = getNews($db);
     </div>
 </section>
 
-<!-- Contact Us Section -->
-<section id="contact-us" class="py-20 bg-black text-white">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-        <!-- Header -->
-        <div class="mb-10">
-            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">CONTACT US</h2>
-            <div class="mt-4 flex items-center justify-center gap-3">
-                <span class="h-[2px] w-16 bg-white/15"></span>
-                <i class="pi pi-star text-[var(--secondary)]"></i>
-                <span class="h-[2px] w-16 bg-white/15"></span>
-            </div>
-        </div>
-
-        <?php include 'components/contact/contact-form.php'; ?>
-
-    </div>
-</section>
 
 <!-- News Section -->
 <section id="news" class="py-16 bg-black text-white">
@@ -171,6 +170,24 @@ $newsList = getNews($db);
                 </article>
             <?php endforeach; ?>
         </div>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section id="contact-us" class="py-20 bg-black text-white">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+        <!-- Header -->
+        <div class="mb-10">
+            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">CONTACT US</h2>
+            <div class="mt-4 flex items-center justify-center gap-3">
+                <span class="h-[2px] w-16 bg-white/15"></span>
+                <i class="pi pi-star text-[var(--secondary)]"></i>
+                <span class="h-[2px] w-16 bg-white/15"></span>
+            </div>
+        </div>
+
+        <?php include 'components/contact/contact-form.php'; ?>
+
     </div>
 </section>
 
