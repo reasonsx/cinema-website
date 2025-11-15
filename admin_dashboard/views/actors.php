@@ -16,6 +16,19 @@ function genderBadge(string $gender): string {
 
     return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold $class\">" . e($gender) . "</span>";
 }
+
+function formatDate($date): string {
+    if (!$date || $date === '0000-00-00') {
+        return '—';
+    }
+
+    try {
+        return date('d M Y', strtotime($date)); // Example: 11 Apr 2002
+    } catch (Exception $e) {
+        return '—';
+    }
+}
+
 ?>
 
 <?php
@@ -31,7 +44,7 @@ renderTable([
         return [
             $actor['id'],
             e($actor['first_name'] . ' ' . $actor['last_name']),
-            e($actor['date_of_birth']),
+            formatDate($actor['date_of_birth']),
             genderBadge($actor['gender']),
             e($actor['description']),
         ];
