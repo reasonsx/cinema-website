@@ -17,7 +17,7 @@ $newsList = getNews($db);
 
 <?php include 'header.php'; ?>
 
-<!-- Hero Section -->
+<!-- "Hero" SECTION -->
 <section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
     <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
         <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
@@ -29,13 +29,13 @@ $newsList = getNews($db);
 <!-- "Now Playing" SECTION -->
 <?php include 'components/now-playing/now-playing-section.php'; ?>
 
-<!-- "About Us" Section -->
+<!-- "About Us" SECTION -->
 <?php include 'components/about/about-section.php'; ?>
 
-<!-- "News" Section -->
+<!-- "News" SECTION -->
 <?php include 'components/news/news-section.php'; ?>
 
-<!-- "Contact Us" Section -->
+<!-- "Contact Us" SECTION -->
 <?php include 'components/contact/contact-form.php'; ?>
 
 
