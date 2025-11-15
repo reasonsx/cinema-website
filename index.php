@@ -29,13 +29,13 @@ $newsList = getNews($db);
 <!-- "Now Playing" SECTION -->
 <?php include 'components/now-playing/now-playing-section.php'; ?>
 
-<!-- About Us Section -->
+<!-- "About Us" Section -->
 <?php include 'components/about/about-section.php'; ?>
 
-<!-- News Section -->
+<!-- "News" Section -->
 <?php include 'components/news/news-section.php'; ?>
 
-<!-- Contact Us Section -->
+<!-- "Contact Us" Section -->
 <?php include 'components/contact/contact-form.php'; ?>
 
 
