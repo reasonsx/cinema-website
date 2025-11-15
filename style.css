@@ -51,22 +51,24 @@ body, p, li, a {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--primary);
-    color: var(--white);
-    padding: 0.5rem 1rem;
-    border-radius: 0.75rem;
+
+    padding: 0.625rem 1.25rem; /* px-5 py-2.5 equivalent */
+    border-radius: 9999px;     /* rounded-full */
+
+    border: 1px solid var(--secondary);
+    background-color: transparent;
+
+    color: var(--secondary);
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* close to text-sm */
+
     text-decoration: none;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .btn:hover {
-    background-color: #d9583d;
-}
-
-.btn:active {
-    background-color: #bd4c34;
+    background-color: var(--secondary);
+    color: var(--black);
 }
 
 /* ======================= */

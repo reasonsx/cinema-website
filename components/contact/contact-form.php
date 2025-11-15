@@ -15,6 +15,18 @@ if (empty($_SESSION['csrf'])) {
 }
 ?>
 
+
+<section id="contact-us" class="py-20 bg-black text-white">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+        <!-- Header -->
+        <div class="mb-10">
+            <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">CONTACT US</h2>
+            <div class="mt-4 flex items-center justify-center gap-3">
+                <span class="h-[2px] w-16 bg-white/15"></span>
+                <i class="pi pi-star text-[var(--secondary)]"></i>
+                <span class="h-[2px] w-16 bg-white/15"></span>
+            </div>
+        </div>
 <form
     action="contact-submit.php"
     method="post"
@@ -79,10 +91,13 @@ if (empty($_SESSION['csrf'])) {
     <div class="text-center pt-3">
         <button
             type="submit"
-            class="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black border border-[var(--secondary)]/60"
+            class="btn"
         >
             <i class="pi pi-send"></i>
             SEND MESSAGE
         </button>
     </div>
 </form>
+
+    </div>
+</section>
