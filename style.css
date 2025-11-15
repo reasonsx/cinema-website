@@ -151,3 +151,24 @@ textarea::placeholder {
 #contact-us button:hover {
     border-color: var(--black) !important;
 }
+.input-edit {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg
+    text-gray-700 bg-white
+    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
+    transition-all duration-200;
+}
+
+.input-edit-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg
+    bg-white text-gray-700
+    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
+    transition-all duration-200;
+}
+
+.input-edit-textarea {
+    @apply w-full p-3 border border-gray-300 rounded-lg
+    bg-white text-gray-700
+    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
+    transition-all duration-200;
+}
+
