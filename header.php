@@ -52,13 +52,6 @@ if (isset($_SESSION['user_id'])) {
                     Contact
                 </a>
 
-                <!-- Search -->
-                <div class="relative group">
-                    <input type="text" placeholder="Search movies…"
-                           class="w-56 lg:w-64 pr-10 pl-4 py-2 rounded-full bg-white/90 text-black placeholder-black/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent shadow" />
-                    <i class="pi pi-search absolute right-3 top-1/2 -translate-y-1/2 text-black/60 group-focus-within:text-[var(--secondary)]"></i>
-                </div>
-
                 <!-- Auth -->
                 <div class="flex items-center gap-2 ml-2">
                     <?php if ($userName): ?>
@@ -93,12 +86,6 @@ if (isset($_SESSION['user_id'])) {
                 <a href="/cinema-website/movies-list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
                 <a href="/cinema-website/schedule.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-calendar"></i> Schedule</a>
                 <a href="/cinema-website/contact.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-phone"></i> Contact</a>
-
-                <div class="relative group pt-2">
-                    <input type="text" placeholder="Search movies…"
-                           class="w-full pr-10 pl-4 py-2 rounded-full bg-white/90 text-black placeholder-black/60 border border-white/20 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent shadow" />
-                    <i class="pi pi-search absolute right-3 top-1/2 -translate-y-1/2 text-black/60 group-focus-within:text-[var(--secondary)]"></i>
-                </div>
 
                 <div class="flex gap-2 pt-2">
                     <?php if ($userName): ?>
