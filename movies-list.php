@@ -14,7 +14,7 @@ $movies = getMovies($db);
 <?php include 'header.php'; ?>
 
 <!-- Hero Section -->
-<section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--primary)] to-[var(--primary)]/70 text-black text-center">
+<section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--secondary)] to-[var(--primary)]/70 text-black text-center">
     <!-- subtle pattern overlay -->
     <div class="pointer-events-none absolute inset-0 opacity-10"
          style="background-image: radial-gradient(transparent 0, rgba(0,0,0,.08) 100%); background-size: 8px 8px;">
@@ -24,7 +24,7 @@ $movies = getMovies($db);
         <h1 class="text-4xl md:text-6xl font-[Limelight] mb-4 md:mb-6">All Movies</h1>
 
         <p class="text-base md:text-lg max-w-2xl mx-auto mb-6 md:mb-8 text-black/80">
-            Discover the latest movies now showing in our cinema. Click on a movie to learn more!
+            Discover the latest movies now showing in our cinema. <br> Click on a movie to learn more!
         </p>
 
         <!-- Search Input -->
@@ -34,11 +34,9 @@ $movies = getMovies($db);
                         type="text"
                         id="movieSearch"
                         placeholder="Search movies..."
-                        class="w-full px-5 py-3.5 md:py-4 pr-12 rounded-full border border-black/20 bg-white/90 backdrop-blur-sm text-black placeholder-black/50
-                 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)] focus:border-transparent transition shadow-lg"
+                        class="!rounded-full"
                 />
-                <!-- PrimeNG search icon -->
-                <i class="pi pi-search absolute right-5 top-1/2 -translate-y-1/2 text-black/50 group-focus-within:text-[var(--secondary)] transition"></i>
+                <i class="pi pi-search absolute right-5 top-1/2 -translate-y-1/2 text-black/50"></i>
             </div>
         </div>
     </div>
