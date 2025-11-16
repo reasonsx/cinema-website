@@ -1,5 +1,5 @@
 <section id="now-playing" class="bg-black py-16">
-    <div class="max-w-7xl mx-auto text-center relative px-6">
+    <div class="max-w-8xl mx-auto text-center relative px-6">
 
         <!-- Header -->
         <div class="text-center mb-12">
@@ -23,12 +23,17 @@
             <!-- Carousel -->
             <div id="movies-carousel" class="flex gap-6 overflow-hidden mx-4 flex-1 p-2">
                 <?php foreach ($movies as $movie): ?>
-                    <div class="w-60 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 overflow-visible">
+                    <div class="w-52 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 overflow-visible">
                         <a href="movie.php?id=<?= $movie['id'] ?>">
                             <img src="<?= htmlspecialchars($movie['poster']) ?>"
                                  alt="<?= htmlspecialchars($movie['title']) ?>"
-                                 class="w-full h-80 object-cover rounded-lg">
+                                 class="w-full h-[296px] object-cover rounded-lg">
                         </a>
+
+                        <!-- TITLE UNDER POSTER -->
+                        <p class="mt-3 text-white text-center font-semibold text-lg">
+                            <?= htmlspecialchars($movie['title']) ?>
+                        </p>
                     </div>
                 <?php endforeach; ?>
             </div>

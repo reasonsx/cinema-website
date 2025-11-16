@@ -51,7 +51,27 @@ VALUES ('Inception', 2010, 'PG-13', 'Sci-Fi, Thriller', 'English',
         'Humans exploit Pandora while a soldier joins the Na''vi.', 162, 'images/avatar.jpg',
         'https://www.youtube.com/watch?v=5PSNL1qE6VY'),
        ('Pulp Fiction', 1994, 'R', 'Crime, Drama', 'English', 'Crime stories intersect in Tarantino''s classic.', 154,
-        'images/pulpfiction.jpg', 'https://www.youtube.com/watch?v=s7EdQ4FqbhY');
+        'images/pulpfiction.jpg', 'https://www.youtube.com/watch?v=s7EdQ4FqbhY'),
+       ('The Shawshank Redemption', 1994, 'R', 'Drama', 'English',
+        'A banker is imprisoned for murder and forms a profound friendship while planning an escape.',
+        142, 'images/shawshank.jpg',
+        'https://www.youtube.com/watch?v=6hB3S9bIaco'),
+       ('Gladiator', 2000, 'R', 'Action, Drama', 'English',
+        'A betrayed Roman general seeks revenge against the corrupt emperor who murdered his family.',
+        155, 'images/gladiator.jpg',
+        'https://www.youtube.com/watch?v=owK1qxDselE'),
+       ('The Godfather', 1972, 'R', 'Crime, Drama', 'English',
+        'The aging patriarch of an organized crime dynasty transfers control to his reluctant son.',
+        175, 'images/godfather.jpg',
+        'https://www.youtube.com/watch?v=sY1S34973zA'),
+       ('Spider-Man: No Way Home', 2021, 'PG-13', 'Action, Sci-Fi, Adventure', 'English',
+        'Peter Parker seeks help from Doctor Strange to fix the multiverse after his identity is exposed.',
+        148, 'images/spiderman_nwh.jpg',
+        'https://www.youtube.com/watch?v=JfVOs4VSpmA'),
+       ('Dune: Part One', 2021, 'PG-13', 'Sci-Fi, Adventure', 'English',
+        'A gifted young man must travel to the galaxy’s most dangerous planet to secure his family’s future.',
+        155, 'images/dune.jpg',
+        'https://www.youtube.com/watch?v=n9xhJrPXop4');
 
 -- ACTORS
 CREATE TABLE actors (
