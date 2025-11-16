@@ -40,7 +40,7 @@ if (!function_exists('renderTable')) {
             <!-- ---------- TITLE + ADD BUTTON ---------- -->
             <div class="flex items-center justify-between">
                 <?php if ($title): ?>
-                    <h2 class="text-3xl text-[var(--primary)] font-bold">
+                    <h2 class="text-3xl font-bold">
                         <?= e($title) ?>
                     </h2>
                 <?php endif; ?>
