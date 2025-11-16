@@ -42,7 +42,7 @@ $screenings = getScreenings($db);
                 </button>
             </div>
 
-            <button type="submit" id="addScreeningBtn" name="add_screening" 
+            <button type="submit" id="addScreeningBtn" name="add_screening"
                 class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
                 Add Screening
             </button>

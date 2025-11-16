@@ -2,6 +2,7 @@
 // Safety
 $messages = $contactMessages ?? [];
 include 'components/table.php';
+require_once __DIR__ . '/../../include/helpers.php';
 
 renderTable([
     'title' => 'Contact Messages',
