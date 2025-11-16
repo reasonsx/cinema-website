@@ -143,7 +143,7 @@ function editMovieHandler($db, $data, $files): array {
         $stmt->execute([$movie_id]);
 
         if (!empty($data['actors'])) {
-            $actorIds = explode(',', $data['actors']);
+            $actorIds = $data['actors'];
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($actorIds as $actor_id) {
                 if (trim($actor_id) !== '') {
@@ -157,7 +157,7 @@ function editMovieHandler($db, $data, $files): array {
         $stmt->execute([$movie_id]);
 
         if (!empty($data['directors'])) {
-            $directorIds = explode(',', $data['directors']);
+            $directorIds = $data['directors'];
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($directorIds as $director_id) {
                 if (trim($director_id) !== '') {

@@ -25,6 +25,7 @@ if (!function_exists('renderTable')) {
         $title = $options['title'] ?? '';
         $headers = $options['headers'] ?? [];
         $rows = $options['rows'] ?? [];
+        $count = count($rows);
         $renderRow = $options['renderRow'] ?? null;
         $renderEditRow = $options['renderEditRow'] ?? null;
         $actions = $options['actions'] ?? null;
@@ -39,20 +40,32 @@ if (!function_exists('renderTable')) {
 
             <!-- ---------- TITLE + ADD BUTTON ---------- -->
             <div class="flex items-center justify-between">
-                <?php if ($title): ?>
-                    <h2 class="text-3xl font-bold">
-                        <?= e($title) ?>
-                    </h2>
-                <?php endif; ?>
 
+                <!-- Left: title + auto count -->
+                <div class="flex items-center gap-3">
+                    <?php if ($title): ?>
+                        <h2 class="text-3xl font-bold">
+                            <?= e($title) ?>
+                        </h2>
+                    <?php endif; ?>
+
+                    <?php if ($count > 0): ?>
+                        <span class="px-3 py-1 rounded-full bg-gray-200 text-gray-700 text-sm font-semibold">
+                <?= $count ?>
+            </span>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Right: Add button -->
                 <?php if ($addForm): ?>
                     <button onclick="toggleAddForm_<?= $id ?>()"
                             class="flex items-center gap-2 px-4 py-2 rounded-lg
-                           bg-green-600 text-white text-sm font-semibold
-                           hover:bg-green-700 transition">
+                    bg-green-600 text-white text-sm font-semibold
+                    hover:bg-green-700 transition">
                         <i class="pi pi-plus"></i> <?= e($addLabel) ?>
                     </button>
                 <?php endif; ?>
+
             </div>
 
             <!-- ---------- ADD FORM ---------- -->

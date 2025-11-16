@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
             if (isset($_POST['delete_movie'])) {
-                [$success, $error] = deleteMovie($db, $_POST['delete_movie_id']);
+                [$success, $error] = deleteMovie($db, $_POST['delete_movie']);
                 header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
                 exit;
             }
