@@ -76,7 +76,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
         <!-- Hero content -->
         <div class="absolute inset-0 flex items-end">
             <div class="mx-auto w-full max-w-7xl px-6 pb-6 md:pb-10">
-                <h1 class="mt-3 mb-3 text-4xl md:text-6xl font-[Limelight] tracking-wide text-[#F8A15A]"><?= htmlspecialchars($movie['title']) ?></h1>
+                <h1 class="mt-3 mb-3 text-4xl md:text-6xl font-[Limelight] tracking-wide text-secondary"><?= htmlspecialchars($movie['title']) ?></h1>
                 <div class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3 py-1 text-xs md:text-sm border border-white/15">
                     <i class="pi pi-calendar"></i>
                     <span><?= htmlspecialchars($movie['release_year']) ?></span>

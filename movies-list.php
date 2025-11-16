@@ -94,7 +94,7 @@ $movies = getMovies($db);
                                 <!-- Info -->
                                 <div class="flex-1 min-w-0">
                                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                                        <h3 class="text-xl font-semibold text-[#F8A15A] truncate"><?= $title ?></h3>
+                                        <h3 class="text-xl font-semibold text-secondary truncate"><?= $title ?></h3>
                                         <span class="inline-flex items-center rounded-full border border-white/15 px-2 py-0.5 text-[11px] uppercase tracking-wide text-white/80">
                                             <?= $age_rating ?>
                                         </span>
@@ -109,7 +109,7 @@ $movies = getMovies($db);
 
                                 <!-- New sleeker button -->
                                 <div class="shrink-0">
-                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-transparent px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
+                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] bg-transparent px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
                                         Details
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
