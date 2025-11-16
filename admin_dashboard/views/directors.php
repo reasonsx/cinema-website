@@ -25,31 +25,57 @@ renderTable([
         ob_start(); ?>
         <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input type="hidden" name="add_director" value="1">
-
             <!-- First Name -->
             <div class="flex flex-col gap-1">
                 <label>First Name</label>
-                <input type="text" name="first_name" class="input-edit" required>
+                <input
+                        type="text"
+                        name="first_name"
+                        placeholder="First Name"
+                        class="block h-9 w-full bg-transparent border border-gray-600 rounded-md
+               px-2 text-sm placeholder:text-gray-400
+               focus:outline-none focus:border-gray-300"
+                        required
+                >
             </div>
 
             <!-- Last Name -->
             <div class="flex flex-col gap-1">
                 <label>Last Name</label>
-                <input type="text" name="last_name" class="input-edit" required>
+                <input
+                        type="text"
+                        name="last_name"
+                        placeholder="Last Name"
+                        class="block h-9 w-full bg-transparent border border-gray-600 rounded-md
+               px-2 text-sm placeholder:text-gray-400
+               focus:outline-none focus:border-gray-300"
+                        required
+                >
             </div>
 
             <!-- DOB -->
             <div class="flex flex-col gap-1">
                 <label>Date of Birth</label>
-                <input type="date" name="date_of_birth" class="input-edit">
+                <input
+                        type="date"
+                        name="date_of_birth"
+                        class="block h-9 w-full bg-transparent border border-gray-600 rounded-md
+               px-2 text-sm placeholder:text-gray-400
+               focus:outline-none focus:border-gray-300"
+                >
             </div>
 
             <!-- Gender -->
             <div class="flex flex-col gap-1">
                 <label>Gender</label>
-                <select name="gender" class="input-edit-select">
+                <select
+                        name="gender"
+                        class="block h-9 w-full bg-transparent border border-gray-600 rounded-md
+               px-2 text-sm
+               focus:outline-none focus:border-gray-300"
+                >
                     <?php foreach (['Male','Female','Other'] as $g): ?>
-                        <option><?= $g ?></option>
+                        <option class="text-black"><?= $g ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -57,8 +83,15 @@ renderTable([
             <!-- Description -->
             <div class="md:col-span-2 flex flex-col gap-1">
                 <label>Description</label>
-                <textarea name="description" class="input-edit-textarea"></textarea>
+                <textarea
+                        name="description"
+                        placeholder="Short description..."
+                        class="w-full min-h-[80px] bg-transparent border border-gray-600 rounded-md
+               px-2 py-1.5 text-sm placeholder:text-gray-400
+               focus:outline-none focus:border-gray-300"
+                ></textarea>
             </div>
+
 
             <!-- Buttons -->
             <div class="md:col-span-2 flex gap-4 mt-2">
