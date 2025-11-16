@@ -17,8 +17,6 @@ renderTable([
     'headers'   => ['ID', 'Title', 'Date Added', 'Content'],
     'rows'      => $newsList,
     'searchable'=> true,
-
-    // Display row
     'renderRow' => function ($news) {
         return [
             $news['id'],
@@ -27,8 +25,6 @@ renderTable([
             e(mb_strimwidth($news['content'], 0, 100, '…'))
         ];
     },
-
-    // Action buttons
     'actions' => function ($news) {
         ob_start(); ?>
         <div class="flex items-center gap-2">
@@ -56,8 +52,6 @@ renderTable([
         </div>
         <?php return ob_get_clean();
     },
-
-    // Inline edit form
     'renderEditRow' => function ($news) {
         ob_start(); ?>
         <form method="post" class="grid grid-cols-1 gap-4">
