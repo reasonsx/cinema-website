@@ -60,55 +60,77 @@ $email     = htmlspecialchars($user['email']);
 <?php include 'header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-4xl mx-auto">
-    <h1 class="text-4xl font-[Limelight] text-secondary mb-6">My Profile</h1>
+    <h1 class="text-4xl font-[Limelight] tracking-wide text-secondary mb-8">My Profile</h1>
 
-    <div class="bg-white/10 rounded-lg p-6 mb-8">
+    <!-- PROFILE CARD -->
+    <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-8 mb-10 shadow-2xl">
         <div class="flex flex-col items-center gap-4">
+
             <!-- Avatar -->
-            <div class="w-24 h-24 rounded-full bg-gray-500 flex items-center justify-center text-2xl font-bold text-white">
+            <div class="w-24 h-24 rounded-full bg-white/10 border border-white/20
+                        flex items-center justify-center text-3xl font-bold text-secondary shadow-xl">
                 <?= strtoupper($firstname[0] . ($lastname[0] ?? '')) ?>
             </div>
 
             <h2 class="text-2xl font-semibold"><?= "$firstname $lastname" ?></h2>
-            <p class="text-white/80"><?= $email ?></p>
+            <p class="text-white/60"><?= $email ?></p>
 
             <?= $updateMessage ?>
 
             <?php if ($isEditing): ?>
-                <!-- Edit Mode -->
-                <form method="POST" class="mt-6 w-full max-w-md space-y-3">
-                    <input type="text" name="firstname" value="<?= $firstname ?>" placeholder="First name" required class="w-full p-2 rounded text-black">
-                    <input type="text" name="lastname" value="<?= $lastname ?>" placeholder="Last name" required class="w-full p-2 rounded text-black">
-                    <input type="email" name="email" value="<?= $email ?>" placeholder="Email" required class="w-full p-2 rounded text-black">
-                    <input type="password" name="new_password" placeholder="New password (optional)" class="w-full p-2 rounded text-black">
-                    <input type="password" name="current_password" placeholder="Current password (required to save changes)" required class="w-full p-2 rounded text-black">
+                <!-- EDIT PROFILE -->
+                <form method="POST" class="mt-6 w-full max-w-md space-y-4">
+
+                    <input type="text" name="firstname" value="<?= $firstname ?>" placeholder="First name"
+                           required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+
+                    <input type="text" name="lastname" value="<?= $lastname ?>" placeholder="Last name"
+                           required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+
+                    <input type="email" name="email" value="<?= $email ?>" placeholder="Email"
+                           required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+
+                    <input type="password" name="new_password" placeholder="New password (optional)"
+                           class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+
+                    <input type="password" name="current_password"
+                           placeholder="Current password (required)"
+                           required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
 
                     <div class="flex gap-3">
                         <button type="submit"
                                 class="flex-1 bg-[var(--secondary)] text-black font-semibold py-3 rounded-full">
                             Save Changes
                         </button>
+
                         <a href="profile.php"
-                           class="flex-1 bg-gray-600 text-white font-semibold py-3 rounded-full hover:bg-gray-500 transition text-center">
+                           class="flex-1 border border-white/20 text-white font-semibold py-3 rounded-full
+                                  hover:bg-white/10 transition text-center">
                             Cancel
                         </a>
                     </div>
                 </form>
+
             <?php else: ?>
-                <!-- View Mode -->
+                <!-- VIEW MODE BUTTONS -->
                 <div class="mt-6 flex flex-wrap justify-center gap-3">
+
                     <a href="profile.php?edit=true"
                        class="btn">
+                        <i class="pi pi-user-edit"></i>
                         Edit Profile
                     </a>
+
                     <?php if ($isAdmin): ?>
                         <a href="/cinema-website/admin_dashboard.php"
-                          class="btn">
-                         Go to Admin Dashboard
+                           class="btn">
+                            <i class="pi pi-cog"></i>
+                            Go to Admin Dashboard
                         </a>
                     <?php endif; ?>
+
                     <a href="/cinema-website/auth/logout.php"
-                       class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition">
+                       class="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 transition font-semibold">
                         Logout
                     </a>
                 </div>
@@ -116,20 +138,26 @@ $email     = htmlspecialchars($user['email']);
         </div>
     </div>
 
-    <!-- Booking History -->
-    <div class="bg-white/10 rounded-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4 text-secondary">Booking History</h2>
+    <!-- BOOKING HISTORY CARD -->
+    <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-8 shadow-2xl">
+        <h2 class="text-2xl font-semibold mb-4 text-secondary flex items-center gap-2">
+            <i class="pi pi-ticket"></i> Booking History
+        </h2>
+
         <?php if (empty($bookings)): ?>
-            <p class="text-gray-400">You haven’t made any bookings yet.</p>
+            <p class="text-white/50 italic">You haven’t made any bookings yet.</p>
+
         <?php else: ?>
-            <ul class="divide-y divide-white/10">
+            <ul class="space-y-4">
                 <?php foreach ($bookings as $b): ?>
-                    <li class="py-3 flex justify-between items-center">
+                    <li class="rounded-xl border border-white/10 bg-black/20 px-4 py-4 flex items-center justify-between hover:bg-black/30 transition">
                         <div>
                             <p class="font-semibold"><?= htmlspecialchars($b['title']) ?></p>
-                            <p class="text-sm text-gray-400"><?= date("M d, Y - H:i", strtotime($b['start_time'])) ?></p>
+                            <p class="text-white/50 text-sm">
+                                <?= date("M d, Y - H:i", strtotime($b['start_time'])) ?>
+                            </p>
                         </div>
-                        <span class="text-secondary font-semibold">$<?= number_format($b['total_price'], 2) ?></span>
+                        <p class="text-secondary font-semibold">$<?= number_format($b['total_price'], 2) ?></p>
                     </li>
                 <?php endforeach; ?>
             </ul>
