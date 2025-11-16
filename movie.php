@@ -93,7 +93,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 </section>
 
 <!-- MOVIE DETAILS CARD -->
-<section class="px-6 md:px-8 py-10">
+<section class="px-6 md:px-8 py-8">
     <div class="mx-auto max-w-7xl">
         <div class="grid grid-cols-1 md:grid-cols-[320px_1fr] gap-8">
 

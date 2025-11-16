@@ -60,7 +60,7 @@ $email     = htmlspecialchars($user['email']);
 <?php include 'header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-4xl mx-auto">
-    <h1 class="text-4xl font-[Limelight] text-[#F8A15A] mb-6">My Profile</h1>
+    <h1 class="text-4xl font-[Limelight] text-secondary mb-6">My Profile</h1>
 
     <div class="bg-white/10 rounded-lg p-6 mb-8">
         <div class="flex flex-col items-center gap-4">
@@ -85,7 +85,7 @@ $email     = htmlspecialchars($user['email']);
 
                     <div class="flex gap-3">
                         <button type="submit"
-                                class="flex-1 bg-[var(--secondary)] text-black font-semibold py-3 rounded-full hover:shadow-[0_0_25px_var(--secondary)] transition">
+                                class="flex-1 bg-[var(--secondary)] text-black font-semibold py-3 rounded-full">
                             Save Changes
                         </button>
                         <a href="profile.php"
@@ -98,12 +98,12 @@ $email     = htmlspecialchars($user['email']);
                 <!-- View Mode -->
                 <div class="mt-6 flex flex-wrap justify-center gap-3">
                     <a href="profile.php?edit=true"
-                       class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold hover:shadow-[0_0_18px_var(--secondary)] transition">
+                       class="btn">
                         Edit Profile
                     </a>
                     <?php if ($isAdmin): ?>
                         <a href="/cinema-website/admin_dashboard.php"
-                          class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold hover:shadow-[0_0_18px_var(--secondary)] transition">
+                          class="btn">
                          Go to Admin Dashboard
                         </a>
                     <?php endif; ?>
@@ -118,7 +118,7 @@ $email     = htmlspecialchars($user['email']);
 
     <!-- Booking History -->
     <div class="bg-white/10 rounded-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4 text-[#F8A15A]">Booking History</h2>
+        <h2 class="text-2xl font-semibold mb-4 text-secondary">Booking History</h2>
         <?php if (empty($bookings)): ?>
             <p class="text-gray-400">You haven’t made any bookings yet.</p>
         <?php else: ?>
@@ -129,7 +129,7 @@ $email     = htmlspecialchars($user['email']);
                             <p class="font-semibold"><?= htmlspecialchars($b['title']) ?></p>
                             <p class="text-sm text-gray-400"><?= date("M d, Y - H:i", strtotime($b['start_time'])) ?></p>
                         </div>
-                        <span class="text-[#F8A15A] font-semibold">$<?= number_format($b['total_price'], 2) ?></span>
+                        <span class="text-secondary font-semibold">$<?= number_format($b['total_price'], 2) ?></span>
                     </li>
                 <?php endforeach; ?>
             </ul>
