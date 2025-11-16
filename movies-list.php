@@ -109,7 +109,7 @@ $movies = getMovies($db);
 
                                 <!-- New sleeker button -->
                                 <div class="shrink-0">
-                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-transparent px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black hover:shadow-[0_0_15px_var(--secondary)] transition-all duration-300">
+                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-transparent px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
                                         Details
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 opacity-80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
