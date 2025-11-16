@@ -10,7 +10,7 @@ function genderBadge(string $gender): string {
 
     $class = $colors[$gender] ?? 'bg-gray-200 text-gray-700';
 
-    return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold $class\">" . e($gender) . "</span>";
+    return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap $class\">" . e($gender) . "</span>";
 }
 
 function formatDate($date): string {

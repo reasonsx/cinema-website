@@ -21,7 +21,7 @@ renderTable([
         return [
             $news['id'],
             '<strong class="text-gray-900">' . e($news['title']) . '</strong>',
-            '<span class="text-sm text-gray-700">' . e(formatNewsDate($news['date_added'])) . '</span>',
+            '<span class="text-sm text-gray-700 whitespace-nowrap">' . e(formatNewsDate($news['date_added'])) . '</span>',
             e(mb_strimwidth($news['content'], 0, 100, '…'))
         ];
     },
