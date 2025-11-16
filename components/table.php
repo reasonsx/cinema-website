@@ -21,18 +21,18 @@ if (!function_exists('renderTable')) {
     function renderTable(array $options)
     {
         // Extract options
-        $id            = $options['id']            ?? 'table_' . uniqid();
-        $title         = $options['title']         ?? '';
-        $headers       = $options['headers']       ?? [];
-        $rows          = $options['rows']          ?? [];
-        $renderRow     = $options['renderRow']     ?? null;
+        $id = $options['id'] ?? 'table_' . uniqid();
+        $title = $options['title'] ?? '';
+        $headers = $options['headers'] ?? [];
+        $rows = $options['rows'] ?? [];
+        $renderRow = $options['renderRow'] ?? null;
         $renderEditRow = $options['renderEditRow'] ?? null;
-        $actions       = $options['actions']       ?? null;
-        $addLabel      = $options['addLabel']      ?? 'Add New';
-        $addForm       = $options['addForm']       ?? null;
-        $emptyText     = $options['emptyText']     ?? 'No data available.';
-        $searchable    = $options['searchable']    ?? false;
-        $compact       = $options['compact']       ?? false;
+        $actions = $options['actions'] ?? null;
+        $addLabel = $options['addLabel'] ?? 'Add New';
+        $addForm = $options['addForm'] ?? null;
+        $emptyText = $options['emptyText'] ?? 'No data available.';
+        $searchable = $options['searchable'] ?? false;
+        $compact = $options['compact'] ?? false;
         ?>
 
         <section class="flex flex-col gap-4">
@@ -67,7 +67,7 @@ if (!function_exists('renderTable')) {
                 <input id="<?= $id ?>_search"
                        type="text"
                        placeholder="Search..."
-                       class="px-3 py-2 border rounded-md w-64" />
+                       class="px-3 py-2 border rounded-md w-64"/>
             <?php endif; ?>
 
             <!-- ---------- EMPTY STATE ---------- -->
@@ -174,7 +174,7 @@ if (!function_exists('renderTable')) {
                 if (!row) return;
                 row.classList.toggle("hidden");
                 if (!row.classList.contains("hidden")) {
-                    row.scrollIntoView({ behavior: "smooth", block: "center" });
+                    row.scrollIntoView({behavior: "smooth", block: "center"});
                 }
             }
         </script>
@@ -186,7 +186,7 @@ if (!function_exists('renderTable')) {
                 if (!form) return;
                 form.classList.toggle("hidden");
                 if (!form.classList.contains("hidden")) {
-                    form.scrollIntoView({ behavior: "smooth", block: "center" });
+                    form.scrollIntoView({behavior: "smooth", block: "center"});
                 }
             }
         </script>
