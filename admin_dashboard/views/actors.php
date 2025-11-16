@@ -34,19 +34,15 @@ renderTable([
     'headers' => ['ID', 'Name', 'DOB', 'Gender', 'Description'],
     'rows' => $actors,
     'searchable' => true,
-
-    // CLEAN RENDER ROW
     'renderRow' => function ($actor) {
         return [
             $actor['id'],
             e($actor['first_name'] . ' ' . $actor['last_name']),
-            formatDate($actor['date_of_birth']),
+            '<span class="whitespace-nowrap">' . formatDate($actor['date_of_birth']) . '</span>',
             genderBadge($actor['gender']),
             e($actor['description']),
         ];
     },
-
-    // CLEAN ACTION BUTTONS
     'actions' => function ($actor) {
         ob_start(); ?>
         <div class="flex items-center gap-2">
