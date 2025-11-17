@@ -1,4 +1,8 @@
 <?php
+
+// This file contains helper functions for adding, retrieving, updating, and deleting movie records.
+
+// Add a new movie to the database.
 function addMovieHandler($db, $data, $files): array {
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
@@ -10,7 +14,7 @@ function addMovieHandler($db, $data, $files): array {
     $posterPath = '';
     $trailer_url = trim($data['trailer_url']);
 
-    // Handle poster upload
+    // Upload poster image.
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         $fileType = $files['poster']['type'];
@@ -32,15 +36,14 @@ function addMovieHandler($db, $data, $files): array {
     }
 
     try {
-        // Insert movie with genre & language
-        $stmt = $db->prepare("
-            INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
+        // Insert movie.
+        $stmt = $db->prepare("INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url]);
+
         $movie_id = $db->lastInsertId();
 
-        // Link actors
+        // Add actor links.
         if (!empty($data['actors'])) {
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($data['actors'] as $actor_id) {
@@ -48,7 +51,7 @@ function addMovieHandler($db, $data, $files): array {
             }
         }
 
-        // Link directors
+        // Add director links.
         if (!empty($data['directors'])) {
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($data['directors'] as $director_id) {
@@ -62,22 +65,22 @@ function addMovieHandler($db, $data, $files): array {
     }
 }
 
+// Retrieve all movies.
 function getMovies($db) {
     $stmt = $db->prepare("SELECT * FROM movies ORDER BY id DESC");
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// Delete a movie and related links.
 function deleteMovie($db, $movieId): array {
     try {
-        // Remove actor/director links first
         $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id = ?");
         $stmt->execute([$movieId]);
 
         $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id = ?");
         $stmt->execute([$movieId]);
 
-        // Delete movie
         $stmt = $db->prepare("DELETE FROM movies WHERE id = ?");
         $stmt->execute([$movieId]);
 
@@ -87,6 +90,7 @@ function deleteMovie($db, $movieId): array {
     }
 }
 
+// Update movie information.
 function editMovieHandler($db, $data, $files): array {
     $movie_id = intval($data['movie_id']);
     $title = trim($data['title']);
@@ -99,7 +103,7 @@ function editMovieHandler($db, $data, $files): array {
     $trailer_url = trim($data['trailer_url'] ?? '');
     $posterPath = null;
 
-    // Handle new poster upload
+    // Upload new poster.
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         $fileType = $files['poster']['type'];
@@ -121,45 +125,34 @@ function editMovieHandler($db, $data, $files): array {
     }
 
     try {
-        // Update movie data
         if ($posterPath) {
-            $stmt = $db->prepare("
-                UPDATE movies 
-                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=? 
-                WHERE id=?
-            ");
+            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=? WHERE id=?");
             $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url, $movie_id]);
         } else {
-            $stmt = $db->prepare("
-                UPDATE movies 
-                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=? 
-                WHERE id=?
-            ");
+            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=? WHERE id=?");
             $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $trailer_url, $movie_id]);
         }
 
-        // Update actors
+        // Reset actor links.
         $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?");
         $stmt->execute([$movie_id]);
 
         if (!empty($data['actors'])) {
-            $actorIds = $data['actors'];
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
-            foreach ($actorIds as $actor_id) {
+            foreach ($data['actors'] as $actor_id) {
                 if (trim($actor_id) !== '') {
                     $stmt->execute([$actor_id, $movie_id]);
                 }
             }
         }
 
-        // Update directors
+        // Reset director links.
         $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id=?");
         $stmt->execute([$movie_id]);
 
         if (!empty($data['directors'])) {
-            $directorIds = $data['directors'];
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
-            foreach ($directorIds as $director_id) {
+            foreach ($data['directors'] as $director_id) {
                 if (trim($director_id) !== '') {
                     $stmt->execute([$director_id, $movie_id]);
                 }
@@ -172,6 +165,7 @@ function editMovieHandler($db, $data, $files): array {
     }
 }
 
+// Retrieve a single movie by ID.
 function getMovieById($db, $movieId) {
     $stmt = $db->prepare("SELECT * FROM movies WHERE id = ?");
     $stmt->execute([$movieId]);
