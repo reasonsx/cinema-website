@@ -1,5 +1,6 @@
 <?php
-// Fetch all users
+
+// Fetch all user
 function getUsers(PDO $db): array {
     $stmt = $db->prepare("SELECT id, firstname, lastname, email, isAdmin FROM users ORDER BY id DESC");
     $stmt->execute();
@@ -17,16 +18,13 @@ function getUserById(PDO $db, int $userId): ?array {
 // Add new user (admin functionality)
 function addUser(PDO $db, array $data): array {
     try {
-        $stmt = $db->prepare("
-            INSERT INTO users (firstname, lastname, email, password, isAdmin)
-            VALUES (?, ?, ?, ?, ?)
-        ");
+        $stmt = $db->prepare("INSERT INTO users (firstname, lastname, email, password, isAdmin) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([
-            $data['firstname'],
-            $data['lastname'],
-            $data['email'],
+            trim($data['firstname']),
+            trim($data['lastname']),
+            trim($data['email']),
             password_hash($data['password'], PASSWORD_DEFAULT),
-            isset($data['isAdmin']) ? 1 : 0
+            !empty($data['isAdmin']) ? 1 : 0
         ]);
         return ["User added successfully!", ""];
     } catch (PDOException $e) {
@@ -37,16 +35,12 @@ function addUser(PDO $db, array $data): array {
 // Edit user (admin functionality)
 function editUser(PDO $db, array $data): array {
     try {
-        $stmt = $db->prepare("
-            UPDATE users
-            SET firstname = ?, lastname = ?, isAdmin = ?
-            WHERE id = ?
-        ");
+        $stmt = $db->prepare("UPDATE users SET firstname = ?, lastname = ?, isAdmin = ? WHERE id = ?");
         $stmt->execute([
-            $data['firstname'],
-            $data['lastname'],
-            isset($data['isAdmin']) ? 1 : 0,
-            $data['user_id']
+            trim($data['firstname']),
+            trim($data['lastname']),
+            !empty($data['isAdmin']) ? 1 : 0,
+            (int) $data['user_id']
         ]);
         return ["User updated successfully!", ""];
     } catch (PDOException $e) {
@@ -65,10 +59,10 @@ function deleteUser(PDO $db, int $userId): array {
     }
 }
 
-// ✅ Update user’s own profile (used in profile.php)
+// Update user profile (user-facing)
 function updateUserProfile(PDO $db, int $userId, array $data): array {
     try {
-        // Fetch the current hashed password
+        // Verify current password
         $stmt = $db->prepare("SELECT password FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $storedHash = $stmt->fetchColumn();
@@ -101,7 +95,7 @@ function updateUserProfile(PDO $db, int $userId, array $data): array {
     }
 }
 
-// ✅ Check login credentials (used in login.php)
+// Verify login credentials
 function verifyUserLogin(PDO $db, string $email, string $password): ?array {
     $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->execute([$email]);
@@ -113,4 +107,5 @@ function verifyUserLogin(PDO $db, string $email, string $password): ?array {
 
     return null;
 }
+
 ?>
