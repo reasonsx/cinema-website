@@ -6,6 +6,10 @@ composer install
 
 This will automatically download all dependencies (including Stripe) into the vendor/ folder.
 
+and create .ev file with STRIPE_SECRET_KEY=sk_test_xxxxx
+
+
+
 ## Create your own `constants.php`
 
 Each contributor must use their own local credentials.
