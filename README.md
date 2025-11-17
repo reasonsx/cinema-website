@@ -1,4 +1,10 @@
-# 🎬 Cinema Website Setup Guide
+Cinema Website Setup Guide
+
+Before running the project, install all required Composer packages:
+
+composer install
+
+This will automatically download all dependencies (including Stripe) into the vendor/ folder.
 
 ## Create your own `constants.php`
 
