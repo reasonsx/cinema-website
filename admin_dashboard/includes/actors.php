@@ -1,17 +1,15 @@
 <?php
 
-/**
- * Execute a prepared statement safely.
- */
+// This file provides database utilities and handlers for managing actor records.
+
+// Execute a prepared SQL statement.
 function dbRun(PDO $db, string $sql, array $params = []): bool
 {
     $stmt = $db->prepare($sql);
     return $stmt->execute($params);
 }
 
-/**
- * Fetch all rows from a query.
- */
+// Fetch all rows from a SQL query.
 function dbFetchAll(PDO $db, string $sql, array $params = []): array
 {
     $stmt = $db->prepare($sql);
@@ -19,17 +17,13 @@ function dbFetchAll(PDO $db, string $sql, array $params = []): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Standardized success/error response.
- */
+// Return a standardized success or error response.
 function response(bool $ok, string $msg): array
 {
     return $ok ? [$msg, ""] : ["", $msg];
 }
 
-/**
- * Validate incoming actor data.
- */
+// Validate incoming actor data.
 function validateActor(array $data): ?string
 {
     if (empty($data['first_name']) || empty($data['last_name'])) {
@@ -47,9 +41,7 @@ function validateActor(array $data): ?string
     return null;
 }
 
-/**
- * Insert a new actor record.
- */
+// Insert a new actor into the database.
 function addActorHandler(PDO $db, array $data): array
 {
     if ($err = validateActor($data)) {
@@ -72,9 +64,7 @@ function addActorHandler(PDO $db, array $data): array
     return response($ok, $ok ? "Actor added successfully!" : "Failed to add actor.");
 }
 
-/**
- * Retrieve all actors.
- */
+// Retrieve all actors from the database.
 function getActors(PDO $db): array
 {
     return dbFetchAll(
@@ -83,9 +73,7 @@ function getActors(PDO $db): array
     );
 }
 
-/**
- * Retrieve ID + name list of actors.
- */
+// Retrieve a list of actor IDs and names.
 function getActorsList(PDO $db): array
 {
     return dbFetchAll(
@@ -94,9 +82,7 @@ function getActorsList(PDO $db): array
     );
 }
 
-/**
- * Delete actor and related records.
- */
+// Delete an actor and all related records.
 function deleteActor(PDO $db, int $actorId): array
 {
     $db->beginTransaction();
@@ -113,9 +99,7 @@ function deleteActor(PDO $db, int $actorId): array
     }
 }
 
-/**
- * Update an existing actor record.
- */
+// Update actor information.
 function editActorHandler(PDO $db, array $data): array
 {
     if ($err = validateActor($data)) {
