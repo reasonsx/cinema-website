@@ -1,29 +1,26 @@
 <?php
-function getSeatsByRoom(PDO $db, int $roomId): array
-{
-    $stmt = $db->prepare("
-        SELECT id, `row_number`, seat_number
-        FROM seats
-        WHERE screening_room_id = ?
-        ORDER BY `row_number`, seat_number
-    ");
+// This file contains helper functions for managing screening rooms and their seats.
+
+// Fetch all seats belonging to a screening room
+function getSeatsByRoom(PDO $db, int $roomId): array {
+    $stmt = $db->prepare("SELECT id, `row_number`, seat_number FROM seats WHERE screening_room_id = ? ORDER BY `row_number`, seat_number");
     $stmt->execute([$roomId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
+// Get capacity (total number of seats) for a screening room
 function getRoomCapacity($db, $roomId) {
     $stmt = $db->prepare("SELECT COUNT(*) as total_seats FROM seats WHERE screening_room_id = ?");
     $stmt->execute([$roomId]);
     return (int)$stmt->fetch(PDO::FETCH_ASSOC)['total_seats'];
 }
 
+// Get all screening rooms including calculated capacity
 function getScreeningRooms($db) {
     $stmt = $db->prepare("SELECT * FROM screening_rooms ORDER BY id");
     $stmt->execute();
     $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Add dynamic capacity for each room
     foreach ($rooms as &$room) {
         $room['capacity'] = getRoomCapacity($db, $room['id']);
     }
@@ -31,23 +28,21 @@ function getScreeningRooms($db) {
     return $rooms;
 }
 
+// Edit a screening room including updating seats via grid or manual mode
 function editScreeningRoom($db, $data) {
     try {
         $roomId = (int)$data['room_id'];
         $name = trim($data['name']);
 
-        // Update room name only
         $stmt = $db->prepare("UPDATE screening_rooms SET name = ? WHERE id = ?");
         $stmt->execute([$name, $roomId]);
 
-        // Seat inputs
-        $rowsInput = isset($data['rows']) ? trim($data['rows']) : '';
-        $seatsPerRowInput = isset($data['seats_per_row']) ? trim($data['seats_per_row']) : '';
-        $manualSeatsInput = isset($data['seats_text']) ? trim($data['seats_text']) : '';
+        $rowsInput = trim($data['rows'] ?? '');
+        $seatsPerRowInput = trim($data['seats_per_row'] ?? '');
+        $manualSeatsInput = trim($data['seats_text'] ?? '');
         $mode = $data['seat_edit_mode'] ?? '';
 
         if ($mode === 'grid' && $rowsInput !== '' && $seatsPerRowInput !== '') {
-            // GRID MODE
             $rows = (int)$rowsInput;
             $seatsPerRow = (int)$seatsPerRowInput;
 
@@ -60,9 +55,7 @@ function editScreeningRoom($db, $data) {
                     $stmtInsert->execute([$roomId, $rowLetter, $s]);
                 }
             }
-
         } elseif ($mode === 'manual' && $manualSeatsInput !== '') {
-            // MANUAL MODE
             $db->prepare("DELETE FROM seats WHERE screening_room_id = ?")->execute([$roomId]);
             $stmtInsert = $db->prepare("INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES (?, ?, ?)");
 
@@ -86,18 +79,16 @@ function editScreeningRoom($db, $data) {
     }
 }
 
-
+// Add a new screening room and optional seats via grid/manual mode
 function addScreeningRoom($db, $data) {
     try {
         $name = trim($data['name']);
         if (!$name) throw new Exception("Room name is required");
 
-        // Insert room
         $stmt = $db->prepare("INSERT INTO screening_rooms (name) VALUES (?)");
         $stmt->execute([$name]);
         $roomId = $db->lastInsertId();
 
-        // Insert seats if provided
         $rows = (int)($data['rows'] ?? 0);
         $seatsPerRow = (int)($data['seats_per_row'] ?? 0);
         $manualSeats = trim($data['seats_text'] ?? '');
@@ -129,15 +120,13 @@ function addScreeningRoom($db, $data) {
     }
 }
 
+// Delete a screening room and its seats
 function deleteScreeningRoom($db, $roomId) {
     try {
         $roomId = (int)$roomId;
         if (!$roomId) throw new Exception("Invalid room ID");
 
-        // Delete seats first
         $db->prepare("DELETE FROM seats WHERE screening_room_id = ?")->execute([$roomId]);
-
-        // Delete room
         $db->prepare("DELETE FROM screening_rooms WHERE id = ?")->execute([$roomId]);
 
         return ['Screening room deleted successfully!', ''];
@@ -145,6 +134,5 @@ function deleteScreeningRoom($db, $roomId) {
         return ['', 'Error deleting screening room: ' . $e->getMessage()];
     }
 }
-
 
 $screeningRooms = getScreeningRooms($db);
