@@ -1,0 +1,12 @@
+{
+    "name": "karol/cinema-website",
+    "authors": [
+        {
+            "name": "nakaaay13",
+            "email": "karbrz01@easv365.dk"
+        }
+    ],
+    "require": {
+        "stripe/stripe-php": "^18.2"
+    }
+}
