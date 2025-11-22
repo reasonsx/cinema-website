@@ -1,20 +1,12 @@
-/* ========================================= */
-/* Cinema Website Theme - Clean + Consistent */
-/* ========================================= */
-
 :root {
-    --primary: #ED6044;     /* Main accent (warm red-orange) */
-    --secondary: #f5821e;   /* Softer peach for contrast */
-    --white: #f8f8f8;       /* Balanced off-white */
-    --black: #111111;       /* Clean deep charcoal */
+    --primary: #ED6044;
+    --secondary: #f5821e;
+    --white: #f8f8f8;
+    --black: #111111;
 
     --primary-font: 'Limelight', cursive;
     --body-font: 'Inter', sans-serif;
 }
-
-/* ======================= */
-/* Typography               */
-/* ======================= */
 
 h1, h3, h4, h5, h6 {
     font-family: var(--primary-font);
@@ -24,10 +16,7 @@ body, p, li, a {
     font-family: var(--body-font);
 }
 
-/* ======================= */
 /* Utility Classes          */
-/* ======================= */
-
 .bg-primary { background-color: var(--primary); }
 .bg-secondary { background-color: var(--secondary); }
 .bg-white { background-color: var(--white); }
@@ -43,27 +32,24 @@ body, p, li, a {
 .border-white { border-color: var(--white); }
 .border-black { border-color: var(--black); }
 
-/* ======================= */
-/* Buttons                  */
-/* ======================= */
-
-.btn {
+/*  BUTTONS   */
+.btn,
+.btn-full {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-
-    padding: 0.625rem 1.25rem; /* px-5 py-2.5 equivalent */
-    border-radius: 9999px;     /* rounded-full */
-
-    border: 1px solid var(--secondary);
-    background-color: transparent;
-
-    color: var(--secondary);
+    padding: 0.625rem 1.25rem;
+    border-radius: 9999px;
     font-weight: 600;
-    font-size: 0.9rem; /* close to text-sm */
-
+    font-size: 0.9rem;
     text-decoration: none;
     transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.btn {
+    border: 1px solid var(--secondary);
+    background-color: transparent;
+    color: var(--secondary);
 }
 
 .btn:hover {
@@ -71,10 +57,18 @@ body, p, li, a {
     color: var(--black);
 }
 
-/* ======================= */
-/* Form Inputs              */
-/* ======================= */
+.btn-full {
+    border: 1px solid var(--secondary);
+    background-color: var(--secondary);
+    color: var(--black);
+}
 
+/*.btn-full:hover {*/
+/*    background-color: transparent;*/
+/*    color: var(--secondary);*/
+/*}*/
+
+/*  FORM INPUTS   */
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -93,10 +87,7 @@ textarea {
 }
 
 input:hover,
-textarea:hover {
-    border-color: var(--black);
-}
-
+textarea:hover,
 input:focus,
 textarea:focus {
     border-color: var(--black);
@@ -107,10 +98,7 @@ textarea::placeholder {
     color: #999;
 }
 
-/* ======================= */
-/* Actor / Director Buttons */
-/* ======================= */
-
+/* Actor / Director Tags    */
 .actor-btn,
 .director-btn {
     transition: background 0.15s ease, color 0.15s ease;
@@ -123,15 +111,13 @@ textarea::placeholder {
     border-color: var(--primary);
 }
 
-/* ======================= */
 /* Contact Form Overrides   */
-/* ======================= */
-
 #contact-us input,
 #contact-us textarea {
     background-color: var(--secondary) !important;
     color: var(--black) !important;
     border: 2px solid var(--black) !important;
+    border-radius: 0.5rem;
 }
 
 #contact-us input::placeholder,
@@ -139,41 +125,27 @@ textarea::placeholder {
     color: var(--black) !important;
 }
 
-#contact-us input,
-#contact-us textarea,
-#contact-us button {
-    border-radius: 0.5rem;
-}
-
-/* Optional: minimal hover/focus */
 #contact-us input:focus,
 #contact-us textarea:focus,
 #contact-us button:hover {
     border-color: var(--black) !important;
 }
+
+/* Tailwind Utility Inputs  */
 .input-edit {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg
-    text-gray-700 bg-white
-    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
-    transition-all duration-200;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all duration-200;
 }
 
 .input-edit-select {
-    @apply w-full px-3 py-2 border border-gray-300 rounded-lg
-    bg-white text-gray-700
-    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
-    transition-all duration-200;
+    @apply w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all duration-200;
 }
 
 .input-edit-textarea {
-    @apply w-full p-3 border border-gray-300 rounded-lg
-    bg-white text-gray-700
-    focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)]
-    transition-all duration-200;
+    @apply w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all duration-200;
 }
 
 form {
     padding: 0;
     margin: 0;
-    line-height: 1; /* or 1.2 if you want slightly looser spacing */
+    line-height: 1;
 }

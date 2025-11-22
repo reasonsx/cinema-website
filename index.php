@@ -25,7 +25,7 @@ $newsList   = getNews($db);
 <section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
     <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
         <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
-        <a href="#now-playing" class="btn">Explore Now</a>
+        <a href="#now-playing" class="btn-full">Explore Now</a>
 
         <img src="images/film-reel.png"
              alt="Film Reel"
