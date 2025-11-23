@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'include/connection.php';
-require_once 'admin_dashboard/includes/contact.php';
+require_once 'admin_dashboard/includes/contact_functions.php';
 
 /* --- Basic protections --- */
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: index.php#contact-us'); exit; }
@@ -27,13 +27,13 @@ require_once 'include/connection.php';
 
 // Basic spam honeypot
 if (!empty($_POST['website'])) {
-    header('Location: contact.php?status=spam');
+    header('Location: contact_functions.php?status=spam');
     exit;
 }
 
 // Validate CSRF
 if (empty($_POST['csrf']) || $_POST['csrf'] !== ($_SESSION['csrf'] ?? '')) {
-    header('Location: contact.php?status=csrf');
+    header('Location: contact_functions.php?status=csrf');
     exit;
 }
 
@@ -44,7 +44,7 @@ $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
 if ($name === '' || $email === '' || $subject === '' || $message === '') {
-    header('Location: contact.php?status=invalid');
+    header('Location: contact_functions.php?status=invalid');
     exit;
 }
 
@@ -56,10 +56,10 @@ try {
     ");
     $stmt->execute([$name, $email, $subject, $message]);
 
-    header('Location: contact.php?status=success');
+    header('Location: contact_functions.php?status=success');
     exit;
 } catch (PDOException $e) {
-    header('Location: contact.php?status=error');
+    header('Location: contact_functions.php?status=error');
     exit;
 }
 

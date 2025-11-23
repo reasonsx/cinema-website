@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../components/table.php';
-require_once __DIR__ . '/../../include/helpers.php';
+require_once __DIR__ . '/../../../include/helpers.php';
 
 function genderBadge(string $gender): string {
     $colors = [

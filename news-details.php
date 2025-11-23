@@ -1,6 +1,6 @@
 <?php
-require_once 'include/connection.php';
-require_once 'admin_dashboard/includes/news.php';
+require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/admin_dashboard/views/news/news_functions.php';
 
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $article = getNewsById($db, $id);

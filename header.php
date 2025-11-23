@@ -48,7 +48,7 @@ if (isset($_SESSION['user_id'])) {
                 </a>
                 <a href="/cinema-website/contact.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
-                  <?= isActive('contact.php', $current) ?>">
+                  <?= isActive('contact_functions.php', $current) ?>">
                     Contact
                 </a>
 

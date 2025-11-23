@@ -1,16 +1,17 @@
 <?php
-// Include modules
-require_once 'include/connection.php'; // DB connection
-require_once 'admin_dashboard/includes/actors.php';
-require_once 'admin_dashboard/includes/directors.php';
-require_once 'admin_dashboard/includes/movies.php';
-require_once 'admin_dashboard/includes/users.php';
-require_once 'admin_dashboard/includes/screening_rooms.php';
-require_once 'admin_dashboard/includes/screenings.php';
-require_once 'admin_dashboard/includes/bookings.php';
-require_once 'admin_dashboard/includes/news.php';
-require_once 'admin_dashboard/includes/contact.php';
-require_once 'auth/session.php';
+require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/admin_dashboard/views/actors/actors_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/directors/directors_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/movies/movies_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/users/users_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/screenings/screenings_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/bookings/bookings_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/news/news_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/contact_messages/contact_functions.php';
+
+require_once __DIR__ . '/auth/session.php';
+
 
 $session = new SessionManager($db);
 $session->requireLogin(); // ensures user is logged in
@@ -313,7 +314,7 @@ include 'header.php';
         <!-- Dynamic View Content -->
         <?php
         // Include the proper view dynamically
-        $viewFile = __DIR__ . "/admin_dashboard/views/{$view}.php";
+        $viewFile = __DIR__ . "/admin_dashboard/views/{$view}/{$view}_view.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {

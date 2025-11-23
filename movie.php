@@ -1,10 +1,10 @@
 <?php
 session_start();
 require_once 'include/connection.php';
-require_once 'admin_dashboard/includes/movies.php';
-require_once 'admin_dashboard/includes/actors.php';
-require_once 'admin_dashboard/includes/directors.php';
-require_once 'admin_dashboard/includes/screenings.php';
+require_once 'admin_dashboard/views/movies/movies_functions.php';
+require_once 'admin_dashboard/views/actors/actors_functions.php';
+require_once 'admin_dashboard/views/directors/directors_functions.php';
+require_once 'admin_dashboard/views/screenings/screenings_functions.php';
 require_once 'include/helpers.php';
 
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;

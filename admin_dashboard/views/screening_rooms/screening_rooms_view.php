@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../components/table.php';
-require_once __DIR__ . '/../../include/helpers.php';
+require_once __DIR__ . '/../../../include/helpers.php';
 
 // Helper: group seats by row and build data for edit/manual mode
 function buildSeatLayout(PDO $db, int $roomId): array {
