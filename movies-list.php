@@ -1,17 +1,19 @@
 <?php
 session_start();
-require_once 'include/connection.php';
-require_once 'admin_dashboard/includes/movies.php';
+
+require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/admin_dashboard/views/movies/movies_functions.php';
+
 
 // Fetch all movies
 $movies = getMovies($db);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include __DIR__ . '/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include 'header.php'; ?>
+<?php include __DIR__ . '/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--secondary)] to-[var(--primary)]/70 text-black text-center">
@@ -132,7 +134,7 @@ $movies = getMovies($db);
 </section>
 
 
-<?php include 'footer.php'; ?>
+<?php include __DIR__ . '/footer.php'; ?>
 
 <!-- Search Script -->
 <script>

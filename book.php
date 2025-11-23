@@ -1,8 +1,8 @@
 <?php
-require_once 'include/connection.php';
-require_once 'auth/session.php'; // <-- your SessionManager class
-require_once 'admin_dashboard/includes/screenings.php';
-require_once 'admin_dashboard/includes/screening_rooms.php';
+require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/auth/session.php'; // <-- your SessionManager class
+require_once __DIR__ . '/admin_dashboard/views/screenings/screenings_functions.php';
+require_once __DIR__ . '/admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
 // Initialize session manager
 $session = new SessionManager($db);

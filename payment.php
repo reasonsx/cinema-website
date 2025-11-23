@@ -3,8 +3,8 @@ session_start();
 
 require_once 'include/connection.php';
 require_once 'include/stripe_config.php'; // Loads Stripe API key from .env
-require_once 'admin_dashboard/includes/screenings.php';
-require_once 'admin_dashboard/includes/screening_rooms.php';
+require_once 'admin_dashboard/includes/screenings_functions.php';
+require_once 'admin_dashboard/includes/screening_rooms_functions.php';
 
 // Require login
 if (!isset($_SESSION['user_id'])) {
