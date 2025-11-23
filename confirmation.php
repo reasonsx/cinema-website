@@ -14,10 +14,10 @@ $payment_method = $_POST['payment_method'] ?? 'card';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-light text-black font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="py-12 px-6 md:px-16 bg-white">
     <div class="max-w-2xl mx-auto bg-light rounded-2xl shadow-lg p-8 text-center">
@@ -60,6 +60,6 @@ $payment_method = $_POST['payment_method'] ?? 'card';
     </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>

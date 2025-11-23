@@ -12,10 +12,10 @@ if (!$article) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="py-16 px-6 max-w-5xl mx-auto">
     <h1 class="text-5xl font-[Limelight] text-[var(--secondary)] mb-4"><?= htmlspecialchars($article['title']) ?></h1>
@@ -23,6 +23,6 @@ if (!$article) {
     <div class="text-white/90 leading-relaxed"><?= nl2br(htmlspecialchars($article['content'])) ?></div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>

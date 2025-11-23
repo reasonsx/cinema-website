@@ -58,10 +58,10 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <!-- HERO -->
 <section class="relative">
@@ -295,7 +295,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
     </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 
 <?php if (!empty($groupedScreenings)): ?>
     <script>

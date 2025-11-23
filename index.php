@@ -14,11 +14,11 @@ $newsList   = getNews($db);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 
 <body class="bg-light text-black font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 
 <!-- Hero Section -->
@@ -50,7 +50,7 @@ $newsList   = getNews($db);
 <?php include 'components/frontpage/contact/contact-form.php'; ?>
 
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 
 </body>
 </html>

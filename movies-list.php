@@ -10,10 +10,10 @@ $movies = getMovies($db);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include __DIR__ . '/head.php'; ?>
+<?php include __DIR__ . '/shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/shared/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--secondary)] to-[var(--primary)]/70 text-black text-center">
@@ -134,7 +134,7 @@ $movies = getMovies($db);
 </section>
 
 
-<?php include __DIR__ . '/footer.php'; ?>
+<?php include __DIR__ . '/shared/footer.php'; ?>
 
 <!-- Search Script -->
 <script>

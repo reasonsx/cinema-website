@@ -9,10 +9,10 @@ $time = $_GET['time'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-light text-black font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="py-12 px-6 md:px-16 bg-light">
     <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
@@ -98,6 +98,6 @@ $time = $_GET['time'] ?? '';
     });
 </script>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>

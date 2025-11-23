@@ -220,8 +220,8 @@ $newContactMessagesCount = countNewContactMessages($db);
 $contactMessages = listContactMessages($db);
 
 // ------------------- Include Layout -------------------
-include 'head.php';
-include 'header.php';
+include 'shared/head.php';
+include 'shared/header.php';
 ?>
 <section class="flex min-h-[80vh] bg-gray-100 px-4 py-6">
     <!-- Sidebar -->

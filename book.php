@@ -56,9 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10">
     <div class="mx-auto max-w-7xl">
@@ -139,6 +139,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 </script>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>

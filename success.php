@@ -36,11 +36,11 @@ unset($_SESSION['selected_screening'], $_SESSION['selected_seats']);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 
 <body class="bg-black text-white font-sans">
 
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-20 max-w-3xl mx-auto text-center">
     <h1 class="text-4xl md:text-5xl font-[Limelight] text-[#F8A15A] mb-8">Payment Successful!</h1>
@@ -59,7 +59,7 @@ unset($_SESSION['selected_screening'], $_SESSION['selected_seats']);
     </a>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 
 </body>
 </html>

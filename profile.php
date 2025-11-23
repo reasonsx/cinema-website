@@ -55,9 +55,9 @@ $email     = htmlspecialchars($user['email']);
 
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-4xl mx-auto">
     <h1 class="text-4xl font-[Limelight] tracking-wide text-secondary mb-8">My Profile</h1>
@@ -165,6 +165,6 @@ $email     = htmlspecialchars($user['email']);
     </div>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>

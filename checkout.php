@@ -30,9 +30,9 @@ $totalPrice = $seatPrice * count($selectedSeats);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'head.php'; ?>
+<?php include 'shared/head.php'; ?>
 <body class="bg-black text-white">
-<?php include 'header.php'; ?>
+<?php include 'shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-3xl mx-auto">
     <h1 class="text-4xl font-[Limelight] text-[#F8A15A] mb-6">Checkout</h1>
@@ -57,6 +57,6 @@ $totalPrice = $seatPrice * count($selectedSeats);
     </form>
 </section>
 
-<?php include 'footer.php'; ?>
+<?php include 'shared/footer.php'; ?>
 </body>
 </html>
