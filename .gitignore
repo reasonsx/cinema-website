@@ -11,3 +11,7 @@
 
 /vendor/
 .env
+.idea/inspectionProfiles/Project_Default.xml
+.idea/php.xml
+.idea/vcs.xml
+.idea/php.xml
