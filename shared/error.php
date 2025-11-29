@@ -9,7 +9,7 @@ $title = match ((int)$code) {
     default => 'Page Not Found',
 };
 
-include 'shared/head.php';
+include '../shared/head.php';
 ?>
 <body class="min-h-screen flex flex-col items-center justify-center text-center bg-black text-secondary font-sans">
 

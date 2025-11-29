@@ -27,7 +27,7 @@ $newsList   = getNews($db);
         <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
         <a href="#now-playing" class="btn-full">Explore Now</a>
 
-        <img src="images/film-reel.png"
+        <img src="images/frontpage/film-reel.png"
              alt="Film Reel"
              class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
     </div>

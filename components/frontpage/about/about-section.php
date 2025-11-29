@@ -9,13 +9,16 @@
             <h2 class="text-5xl font-[Limelight] uppercase mb-6">Our Cinema</h2>
 
             <p class="mb-4 leading-relaxed">
-                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi
-                At Magna Tempus Facilisis. Quisque Euismod, Turpis Id Lacinia Elementum, Nibh Libero Cursus Nulla, Non
-                Interdum Risus Mi Vel Massa.
+                Our cinema was founded with one simple goal: to bring unforgettable film experiences to our community.
+                From timeless classics to the newest blockbusters, we’ve built a space where movie lovers can escape
+                into storytelling, immerse themselves in breathtaking sound, and enjoy the magic of the big screen.
             </p>
 
             <p class="leading-relaxed">
-                Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Sed Sit Amet Facilisis Urna. Praesent Ac Nisi At.
+                We believe that a cinema should be more than just a place to watch movies — it should be a gathering
+                spot for friends, families, and film enthusiasts. That’s why we focus on comfort, modern technology, and
+                friendly service. Whether you're here for a premiere night, a cozy late show, or a special event, we
+                strive to make every visit feel special.
             </p>
         </div>
 
