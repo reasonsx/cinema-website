@@ -79,7 +79,7 @@ $movies = getMovies($db);
                         ?>
                         <li class="movie-row group" data-title="<?= $title ?>">
                             <a
-                                    href="movie.php?id=<?= $id ?>"
+                                    href="views/movie/movie.php?id=<?= $id ?>"
                                     class="flex items-center gap-6 px-8 py-5 transition rounded-2xl md:rounded-none hover:bg-white/10 focus:bg-white/10 focus:outline-none"
                             >
                                 <!-- Poster -->
