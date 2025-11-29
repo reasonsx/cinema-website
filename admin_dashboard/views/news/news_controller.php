@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../../include/connection.php';
+require_once __DIR__ . '/../../../backend/connection.php';
 require_once __DIR__ . '/news_functions.php';
 
 // -----------------------------------

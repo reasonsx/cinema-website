@@ -1,5 +1,5 @@
 <?php
-require('include/constants.php');
+require('constants.php');
 
 try {
     // Connect to MySQL server (no specific database)

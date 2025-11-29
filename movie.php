@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once 'include/connection.php';
+require_once 'backend/connection.php';
 require_once 'admin_dashboard/views/movies/movies_functions.php';
 require_once 'admin_dashboard/views/actors/actors_functions.php';
 require_once 'admin_dashboard/views/directors/directors_functions.php';
 require_once 'admin_dashboard/views/screenings/screenings_functions.php';
-require_once 'include/helpers.php';
+require_once 'shared/helpers.php';
 
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);

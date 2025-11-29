@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../../include/connection.php';
+require_once __DIR__ . '/../../../backend/connection.php';
 require_once __DIR__ . '/users_functions.php';
 
 // Load all users for the table

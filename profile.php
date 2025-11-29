@@ -1,5 +1,5 @@
 <?php
-require_once 'include/connection.php';
+require_once 'backend/connection.php';
 require_once 'auth/session.php';
 require_once 'admin_dashboard/views/users/users_functions.php';
 require_once 'admin_dashboard/views/bookings/bookings_functions.php';

@@ -11,7 +11,7 @@ session_set_cookie_params([
 ]);
 session_start();
 
-require_once '../include/connection.php';
+require_once '../backend/connection.php';
 
 // --- Handle session timeout (30 min inactivity) ---
 $timeoutDuration = 1800;

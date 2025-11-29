@@ -31,7 +31,7 @@ Initialize or reset the database
 
 Visit the following URL in your browser to run the SQL code:
 
-http://localhost/cinema-website/setup_database.php
+http://localhost/cinema-website/backend/setup_database.php
 
 
 You should see:

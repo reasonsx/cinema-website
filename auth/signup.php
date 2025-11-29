@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../include/connection.php'; // keep this path since your folder is "include"
+require_once '../backend/connection.php'; // keep this path since your folder is "backend"
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = trim($_POST['firstname']);

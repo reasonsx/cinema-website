@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'include/connection.php';
+require_once 'backend/connection.php';
 require_once 'admin_dashboard/includes/contact_functions.php';
 
 /* --- Basic protections --- */
@@ -23,7 +23,7 @@ $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
 session_start();
-require_once 'include/connection.php';
+require_once 'backend/connection.php';
 
 // Basic spam honeypot
 if (!empty($_POST['website'])) {

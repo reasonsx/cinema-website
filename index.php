@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'include/connection.php';
+require_once 'backend/connection.php';
 require_once 'admin_dashboard/views/movies/movies_functions.php';
 require_once 'admin_dashboard/views/screenings/screenings_functions.php';
 require_once 'admin_dashboard/views/news/news_functions.php';

@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/backend/connection.php';
 require_once __DIR__ . '/admin_dashboard/views/movies/movies_functions.php';
 
 

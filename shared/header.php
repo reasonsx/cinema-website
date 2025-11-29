@@ -13,7 +13,7 @@ $userName = null;
 
 // If logged in, fetch user first name
 if (isset($_SESSION['user_id'])) {
-    require_once __DIR__ . '/../include/connection.php';
+    require_once __DIR__ . '/../backend/connection.php';
     $stmt = $db->prepare("SELECT firstname FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);

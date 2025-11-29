@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/include/connection.php';
+require_once __DIR__ . '/backend/connection.php';
 require_once __DIR__ . '/admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
