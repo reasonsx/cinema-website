@@ -36,9 +36,9 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center gap-6">
-                <a href="/cinema-website/movies-list.php"
+                <a href="/cinema-website/movies_list.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
-                  <?= isActive('movies-list.php', $current) ?>">
+                  <?= isActive('movies_list.php', $current) ?>">
                     WHAT'S ON
                 </a>
 
@@ -73,7 +73,7 @@ if (isset($_SESSION['user_id'])) {
              class="md:hidden max-h-0 overflow-hidden transition-[max-height] duration-300 ease-in-out bg-black/85 border-t border-white/10">
             <div class="px-6 py-4 space-y-4">
                 <a href="/cinema-website/index.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-home"></i> Home</a>
-                <a href="/cinema-website/movies-list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
+                <a href="/cinema-website/movies_list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
 
                 <div class="flex gap-2 pt-2">
                     <?php if ($userName): ?>
