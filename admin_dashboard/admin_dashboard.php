@@ -1,16 +1,16 @@
 <?php
-require_once __DIR__ . '/include/connection.php';
-require_once __DIR__ . '/admin_dashboard/views/actors/actors_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/directors/directors_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/movies/movies_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/users/users_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/screenings/screenings_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/bookings/bookings_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/news/news_functions.php';
-require_once __DIR__ . '/admin_dashboard/views/contact_messages/contact_functions.php';
+require_once __DIR__ . '/../include/connection.php';
+require_once __DIR__ . '/views/actors/actors_functions.php';
+require_once __DIR__ . '/views/directors/directors_functions.php';
+require_once __DIR__ . '/views/movies/movies_functions.php';
+require_once __DIR__ . '/views/users/users_functions.php';
+require_once __DIR__ . '/views/screening_rooms/screening_rooms_functions.php';
+require_once __DIR__ . '/views/screenings/screenings_functions.php';
+require_once __DIR__ . '/views/bookings/bookings_functions.php';
+require_once __DIR__ . '/views/news/news_functions.php';
+require_once __DIR__ . '/views/contact_messages/contact_functions.php';
 
-require_once __DIR__ . '/auth/session.php';
+require_once __DIR__ . '/../auth/session.php';
 
 
 $session = new SessionManager($db);
@@ -220,15 +220,16 @@ $newContactMessagesCount = countNewContactMessages($db);
 $contactMessages = listContactMessages($db);
 
 // ------------------- Include Layout -------------------
-include 'shared/head.php';
-include 'shared/header.php';
+include __DIR__ . '/../shared/head.php';
+include __DIR__ . '/../shared/header.php';
+
 ?>
 <section class="flex min-h-[80vh] bg-gray-100 px-4 py-6">
     <!-- Sidebar -->
     <aside class="w-64 bg-white p-6 rounded-2xl shadow-xl flex flex-col">
         <div class="mb-8 flex flex-col items-center">
             <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
-            <img src="images/adminProfilePic.jpg" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
+            <img src="../images/adminProfilePic.jpg" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
             <span class="text-gray-600 mt-2">Administrator</span>
         </div>
 
@@ -290,7 +291,7 @@ include 'shared/header.php';
         </nav>
 
         <div class="mt-6">
-            <a href="auth/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
+            <a href="../auth/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
     <i class="pi pi-sign-out"></i> Logout
 </a>
 
@@ -314,7 +315,7 @@ include 'shared/header.php';
         <!-- Dynamic View Content -->
         <?php
         // Include the proper view dynamically
-        $viewFile = __DIR__ . "/admin_dashboard/views/{$view}/{$view}_view.php";
+        $viewFile = __DIR__ . "/views/{$view}/{$view}_view.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
@@ -325,4 +326,4 @@ include 'shared/header.php';
 </section>
 
 
-<script src="admin_dashboard/assets/js/admin.js"></script>
+<script src="assets/js/admin.js"></script>

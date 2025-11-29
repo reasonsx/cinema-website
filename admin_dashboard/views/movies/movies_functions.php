@@ -1,8 +1,8 @@
 <?php
 
-// This file contains helper functions for adding, retrieving, updating, and deleting movie records.
-
-// Add a new movie to the database.
+// ---------------------------------------------------------
+// ADD MOVIE
+// ---------------------------------------------------------
 function addMovieHandler($db, $data, $files): array {
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
@@ -11,39 +11,44 @@ function addMovieHandler($db, $data, $files): array {
     $language = trim($data['language']);
     $length = trim($data['length']);
     $description = trim($data['description']);
-    $posterPath = '';
     $trailer_url = trim($data['trailer_url']);
+    $posterPath = '';
 
-    // Upload poster image.
+    // Handle poster upload
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         $fileType = $files['poster']['type'];
         $fileSize = $files['poster']['size'];
 
-        if (in_array($fileType, $allowedTypes) && $fileSize < 10 * 1024 * 1024) {
-            $targetDir = 'images/';
-            $fileName = time() . '_' . basename($files['poster']['name']);
-            $targetFile = $targetDir . $fileName;
-
-            if (move_uploaded_file($files['poster']['tmp_name'], $targetFile)) {
-                $posterPath = $targetFile;
-            } else {
-                return ["", "Failed to upload poster image."];
-            }
-        } else {
-            return ["", "Invalid file type or size. Only JPEG, PNG, GIF under 10MB allowed."];
+        if (!in_array($fileType, $allowedTypes) || $fileSize > 10 * 1024 * 1024) {
+            return ["", "Invalid file type or size. Only JPG, PNG, GIF under 10MB allowed."];
         }
+
+        $targetDir  = __DIR__ . '/../../../images/';
+        $publicPath = '/cinema-website/images/';
+        $fileName   = time() . '_' . basename($files['poster']['name']);
+        $targetFile = $targetDir . $fileName;
+
+        if (!move_uploaded_file($files['poster']['tmp_name'], $targetFile)) {
+            return ["", "Failed to upload poster image."];
+        }
+
+        // Store browser-friendly path
+        $posterPath = $publicPath . $fileName;
     }
 
+    // Insert movie
     try {
-        // Insert movie.
-        $stmt = $db->prepare("INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
-                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $db->prepare("
+            INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
         $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url]);
 
         $movie_id = $db->lastInsertId();
 
-        // Add actor links.
+        // Actors
         if (!empty($data['actors'])) {
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($data['actors'] as $actor_id) {
@@ -51,7 +56,7 @@ function addMovieHandler($db, $data, $files): array {
             }
         }
 
-        // Add director links.
+        // Directors
         if (!empty($data['directors'])) {
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($data['directors'] as $director_id) {
@@ -60,38 +65,42 @@ function addMovieHandler($db, $data, $files): array {
         }
 
         return ["Movie added successfully!", ""];
+
     } catch (PDOException $e) {
         return ["", "Database error: " . $e->getMessage()];
     }
 }
 
-// Retrieve all movies.
+// ---------------------------------------------------------
+// GET ALL MOVIES
+// ---------------------------------------------------------
 function getMovies($db) {
-    $stmt = $db->prepare("SELECT * FROM movies ORDER BY id DESC");
-    $stmt->execute();
+    $stmt = $db->query("SELECT * FROM movies ORDER BY id DESC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Delete a movie and related links.
+// ---------------------------------------------------------
+// DELETE MOVIE
+// ---------------------------------------------------------
 function deleteMovie($db, $movieId): array {
     try {
-        $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id = ?");
-        $stmt->execute([$movieId]);
-
-        $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id = ?");
-        $stmt->execute([$movieId]);
-
-        $stmt = $db->prepare("DELETE FROM movies WHERE id = ?");
-        $stmt->execute([$movieId]);
+        $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?")->execute([$movieId]);
+        $db->prepare("DELETE FROM directorDirects WHERE movie_id=?")->execute([$movieId]);
+        $db->prepare("DELETE FROM movies WHERE id=?")->execute([$movieId]);
 
         return ["Movie deleted successfully!", ""];
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         return ["", "Database error: " . $e->getMessage()];
     }
 }
 
-// Update movie information.
+
+// ---------------------------------------------------------
+// EDIT MOVIE
+// ---------------------------------------------------------
 function editMovieHandler($db, $data, $files): array {
+
     $movie_id = intval($data['movie_id']);
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
@@ -100,74 +109,83 @@ function editMovieHandler($db, $data, $files): array {
     $language = trim($data['language']);
     $length = trim($data['length']);
     $description = trim($data['description']);
-    $trailer_url = trim($data['trailer_url'] ?? '');
+    $trailer_url = trim($data['trailer_url']);
     $posterPath = null;
 
-    // Upload new poster.
+    // NEW POSTER UPLOAD
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
         $fileType = $files['poster']['type'];
-        $fileSize = $files['poster']['size'];
 
-        if (in_array($fileType, $allowedTypes) && $fileSize < 10 * 1024 * 1024) {
-            $targetDir = 'images/';
-            $fileName = time() . '_' . basename($files['poster']['name']);
-            $targetFile = $targetDir . $fileName;
-
-            if (move_uploaded_file($files['poster']['tmp_name'], $targetFile)) {
-                $posterPath = $targetFile;
-            } else {
-                return ["", "Failed to upload poster image."];
-            }
-        } else {
-            return ["", "Invalid file type or size. Only JPEG, PNG, GIF under 10MB allowed."];
+        if (!in_array($fileType, $allowedTypes)) {
+            return ["", "Invalid poster file type."];
         }
+
+        $targetDir  = __DIR__ . '/../../../images/';
+        $publicPath = '/cinema-website/images/';   // FIXED to match addMovieHandler
+        $fileName   = time() . '_' . basename($files['poster']['name']);
+        $targetFile = $targetDir . $fileName;
+
+        if (!move_uploaded_file($files['poster']['tmp_name'], $targetFile)) {
+            return ["", "Failed to upload poster image."];
+        }
+
+        $posterPath = $publicPath . $fileName;
     }
 
+    // UPDATE MOVIE
     try {
         if ($posterPath) {
-            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=? WHERE id=?");
-            $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url, $movie_id]);
+            $stmt = $db->prepare("
+                UPDATE movies 
+                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=?
+                WHERE id=?
+            ");
+            $params = [$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url, $movie_id];
         } else {
-            $stmt = $db->prepare("UPDATE movies SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=? WHERE id=?");
-            $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $trailer_url, $movie_id]);
+            $stmt = $db->prepare("
+                UPDATE movies 
+                SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=?
+                WHERE id=?
+            ");
+            $params = [$title, $release_year, $rating, $genre, $language, $length, $description, $trailer_url, $movie_id];
         }
 
-        // Reset actor links.
-        $stmt = $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?");
-        $stmt->execute([$movie_id]);
+        $stmt->execute($params);
 
+        // Reset actors
+        $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?")->execute([$movie_id]);
         if (!empty($data['actors'])) {
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($data['actors'] as $actor_id) {
-                if (trim($actor_id) !== '') {
-                    $stmt->execute([$actor_id, $movie_id]);
-                }
+                $stmt->execute([$actor_id, $movie_id]);
             }
         }
 
-        // Reset director links.
-        $stmt = $db->prepare("DELETE FROM directorDirects WHERE movie_id=?");
-        $stmt->execute([$movie_id]);
-
+        // Reset directors
+        $db->prepare("DELETE FROM directorDirects WHERE movie_id=?")->execute([$movie_id]);
         if (!empty($data['directors'])) {
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($data['directors'] as $director_id) {
-                if (trim($director_id) !== '') {
-                    $stmt->execute([$director_id, $movie_id]);
-                }
+                $stmt->execute([$director_id, $movie_id]);
             }
         }
 
         return ["Movie updated successfully!", ""];
+
     } catch (PDOException $e) {
         return ["", "Database error: " . $e->getMessage()];
     }
 }
 
-// Retrieve a single movie by ID.
+// ---------------------------------------------------------
+// GET MOVIE BY ID
+// ---------------------------------------------------------
 function getMovieById($db, $movieId) {
-    $stmt = $db->prepare("SELECT * FROM movies WHERE id = ?");
+    $stmt = $db->prepare("SELECT * FROM movies WHERE id=?");
     $stmt->execute([$movieId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+
+?>

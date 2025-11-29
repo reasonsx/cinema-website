@@ -122,14 +122,14 @@ $email     = htmlspecialchars($user['email']);
                     </a>
 
                     <?php if ($isAdmin): ?>
-                        <a href="/cinema-website/admin_dashboard.php"
+                        <a href="/cinema-website/admin_dashboard/admin_dashboard.php"
                            class="btn">
                             <i class="pi pi-cog"></i>
                             Go to Admin Dashboard
                         </a>
                     <?php endif; ?>
 
-                    <a href="/cinema-website/auth/logout.php"
+                    <a href="auth/logout.php"
                        class="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 transition font-semibold">
                         Logout
                     </a>

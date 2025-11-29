@@ -13,7 +13,7 @@ $userName = null;
 
 // If logged in, fetch user first name
 if (isset($_SESSION['user_id'])) {
-    require_once 'include/connection.php';
+    require_once __DIR__ . '/../include/connection.php';
     $stmt = $db->prepare("SELECT firstname FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,16 +40,6 @@ if (isset($_SESSION['user_id'])) {
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
                   <?= isActive('movies-list.php', $current) ?>">
                     WHAT'S ON
-                </a>
-                <a href="/cinema-website/schedule.php"
-                   class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
-                  <?= isActive('schedule.php', $current) ?>">
-                    Schedule
-                </a>
-                <a href="/cinema-website/contact.php"
-                   class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
-                  <?= isActive('contact_functions.php', $current) ?>">
-                    Contact
                 </a>
 
                 <!-- Auth -->
@@ -84,8 +74,6 @@ if (isset($_SESSION['user_id'])) {
             <div class="px-6 py-4 space-y-4">
                 <a href="/cinema-website/index.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-home"></i> Home</a>
                 <a href="/cinema-website/movies-list.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-ticket"></i> Movies</a>
-                <a href="/cinema-website/schedule.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-calendar"></i> Schedule</a>
-                <a href="/cinema-website/contact.php" class="flex items-center gap-2 text-white/90 hover:text-[var(--secondary)]"><i class="pi pi-phone"></i> Contact</a>
 
                 <div class="flex gap-2 pt-2">
                     <?php if ($userName): ?>
