@@ -15,11 +15,11 @@ if (empty($_SESSION['csrf'])) {
 }
 ?>
 
-
 <section id="contact-us" class="py-20 bg-black text-white">
-    <div class="mx-auto max-w-3xl px-6 text-center">
+    <div class="mx-auto max-w-6xl px-6">
+
         <!-- Header -->
-        <div class="mb-10">
+        <div class="text-center mb-14">
             <h2 class="text-5xl font-[Limelight] tracking-wide text-[var(--secondary)]">CONTACT US</h2>
             <div class="mt-4 flex items-center justify-center gap-3">
                 <span class="h-[2px] w-16 bg-white/15"></span>
@@ -27,77 +27,114 @@ if (empty($_SESSION['csrf'])) {
                 <span class="h-[2px] w-16 bg-white/15"></span>
             </div>
         </div>
-<form
-    action="contact-submit.php"
-    method="post"
-    class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-8 py-10 flex flex-col gap-6 text-left text-white"
->
-    <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
-    <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
 
-    <!-- Name -->
-    <div>
-        <label for="name" class="block text-sm uppercase tracking-wide text-white/60 mb-2">Your Name</label>
-        <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            placeholder="Enter your name"
-            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-        >
-    </div>
+        <!-- GRID: form + info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-    <!-- Email -->
-    <div>
-        <label for="email" class="block text-sm uppercase tracking-wide text-white/60 mb-2">Email</label>
-        <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            placeholder="Enter your email"
-            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-        >
-    </div>
+            <!-- CONTACT FORM BOX -->
+            <form
+                    action="contact-submit.php"
+                    method="post"
+                    class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-8 py-10 flex flex-col gap-6 text-left text-white"
+            >
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf'] ?? '', ENT_QUOTES) ?>">
+                <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
 
-    <!-- Subject -->
-    <div>
-        <label for="subject" class="block text-sm uppercase tracking-wide text-white/60 mb-2">Subject</label>
-        <input
-            type="text"
-            id="subject"
-            name="subject"
-            required
-            placeholder="Enter subject"
-            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-        >
-    </div>
+                <!-- Name -->
+                <div>
+                    <label class="block text-sm uppercase tracking-wide text-white/60 mb-2">Your Name</label>
+                    <input
+                            type="text" name="name" required
+                            placeholder="Enter your name"
+                            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
+                    >
+                </div>
 
-    <!-- Message -->
-    <div>
-        <label for="message" class="block text-sm uppercase tracking-wide text-white/60 mb-2">Message</label>
-        <textarea
-            id="message"
-            name="message"
-            rows="5"
-            required
-            placeholder="Type your message here..."
-            class="w-full rounded-2xl bg-white/5 border border-white/15 px-5 py-3 text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--secondary)]"
-        ></textarea>
-    </div>
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm uppercase tracking-wide text-white/60 mb-2">Email</label>
+                    <input
+                            type="email" name="email" required
+                            placeholder="Enter your email"
+                            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
+                    >
+                </div>
 
-    <!-- Submit Button -->
-    <div class="text-center pt-3">
-        <button
-            type="submit"
-            class="btn"
-        >
-            <i class="pi pi-send"></i>
-            SEND MESSAGE
-        </button>
-    </div>
-</form>
+                <!-- Subject -->
+                <div>
+                    <label class="block text-sm uppercase tracking-wide text-white/60 mb-2">Subject</label>
+                    <input
+                            type="text" name="subject" required
+                            placeholder="Enter subject"
+                            class="w-full rounded-full bg-white/5 border border-white/15 px-5 py-3 placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
+                    >
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label class="block text-sm uppercase tracking-wide text-white/60 mb-2">Message</label>
+                    <textarea
+                            name="message" rows="5" required
+                            placeholder="Type your message here..."
+                            class="w-full rounded-2xl bg-white/5 border border-white/15 px-5 py-3 placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
+                    ></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center pt-3">
+                    <button type="submit" class="btn">
+                        <i class="pi pi-send"></i>bg-white
+                        SEND MESSAGE
+                    </button>
+                </div>
+            </form>
+
+            <!-- CONTACT DETAILS BOX -->
+            <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-10 py-12 flex flex-col gap-12">
+
+                <!-- Contact Methods Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+
+                    <!-- Address -->
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="pi pi-map-marker text-3xl text-[var(--secondary)]"></i>
+                        <p class="font-semibold text-white">Visit Us</p>
+                        <p class="text-white/80">
+                            Spangsbjerg Kirkevej 101B<br>6700 Esbjerg, Denmark
+                        </p>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
+                        <p class="font-semibold text-white">Call Us</p>
+                        <p class="text-white/80">+45 12 34 56 78</p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex flex-col items-center gap-2">
+                        <i class="pi pi-envelope text-3xl text-[var(--secondary)]"></i>
+                        <p class="font-semibold text-white">Email</p>
+                        <p class="text-white/80">support@eclipsecinema.dk</p>
+                    </div>
+                </div>
+
+                <!-- Opening Hours -->
+                <div class="text-center">
+                    <h4 class="text-2xl font-[Limelight] tracking-wide text-[var(--secondary)] mb-4">
+                        OPENING HOURS
+                    </h4>
+                    <div class="text-white/80 leading-relaxed">
+                        <p>Monday – Thursday: 10:00 – 22:00</p>
+                        <p>Friday – Saturday: 10:00 – 00:00</p>
+                        <p>Sunday: 12:00 – 20:00</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
     </div>
 </section>
+
+
