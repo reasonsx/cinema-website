@@ -26,17 +26,17 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] === 'true';
 $updateMessage = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) {
     [$successMsg, $errorMsg] = updateUserProfile($db, $userId, [
-        'firstname'        => $_POST['firstname'],
-        'lastname'         => $_POST['lastname'],
-        'email'            => $_POST['email'],
+        'firstname' => $_POST['firstname'],
+        'lastname' => $_POST['lastname'],
+        'email' => $_POST['email'],
         'current_password' => $_POST['current_password'],
-        'new_password'     => $_POST['new_password'] ?? ''
+        'new_password' => $_POST['new_password'] ?? ''
     ]);
 
     if ($successMsg) {
         $updateMessage = '<p class="text-green-400">' . htmlspecialchars($successMsg) . '</p>';
         $_SESSION['firstname'] = $_POST['firstname'];
-        $_SESSION['lastname']  = $_POST['lastname'];
+        $_SESSION['lastname'] = $_POST['lastname'];
         $user = getUserById($db, $userId); // refresh updated info
         $isEditing = false; // return to view mode
     } else {
@@ -49,8 +49,8 @@ $bookings = getBookingsByUserId($db, $userId);
 
 // Sanitize for display
 $firstname = htmlspecialchars($user['firstname']);
-$lastname  = htmlspecialchars($user['lastname']);
-$email     = htmlspecialchars($user['email']);
+$lastname = htmlspecialchars($user['lastname']);
+$email = htmlspecialchars($user['email']);
 ?>
 
 <!DOCTYPE html>
