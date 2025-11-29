@@ -1,11 +1,11 @@
 <?php
 session_start();
-require_once 'backend/connection.php';
-require_once 'admin_dashboard/views/movies/movies_functions.php';
-require_once 'admin_dashboard/views/actors/actors_functions.php';
-require_once 'admin_dashboard/views/directors/directors_functions.php';
-require_once 'admin_dashboard/views/screenings/screenings_functions.php';
-require_once 'shared/helpers.php';
+require_once '../../backend/connection.php';
+require_once '../../admin_dashboard/views/movies/movies_functions.php';
+require_once '../../admin_dashboard/views/actors/actors_functions.php';
+require_once '../../admin_dashboard/views/directors/directors_functions.php';
+require_once '../../admin_dashboard/views/screenings/screenings_functions.php';
+require_once '../../shared/helpers.php';
 
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);
@@ -58,16 +58,16 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'shared/head.php'; ?>
+<?php include '../../shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include 'shared/header.php'; ?>
+<?php include '../../shared/header.php'; ?>
 
 <!-- HERO -->
 <section class="relative">
     <div class="relative h-[360px] md:h-[440px] overflow-hidden">
-        <img src="<?= htmlspecialchars($movie['poster']) ?>"
-             alt="<?= htmlspecialchars($movie['title']) ?>"
+        <img src="/cinema-website/<?= htmlspecialchars($movie['poster']) ?>"
+        alt="<?= htmlspecialchars($movie['title']) ?>"
              class="object-cover w-full h-full opacity-60">
         <!-- layered gradients for depth -->
         <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black"></div>
@@ -99,7 +99,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
             <!-- Poster panel -->
             <aside class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-4 md:p-5 shadow-2xl">
-                <img src="<?= htmlspecialchars($movie['poster']) ?>"
+                <img src="/cinema-website/<?= htmlspecialchars($movie['poster']) ?>"
                      alt="<?= htmlspecialchars($movie['title']) ?>"
                      class="w-full rounded-2xl border border-white/10 shadow">
                 <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-white/70">
@@ -116,7 +116,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
                 <!-- CTA -->
                 <div class="mt-8 flex flex-col items-center gap-3">
-                    <a href="book.php?movie_id=<?= $movie['id'] ?>"
+                    <a href="../../book.php?movie_id=<?= $movie['id'] ?>"
                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black">
                         <i class="pi pi-ticket"></i>
                         BOOK TICKETS
@@ -267,7 +267,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                         <div id="showtimeButtons" class="flex flex-wrap justify-center gap-3">
                             <?php foreach ($groupedScreenings[$dates[0]] as $t): ?>
                                 <?php $time = date('H:i', strtotime($t['start_time'])); ?>
-                                <a href="book.php?screening_id=<?= $t['id'] ?>"
+                                <a href="../../book.php?screening_id=<?= $t['id'] ?>"
                                    class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
                                     <i class="pi pi-clock"></i>
                                     <?= $time ?>
@@ -280,7 +280,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 <div class="pt-1 pb-6 text-center border-t border-white/10">
     <?php if (!empty($groupedScreenings[$dates[0]])): ?>
         <?php $firstScreening = $groupedScreenings[$dates[0]][0]; ?>
-        <a href="book.php?screening_id=<?= $firstScreening['id'] ?>"
+        <a href="../../book.php?screening_id=<?= $firstScreening['id'] ?>"
            class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
             <i class="pi pi-ticket"></i>
             BOOK TICKETS
@@ -295,7 +295,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
     </div>
 </section>
 
-<?php include 'shared/footer.php'; ?>
+<?php include '../../shared/footer.php'; ?>
 
 <?php if (!empty($groupedScreenings)): ?>
     <script>

@@ -24,7 +24,7 @@
             <div id="movies-carousel" class="flex gap-6 overflow-hidden mx-4 flex-1 p-2">
                 <?php foreach ($movies as $movie): ?>
                     <div class="w-52 flex-shrink-0 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 overflow-visible">
-                        <a href="movie.php?id=<?= $movie['id'] ?>">
+                        <a href="views/movie/movie.php?id=<?= $movie['id'] ?>">
                             <img src="<?= htmlspecialchars($movie['poster']) ?>"
                                  alt="<?= htmlspecialchars($movie['title']) ?>"
                                  class="w-full h-[296px] object-cover rounded-lg">
