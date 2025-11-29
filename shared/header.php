@@ -36,7 +36,7 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- Desktop Nav -->
             <nav class="hidden md:flex items-center gap-6">
-                <a href="/cinema-website/movies_list.php"
+                <a href="/cinema-website/views/movies_list/movies_list.php"
                    class="relative pb-0.5 transition after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[var(--secondary)] after:transition
                   <?= isActive('movies_list.php', $current) ?>">
                     WHAT'S ON

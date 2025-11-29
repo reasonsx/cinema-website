@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once __DIR__ . '/backend/connection.php';
-require_once __DIR__ . '/admin_dashboard/views/movies/movies_functions.php';
+require_once __DIR__ . '/../../backend/connection.php';
+require_once __DIR__ . '/../../admin_dashboard/views/movies/movies_functions.php';
 
 
 // Fetch all movies
@@ -10,10 +10,10 @@ $movies = getMovies($db);
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include __DIR__ . '/shared/head.php'; ?>
+<?php include __DIR__ . '/../../shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
 
-<?php include __DIR__ . '/shared/header.php'; ?>
+<?php include __DIR__ . '/../../shared/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="relative isolate overflow-hidden bg-gradient-to-b from-[var(--secondary)] to-[var(--primary)]/70 text-black text-center">
@@ -71,7 +71,7 @@ $movies = getMovies($db);
                         <?php
                         $id = htmlspecialchars($movie['id'] ?? '');
                         $title = htmlspecialchars($movie['title'] ?? 'Untitled');
-                        $poster = htmlspecialchars($movie['poster'] ?? 'assets/default-poster.jpg');
+                        $poster = '/cinema-website/' . htmlspecialchars($movie['poster'] ?? 'assets/default-poster.jpg');
                         $genre = htmlspecialchars($movie['genre'] ?? 'Unknown genre');
                         $runtime = htmlspecialchars($movie['length'] ?? 'N/A');
                         $age_rating = htmlspecialchars($movie['rating'] ?? 'N/A');
@@ -79,7 +79,7 @@ $movies = getMovies($db);
                         ?>
                         <li class="movie-row group" data-title="<?= $title ?>">
                             <a
-                                    href="views/movie/movie.php?id=<?= $id ?>"
+                                    href="../movie/movie.php?id=<?= $id ?>"
                                     class="flex items-center gap-6 px-8 py-5 transition rounded-2xl md:rounded-none hover:bg-white/10 focus:bg-white/10 focus:outline-none"
                             >
                                 <!-- Poster -->
@@ -134,7 +134,7 @@ $movies = getMovies($db);
 </section>
 
 
-<?php include __DIR__ . '/shared/footer.php'; ?>
+<?php include __DIR__ . '/../../shared/footer.php'; ?>
 
 <!-- Search Script -->
 <script>

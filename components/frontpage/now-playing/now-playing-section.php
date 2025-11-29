@@ -47,7 +47,7 @@
 
         <!-- "ALL MOVIES" BUTTON -->
         <div class="mt-10 flex justify-center">
-            <a href="/cinema-website/movies_list.php" class="btn">
+            <a href="/cinema-website/views/movies_list/movies_list.php" class="btn">
                 All Movies
             </a>
         </div>

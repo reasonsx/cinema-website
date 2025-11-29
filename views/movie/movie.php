@@ -320,7 +320,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
             const d = dates[index];
             showtimeDate.textContent = d.label;
             showtimeButtons.innerHTML = d.screenings.map(s => `
-      <a href="book.php?screening_id=${s.id}"
+      <a href="../../book.php?screening_id=${s.id}"
          class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
         <i class="pi pi-clock"></i>
         ${s.time} <span class="text-xs opacity-70">· ${s.room}</span>
