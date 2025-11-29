@@ -7,7 +7,7 @@
  * @param string $message  Optional descriptive message.
  */
 function showError($code = 404, $message = '') {
-    header("Location: /cinema-website/error.php?code=$code&message=" . urlencode($message));
+    header("Location: /cinema-website/shared/error.php?code=$code&message=" . urlencode($message));
     exit;
 }
 
