@@ -1,8 +1,8 @@
 <?php
-require_once 'backend/connection.php';
-require_once 'auth/session.php';
-require_once 'admin_dashboard/views/users/users_functions.php';
-require_once 'admin_dashboard/views/bookings/bookings_functions.php';
+require_once '../../backend/connection.php';
+require_once '../../auth/session.php';
+require_once '../../admin_dashboard/views/users/users_functions.php';
+require_once '../../admin_dashboard/views/bookings/bookings_functions.php';
 
 // Initialize session manager and require login
 $session = new SessionManager($db);
@@ -55,9 +55,9 @@ $email     = htmlspecialchars($user['email']);
 
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'shared/head.php'; ?>
+<?php include '../../shared/head.php'; ?>
 <body class="bg-black text-white font-sans">
-<?php include 'shared/header.php'; ?>
+<?php include '../../shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-4xl mx-auto">
     <h1 class="text-4xl font-[Limelight] tracking-wide text-secondary mb-8">My Profile</h1>
@@ -115,7 +115,7 @@ $email     = htmlspecialchars($user['email']);
                 <!-- VIEW MODE BUTTONS -->
                 <div class="mt-6 flex flex-wrap justify-center gap-3">
 
-                    <a href="profile.php?edit=true"
+                    <a href="profile?edit=true"
                        class="btn">
                         <i class="pi pi-user-edit"></i>
                         Edit Profile
@@ -129,7 +129,7 @@ $email     = htmlspecialchars($user['email']);
                         </a>
                     <?php endif; ?>
 
-                    <a href="auth/logout.php"
+                    <a href="../../auth/logout.php"
                        class="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 transition font-semibold">
                         Logout
                     </a>
@@ -165,6 +165,6 @@ $email     = htmlspecialchars($user['email']);
     </div>
 </section>
 
-<?php include 'shared/footer.php'; ?>
+<?php include '../../shared/footer.php'; ?>
 </body>
 </html>

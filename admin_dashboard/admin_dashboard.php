@@ -17,7 +17,7 @@ $session = new SessionManager($db);
 $session->requireLogin(); // ensures user is logged in
 
 if (!$session->isAdmin()) {
-    header('Location: /cinema-website/profile.php'); // redirect non-admins to profile
+    header('Location: /cinema-website/views/profile/profile.php'); // redirect non-admins to profile
     exit;
 }
 

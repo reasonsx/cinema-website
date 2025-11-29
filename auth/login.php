@@ -22,7 +22,7 @@ if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) >
 $_SESSION['LAST_ACTIVITY'] = time();
 
 // --- Determine redirect after login ---
-$redirect = '/cinema-website/profile.php'; // default redirect
+$redirect = '/cinema-website/views/profile/profile.php'; // default redirect
 if (isset($_GET['redirect']) && !empty($_GET['redirect'])) {
     // sanitize redirect URL
     $redirectPath = filter_var($_GET['redirect'], FILTER_SANITIZE_URL);
