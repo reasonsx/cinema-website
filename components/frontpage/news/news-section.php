@@ -42,7 +42,7 @@
 
                         <!-- Button -->
                         <div class="mt-auto">
-                            <a href="news-details.php?id=<?= $id ?>" class="btn">
+                            <a href="news_details.php?id=<?= $id ?>" class="btn">
                                 <i class="pi pi-angle-right"></i>
                                 Read more
                             </a>
