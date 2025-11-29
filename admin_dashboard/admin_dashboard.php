@@ -36,172 +36,40 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($view) {
         case 'actors':
-            if (isset($_POST['add_actor'])) {
-                [$success, $error] = addActorHandler($db, $_POST);
-                header("Location: admin_dashboard.php?view=actors&message=" . urlencode($success ?: $error));
-                exit;
-            }
-
-            if (isset($_POST['edit_actor'])) {
-                [$success, $error] = editActorHandler($db, $_POST);
-                header("Location: admin_dashboard.php?view=actors&message=" . urlencode($success ?: $error));
-                exit;
-            }
-
-            if (isset($_POST['delete_actor'])) {
-                [$success, $error] = deleteActor($db, $_POST['delete_actor_id']);
-                header("Location: admin_dashboard.php?view=actors&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/actors/actors_controller.php";
             break;
 
         case 'contact_messages':
-            if (isset($_POST['mark_read'])) {
-                markContactAsRead($db, (int)$_POST['id']);
-                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Marked as read."));
-                exit;
-            }
-            if (isset($_POST['mark_new'])) {
-                markContactAsNew($db, (int)$_POST['id']);
-                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Marked as new."));
-                exit;
-            }
-            if (isset($_POST['delete_message'])) {
-                deleteContactMessage($db, (int)$_POST['id']);
-                header("Location: admin_dashboard.php?view=contact_messages&message=" . urlencode("Message deleted."));
-                exit;
-            }
+            require __DIR__ . "/views/contact_messages/contact_messages_controller.php";
             break;
 
         case 'directors':
-            if (isset($_POST['add_director'])) {
-                [$success, $error] = addDirectorHandler($db, $_POST);
-                header("Location: admin_dashboard.php?view=directors&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['delete_director'])) {
-                [$success, $error] = deleteDirector($db, $_POST['delete_director_id']);
-                header("Location: admin_dashboard.php?view=directors&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['edit_director'])) {
-                [$success, $error] = editDirectorHandler($db, $_POST);
-                header("Location: admin_dashboard.php?view=directors&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/directors/directors_controller.php";
             break;
 
         case 'movies':
-            if (isset($_POST['add_movie'])) {
-                [$success, $error] = addMovieHandler($db, $_POST, $_FILES);
-                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['edit_movie'])) {
-                [$success, $error] = editMovieHandler($db, $_POST, $_FILES);
-                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['delete_movie'])) {
-                [$success, $error] = deleteMovie($db, $_POST['delete_movie']);
-                header("Location: admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/movies/movies_controller.php";
             break;
 
         case 'users':
-            if (isset($_POST['add_user'])) {
-                [$success, $error] = addUser($db, $_POST);
-                header("Location: admin_dashboard.php?view=users&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['edit_user'])) {
-                [$success, $error] = editUser($db, $_POST);
-                header("Location: admin_dashboard.php?view=users&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['delete_user'])) {
-                [$success, $error] = deleteUser($db, $_POST['delete_user_id']);
-                header("Location: admin_dashboard.php?view=users&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/users/users_controller.php";
             break;
 
         case 'screening_rooms':
-            // Add new room
-            if (isset($_POST['add_room'])) {
-                [$success, $error] = addScreeningRoom($db, $_POST);
-                header("Location: admin_dashboard.php?view=screening_rooms&message=" . urlencode($success ?: $error));
-                exit;
-            }
-
-            // Edit existing room
-            if (isset($_POST['edit_room'])) {
-                [$success, $error] = editScreeningRoom($db, $_POST);
-                header("Location: admin_dashboard.php?view=screening_rooms&message=" . urlencode($success ?: $error));
-                exit;
-            }
-
-            // Delete room
-            if (isset($_POST['delete_room'])) {
-                [$success, $error] = deleteScreeningRoom($db, $_POST['room_id']);
-                header("Location: admin_dashboard.php?view=screening_rooms&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/screening_rooms/screening_rooms_controller.php";
             break;
+
         case 'screenings':
-            if (isset($_POST['add_screening'])) {
-                [$success, $error] = addScreening($db, $_POST);
-                header("Location: admin_dashboard.php?view=screenings&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['edit_screening'])) {
-                [$success, $error] = editScreening($db, $_POST);
-                header("Location: admin_dashboard.php?view=screenings&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['delete_screening'])) {
-                [$success, $error] = deleteScreening($db, $_POST['screening_id']);
-                header("Location: admin_dashboard.php?view=screenings&message=" . urlencode($success ?: $error));
-                exit;
-            }
+            require __DIR__ . "/views/screenings/screenings_controller.php";
             break;
+
         case 'bookings':
-            if (isset($_POST['add_booking'])) {
-                [$success, $error] = addBooking($db, $_POST);
-                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
-                exit;
-            }
-            if (isset($_POST['edit_booking'])) {
-                [$successMsg, $errorMsg] = editBooking($db, $_POST);
-                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
-                exit;
-            }
-
-            if (isset($_POST['delete_booking'])) {
-                [$successMsg, $errorMsg] = deleteBooking($db, $_POST['delete_booking']);
-                header("Location: admin_dashboard.php?view=bookings&message=" . urlencode($successMsg ?: $errorMsg));
-                exit;
-            }
-
+            require __DIR__ . "/views/bookings/bookings_controller.php";
             break;
-        case 'news':
-            if (isset($_POST['add_news'])) {
-                [$success, $error] = addNews($db, $_POST);
-                header("Location: admin_dashboard.php?view=news&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['edit_news'])) {
-                [$success, $error] = editNews($db, $_POST);
-                header("Location: admin_dashboard.php?view=news&message=" . urlencode($success ?: $error));
-                exit;
-            }
-            if (isset($_POST['delete_news'])) {
-                [$success, $error] = deleteNews($db, $_POST['delete_news_id']);
-                header("Location: admin_dashboard.php?view=news&message=" . urlencode($success ?: $error));
-                exit;
-            }
 
+        case 'news':
+            require __DIR__ . "/views/news/news_controller.php";
+            break;
     }
 }
 
@@ -248,42 +116,50 @@ include __DIR__ . '/../shared/header.php';
                     </a>
                 </li>
                 <li>
-                    <a href="?view=movies" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=movies"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-video"></i> All Movies
                     </a>
                 </li>
                 <li>
-                    <a href="?view=actors" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'actors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=actors"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'actors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-users"></i> All Actors
                     </a>
                 </li>
                 <li>
-                    <a href="?view=directors" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'directors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=directors"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'directors' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-user-edit"></i> All Directors
                     </a>
                 </li>
                 <li>
-                    <a href="?view=users" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'users' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=users"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'users' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-id-card"></i> All Users
                     </a>
                 </li>
                 <li>
-                    <a href="?view=screening_rooms" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screening_rooms' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=screening_rooms"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screening_rooms' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-th-large"></i> Screening Rooms
                     </a>
                 </li>
                 <li>
-                    <a href="?view=screenings" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screenings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=screenings"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'screenings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-calendar"></i> All Screenings
                     </a>
                 </li>
                 <li>
-                    <a href="?view=bookings" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'bookings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=bookings"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'bookings' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-ticket"></i> All Bookings
                     </a>
                 </li>
                 <li>
-                    <a href="?view=news" class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'news' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                    <a href="?view=news"
+                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'news' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
                         <i class="pi pi-book"></i> All News
                     </a>
                 </li>
@@ -291,9 +167,10 @@ include __DIR__ . '/../shared/header.php';
         </nav>
 
         <div class="mt-6">
-            <a href="../auth/logout.php" class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
-    <i class="pi pi-sign-out"></i> Logout
-</a>
+            <a href="../auth/logout.php"
+               class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
+                <i class="pi pi-sign-out"></i> Logout
+            </a>
 
         </div>
     </aside>
