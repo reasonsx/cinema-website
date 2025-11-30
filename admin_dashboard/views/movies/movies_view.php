@@ -142,10 +142,11 @@ renderTable([
 
             <form method="post" onsubmit="return confirm('Delete movie?')"
                   class="flex items-center justify-center p-0 m-0 leading-none">
+                <!--TOKEN-->
+                <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
+
                 <input type="hidden" name="delete_movie" value="<?= $movie['id'] ?>">
-                <button class="flex items-center justify-center gap-2
-                               px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold
-                               hover:bg-red-600 transition">
+                <button class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -154,9 +155,7 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    /* ---------------------------------------------------------
-       EDIT MOVIE FORM
-    --------------------------------------------------------- */
+    /*  EDIT MOVIE FORM  */
     'renderEditRow' => function ($movie) use ($db, $allActors, $allDirectors) {
 
         $selectedActors = $db->query("SELECT actor_id FROM actorAppearIn WHERE movie_id={$movie['id']}")->fetchAll(PDO::FETCH_COLUMN);
@@ -164,6 +163,8 @@ renderTable([
 
         ob_start(); ?>
         <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!--TOKEN-->
+            <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
 
             <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
             <input type="hidden" name="edit_movie" value="1">
@@ -239,15 +240,15 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    /* ---------------------------------------------------------
-       ADD MOVIE FORM
-    --------------------------------------------------------- */
+    /*  ADD MOVIE FORM   */
     'addLabel' => 'Add Movie',
     'addForm' => (function () use ($allActors, $allDirectors) {
 
         ob_start(); ?>
         <form method="post" enctype="multipart/form-data"
               class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!--TOKEN-->
+            <input type="hidden" name="csrf_token" value="<?= generateCsrfToken() ?>">
 
             <input type="hidden" name="add_movie" value="1">
 

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../../backend/connection.php';
+require_once __DIR__ . '/../../../shared/csrf.php';
 require_once __DIR__ . '/../actors/actors_functions.php';      // needed for getActorsList()
 require_once __DIR__ . '/../directors/directors_functions.php'; // needed for getDirectorsList()
 require_once __DIR__ . '/movies_functions.php';                // movie logic
@@ -12,6 +13,13 @@ $allDirectors = getDirectorsList($db);
 
 // Handle POST requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // CSRF validation
+    $token = $_POST['csrf_token'] ?? '';
+    if (!validateCsrfToken($token)) {
+        die("❌ Invalid CSRF token.");
+    }
+    invalidateCsrfToken(); // prevents replay attacks
 
     if (isset($_POST['add_movie'])) {
         [$success, $error] = addMovieHandler($db, $_POST, $_FILES);
@@ -25,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$success, $error] = deleteMovie($db, $_POST['delete_movie']);
     }
 
+    // Redirect back with message
     header("Location: /cinema-website/admin_dashboard/admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
     exit;
 }
