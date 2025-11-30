@@ -49,7 +49,7 @@ if (empty($_SESSION['csrf'])) {
 
             <!-- CONTACT FORM BOX -->
             <form
-                    action="/cinema-website/components/frontpage/contact/contact-submit.php"
+                    action="/cinema-website/frontpage/components/contact/contact-submit.php"
                     method="post"
                     class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-8 py-10
                        flex flex-col gap-6 text-left text-white"
