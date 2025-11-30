@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
         <div class="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
             <!-- Brand -->
             <a href="/cinema-website/index.php" class="flex items-center gap-2">
-                <span class="text-xl md:text-2xl font-bold tracking-wide text-white font-[Limelight]">Eclipse Cinema</span>
+                <span class="text-xl md:text-2xl font-bold tracking-wide text-white font-[Limelight]">Cinema Eclipse</span>
             </a>
 
             <!-- Desktop Nav -->

@@ -19,19 +19,32 @@ $newsList   = getNews($db);
 <body class="bg-light text-black font-sans">
 
 <?php include 'shared/header.php'; ?>
-
-
 <!-- Hero Section -->
-<section class="relative bg-[var(--primary)] text-black text-center h-[80vh]">
-    <div class="container mx-auto flex flex-col items-center justify-start relative h-full gap-6 pt-20">
-        <h1 class="text-6xl font-[Limelight] text-[var(--black)]">Eclipse Cinema</h1>
-        <a href="#now-playing" class="btn-full">Explore Now</a>
+<section class="relative h-[80vh] text-black overflow-hidden flex items-center justify-center">
 
-        <img src="images/frontpage/film-reel.png"
-             alt="Film Reel"
-             class="w-96 md:w-[35rem] lg:w-[45rem] absolute bottom-0">
+    <!-- Background Video -->
+    <video autoplay loop muted playsinline
+           class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <source src="/cinema-website/assets/videos/hero.mp4" type="video/mp4">
+    </video>
+
+    <!-- Dark Overlay -->
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <!-- Bottom Fade to Black -->
+    <div class="absolute bottom-0 left-0 right-0 h-40
+                bg-gradient-to-b from-transparent to-black"></div>
+
+    <!-- Foreground Content -->
+    <div class="relative z-[5] flex flex-col items-center justify-center text-center gap-6 px-6">
+        <h1 class="text-6xl font-[Limelight] text-black">
+            Cinema Eclipse
+        </h1>
+
+        <a href="#now-playing" class="btn-full">Explore Now</a>
     </div>
 </section>
+
 
 
 <!-- Now Playing -->
