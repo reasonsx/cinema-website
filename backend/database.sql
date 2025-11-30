@@ -396,38 +396,38 @@ INSERT INTO news (title, content, date_added) VALUES
 ('Avatar Returns in 3D', 'Experience the magic of Pandora again in our newly upgraded 3D projection room.', '2025-10-19 16:00:00'),
 ('Technical Upgrade Completed', 'All screening rooms have been equipped with new Dolby Atmos sound systems for enhanced audio experience.', '2025-10-17 14:20:00');
 
-
-CREATE TABLE contact_messages (
-                                  id INT AUTO_INCREMENT PRIMARY KEY,
-                                  name VARCHAR(100) NOT NULL,
-                                  email VARCHAR(150) NOT NULL,
-                                  subject VARCHAR(150) NOT NULL,
-                                  message TEXT NOT NULL,
-                                  ip VARCHAR(45),
-                                  user_agent TEXT,
-                                  status ENUM('new','read') NOT NULL DEFAULT 'new',
-                                  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                  INDEX idx_status_created (status, created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO contact_messages (name, email, subject, message, ip, user_agent, status, created_at)
-VALUES
-    ('John Carter', 'john.carter@example.com', 'Inquiry about screening times',
-     'Hi, I wanted to know if Inception will be showing next weekend?',
-     '192.168.1.12', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'new', '2025-10-25 09:45:00'),
-
-    ('Lisa Brown', 'lisa.brown@example.com', 'Ticket refund request',
-     'Hello, I booked tickets for Avatar yesterday but need to reschedule. Can I get a refund?',
-     '192.168.1.25', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0_0)', 'read', '2025-10-26 15:30:00'),
-
-    ('Tommy Nguyen', 'tommy.nguyen@example.com', 'Lost item in cinema',
-     'Hi, I think I left my wallet in the IMAX hall after the 8 PM screening. Please check.',
-     '10.0.0.55', 'Mozilla/5.0 (Linux; Android 14)', 'new', '2025-10-27 18:20:00'),
-
-    ('Sarah Miller', 'sarah.miller@example.com', 'Great experience!',
-     'Just wanted to say the new Dolby Atmos sound system is incredible. Keep it up!',
-     '172.16.0.33', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X)', 'read', '2025-10-28 11:10:00'),
-
-    ('David Smith', 'david.smith@example.com', 'Website issue',
-     'When I try to book seats for The Dark Knight, I get a payment error. Please help.',
-     '203.0.113.17', 'Mozilla/5.0 (Windows NT 11.0; Win64; x64)', 'new', '2025-10-28 13:42:00');
+--
+-- CREATE TABLE contact_messages (
+--                                   id INT AUTO_INCREMENT PRIMARY KEY,
+--                                   name VARCHAR(100) NOT NULL,
+--                                   email VARCHAR(150) NOT NULL,
+--                                   subject VARCHAR(150) NOT NULL,
+--                                   message TEXT NOT NULL,
+--                                   ip VARCHAR(45),
+--                                   user_agent TEXT,
+--                                   status ENUM('new','read') NOT NULL DEFAULT 'new',
+--                                   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--                                   INDEX idx_status_created (status, created_at)
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+--
+-- INSERT INTO contact_messages (name, email, subject, message, ip, user_agent, status, created_at)
+-- VALUES
+--     ('John Carter', 'john.carter@example.com', 'Inquiry about screening times',
+--      'Hi, I wanted to know if Inception will be showing next weekend?',
+--      '192.168.1.12', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', 'new', '2025-10-25 09:45:00'),
+--
+--     ('Lisa Brown', 'lisa.brown@example.com', 'Ticket refund request',
+--      'Hello, I booked tickets for Avatar yesterday but need to reschedule. Can I get a refund?',
+--      '192.168.1.25', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0_0)', 'read', '2025-10-26 15:30:00'),
+--
+--     ('Tommy Nguyen', 'tommy.nguyen@example.com', 'Lost item in cinema',
+--      'Hi, I think I left my wallet in the IMAX hall after the 8 PM screening. Please check.',
+--      '10.0.0.55', 'Mozilla/5.0 (Linux; Android 14)', 'new', '2025-10-27 18:20:00'),
+--
+--     ('Sarah Miller', 'sarah.miller@example.com', 'Great experience!',
+--      'Just wanted to say the new Dolby Atmos sound system is incredible. Keep it up!',
+--      '172.16.0.33', 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X)', 'read', '2025-10-28 11:10:00'),
+--
+--     ('David Smith', 'david.smith@example.com', 'Website issue',
+--      'When I try to book seats for The Dark Knight, I get a payment error. Please help.',
+--      '203.0.113.17', 'Mozilla/5.0 (Windows NT 11.0; Win64; x64)', 'new', '2025-10-28 13:42:00');

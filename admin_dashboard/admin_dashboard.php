@@ -8,7 +8,7 @@ require_once __DIR__ . '/views/screening_rooms/screening_rooms_functions.php';
 require_once __DIR__ . '/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/views/bookings/bookings_functions.php';
 require_once __DIR__ . '/views/news/news_functions.php';
-require_once __DIR__ . '/views/contact_messages/contact_functions.php';
+//require_once __DIR__ . '/views/contact_messages/contact_functions.php';
 
 require_once __DIR__ . '/../auth/session.php';
 
@@ -24,7 +24,9 @@ if (!$session->isAdmin()) {
 $userId = $session->getUserId();
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'contact_messages'];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news',
+//    'contact_messages'
+];
 
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
@@ -39,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require __DIR__ . "/views/actors/actors_controller.php";
             break;
 
-        case 'contact_messages':
-            require __DIR__ . "/views/contact_messages/contact_messages_controller.php";
-            break;
+//        case 'contact_messages':
+//            require __DIR__ . "/views/contact_messages/contact_messages_controller.php";
+//            break;
 
         case 'directors':
             require __DIR__ . "/views/directors/directors_controller.php";
@@ -84,8 +86,8 @@ $screeningRooms = getScreeningRooms($db); // <-- NEW
 $screenings = getScreenings($db);
 $bookings = getBookings($db);
 $newsList = getNews($db);
-$newContactMessagesCount = countNewContactMessages($db);
-$contactMessages = listContactMessages($db);
+//$newContactMessagesCount = countNewContactMessages($db);
+//$contactMessages = listContactMessages($db);
 
 // ------------------- Include Layout -------------------
 include __DIR__ . '/../shared/head.php';
@@ -103,18 +105,18 @@ include __DIR__ . '/../shared/header.php';
 
         <nav class="flex-1">
             <ul class="space-y-3">
-                <li>
-                    <a href="?view=contact_messages"
-                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'contact_messages' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
-                        <i class="pi pi-inbox"></i> Messages
-
-                        <?php if (!empty($newContactMessagesCount)): ?>
-                            <span class="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-xs px-2 py-0.5">
-        <?= (int)$newContactMessagesCount ?>
-      </span>
-                        <?php endif; ?>
-                    </a>
-                </li>
+<!--                <li>-->
+<!--                    <a href="?view=contact_messages"-->
+<!--                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors --><?php //= $view === 'contact_messages' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?><!--">-->
+<!--                        <i class="pi pi-inbox"></i> Messages-->
+<!---->
+<!--                        --><?php //if (!empty($newContactMessagesCount)): ?>
+<!--                            <span class="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-xs px-2 py-0.5">-->
+<!--        --><?php //= (int)$newContactMessagesCount ?>
+<!--      </span>-->
+<!--                        --><?php //endif; ?>
+<!--                    </a>-->
+<!--                </li>-->
                 <li>
                     <a href="?view=movies"
                        class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">

@@ -1,101 +1,73 @@
 <?php
 session_start();
-require_once 'backend/connection.php';
-require_once 'admin_dashboard/includes/contact_functions.php';
+require_once __DIR__ . '/../../../backend/email_config.php';
+require_once __DIR__ . '/../../../backend/connection.php';
 
-/* --- Basic protections --- */
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: index.php#contact-us'); exit; }
-
-if (empty($_SESSION['csrf']) || empty($_POST['csrf']) || !hash_equals($_SESSION['csrf'], $_POST['csrf'])) {
-    $_SESSION['flash_error'] = "Security token mismatch. Please try again.";
-    header('Location: index.php#contact-us'); exit;
+// 1. Anti-bot check
+if (!empty($_POST['website'])) {
+    $_SESSION['contact_status'] = ['type' => 'error', 'msg' => 'Bot detected.'];
+    header("Location: /cinema-website/#contact-us");
+    exit;
 }
 
-if (!empty($_POST['website'])) { // honeypot
-    $_SESSION['flash_error'] = "Spam detected.";
-    header('Location: index.php#contact-us'); exit;
+// 2. CSRF check
+if (!isset($_POST['csrf']) || $_POST['csrf'] !== ($_SESSION['csrf'] ?? '')) {
+    $_SESSION['contact_status'] = ['type' => 'error', 'msg' => 'Invalid CSRF token.'];
+    header("Location: /cinema-website/#contact-us");
+    exit;
 }
 
-/* --- Collect & validate --- */
+// 3. Validate
 $name    = trim($_POST['name'] ?? '');
 $email   = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
 
-session_start();
-require_once 'backend/connection.php';
-
-// Basic spam honeypot
-if (!empty($_POST['website'])) {
-    header('Location: contact_functions.php?status=spam');
+if (!$name || !$email || !$subject || !$message) {
+    $_SESSION['contact_status'] = ['type' => 'error', 'msg' => 'All fields are required.'];
+    header("Location: /cinema-website/#contact-us");
     exit;
 }
 
-// Validate CSRF
-if (empty($_POST['csrf']) || $_POST['csrf'] !== ($_SESSION['csrf'] ?? '')) {
-    header('Location: contact_functions.php?status=csrf');
-    exit;
+// 4. Save message to DB
+$stmt = $db->prepare("
+    INSERT INTO contact_messages (name, email, subject, message, created_at)
+    VALUES (?, ?, ?, ?, NOW())
+");
+$stmt->execute([$name, $email, $subject, $message]);
+
+// 5. Send email
+$body = "
+<strong>New contact message:</strong><br><br>
+Name: $name<br>
+Email: $email<br><br>
+Subject: $subject<br>
+Message:<br>
+$message
+";
+
+$sent = sendMail(
+    "contact@cinema-eclipse.com",
+    "New Message: $subject",
+    $body,
+    $email,   // user email
+    $name     // user name
+);
+
+
+// Store flash message
+if ($sent === true) {
+    $_SESSION['contact_status'] = [
+        'type' => 'success',
+        'msg'  => 'Your message has been sent successfully!'
+    ];
+} else {
+    $_SESSION['contact_status'] = [
+        'type' => 'error',
+        'msg'  => 'Email failed: ' . $sent
+    ];
 }
 
-// Sanitize inputs
-$name = trim($_POST['name'] ?? '');
-$email = trim($_POST['email'] ?? '');
-$subject = trim($_POST['subject'] ?? '');
-$message = trim($_POST['message'] ?? '');
-
-if ($name === '' || $email === '' || $subject === '' || $message === '') {
-    header('Location: contact_functions.php?status=invalid');
-    exit;
-}
-
-// Example: store message in database
-try {
-    $stmt = $db->prepare("
-        INSERT INTO contact_messages (name, email, subject, message, created_at)
-        VALUES (?, ?, ?, ?, NOW())
-    ");
-    $stmt->execute([$name, $email, $subject, $message]);
-
-    header('Location: contact_functions.php?status=success');
-    exit;
-} catch (PDOException $e) {
-    header('Location: contact_functions.php?status=error');
-    exit;
-}
-
-$errors = [];
-if (mb_strlen($name) < 2 || mb_strlen($name) > 100)         $errors[] = "Name must be 2–100 characters.";
-if (!filter_var($email, FILTER_VALIDATE_EMAIL))              $errors[] = "Please enter a valid email.";
-if (mb_strlen($subject) < 3 || mb_strlen($subject) > 150)    $errors[] = "Subject must be 3–150 characters.";
-if (mb_strlen($message) < 10 || mb_strlen($message) > 5000)  $errors[] = "Message must be 10–5000 characters.";
-if ($errors) {
-    $_SESSION['flash_error'] = implode(' ', $errors);
-    header('Location: index.php#contact-us'); exit;
-}
-
-/* --- Save --- */
-$userId = $_SESSION['user_id'] ?? null; // if you set this on login
-[$ok, $err] = addContactMessage($db, [
-    'user_id' => $userId,
-    'name'    => $name,
-    'email'   => $email,
-    'subject' => $subject,
-    'message' => $message,
-    'ip'      => $_SERVER['REMOTE_ADDR'] ?? null,
-    'ua'      => $_SERVER['HTTP_USER_AGENT'] ?? null,
-]);
-
-if ($err) {
-    $_SESSION['flash_error'] = $err;
-    header('Location: index.php#contact-us'); exit;
-}
-
-/* --- Optional email (PHPMailer recommended in prod) --- */
-$to = 'info@mycinema.com';
-$subjectLine = "[Contact] $subject";
-$body = "From: $name <$email>\n\n$message";
-$headers = "From: no-reply@mycinema.com\r\nReply-To: $email\r\n";
-@mail($to, $subjectLine, $body, $headers);
-
-$_SESSION['flash_success'] = "Thanks! Your message has been sent.";
-header('Location: index.php#contact-us'); exit;
+// Redirect back to contact section
+header("Location: /cinema-website/#contact-us");
+exit;
