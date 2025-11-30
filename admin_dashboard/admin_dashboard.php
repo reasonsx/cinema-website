@@ -96,9 +96,9 @@ include __DIR__ . '/../shared/head.php';
 include __DIR__ . '/../shared/header.php';
 
 ?>
-<section class="flex min-h-[80vh] bg-gray-100 px-4 py-6">
+<section class="flex min-h-[80vh] px-4 py-6">
     <!-- Sidebar -->
-    <aside class="w-64 bg-white p-6 rounded-2xl shadow-xl flex flex-col">
+    <aside class="w-64 bg-white p-6 rounded-2xl shadow-md flex flex-col">
         <div class="mb-8 flex flex-col items-center">
             <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
             <img src="../images/adminProfilePic.jpg" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
@@ -180,7 +180,7 @@ include __DIR__ . '/../shared/header.php';
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 ml-6 p-6 bg-white rounded-2xl shadow-xl overflow-auto">
+    <main class="flex-1 ml-6 p-6 bg-white rounded-2xl shadow-md overflow-auto">
         <!-- Toast Messages -->
         <?php
         // Show success/error messages, either from POST handlers or from GET after redirect
@@ -205,6 +205,8 @@ include __DIR__ . '/../shared/header.php';
         ?>
     </main>
 </section>
+
+<?php include __DIR__ . '/../shared/footer.php'; ?>
 
 
 <script src="assets/js/admin.js"></script>
