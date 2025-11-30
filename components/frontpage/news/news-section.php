@@ -11,8 +11,9 @@
             </div>
         </div>
 
+        <!-- News Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <?php foreach ($newsList as $news): ?>
+            <?php foreach (array_slice($newsList, 0, 3) as $news): ?>
                 <?php
                 $id = (int)$news['id'];
                 $title = htmlspecialchars($news['title'] ?? 'Untitled');
@@ -21,7 +22,7 @@
                 $excerpt = mb_strlen($content) > 260 ? mb_substr($content, 0, 260) . '…' : $content;
                 ?>
                 <article
-                    class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl overflow-hidden">
+                        class="group flex flex-col justify-between rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl overflow-hidden">
 
                     <div class="flex-1 flex flex-col px-5 pt-5 pb-6">
 
@@ -40,7 +41,6 @@
 
                         <p class="text-white/85 leading-relaxed mb-5"><?= $excerpt ?></p>
 
-                        <!-- Button -->
                         <div class="mt-auto">
                             <a href="views/news_details/news_details.php?id=<?= $id ?>" class="btn">
                                 <i class="pi pi-angle-right"></i>
@@ -53,5 +53,14 @@
                 </article>
             <?php endforeach; ?>
         </div>
+
+        <!-- Centered Button -->
+        <div class="text-center mt-12">
+            <a href="views/all_news/all_news.php"
+               class="btn">
+                See all news
+            </a>
+        </div>
+
     </div>
 </section>
