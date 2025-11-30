@@ -36,5 +36,3 @@ http://localhost/cinema-website/backend/setup_database.php
 
 You should see:
 "Database setup completed successfully."
-
-There will be admin user created with password 123456 and login admin@admin.com
