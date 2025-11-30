@@ -37,7 +37,7 @@ $newsList   = getNews($db);
 
     <!-- Foreground Content -->
     <div class="relative z-[5] flex flex-col items-center gap-6 px-6 text-center">
-        <h1 class="text-6xl font-[Limelight] text-white drop-shadow-lg">Eclipse Cinema</h1>
+        <h1 class="text-6xl font-[Limelight] text-white drop-shadow-lg">Cinema Eclipse</h1>
         <a href="#now-playing" class="btn-full">Explore Now</a>
     </div>
 </section>
