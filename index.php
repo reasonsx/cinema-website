@@ -72,19 +72,19 @@ $newsList   = getNews($db);
 
 
 <!-- Now Playing -->
-<?php include 'components/frontpage/now-playing/now-playing-section.php'; ?>
+<?php include 'frontpage/components/now-playing/now-playing-section.php'; ?>
 
 
 <!-- About Us -->
-<?php include 'components/frontpage/about/about-section.php'; ?>
+<?php include 'frontpage/components/about/about-section.php'; ?>
 
 
 <!-- News -->
-<?php include 'components/frontpage/news/news-section.php'; ?>
+<?php include 'frontpage/components/news/news-section.php'; ?>
 
 
 <!-- Contact -->
-<?php include 'components/frontpage/contact/contact-form.php'; ?>
+<?php include 'frontpage/components/contact/contact-form.php'; ?>
 
 
 <?php include 'shared/footer.php'; ?>
