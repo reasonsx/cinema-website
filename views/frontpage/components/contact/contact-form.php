@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../../../admin_dashboard/views/content_blocks/content_blocks_functions.php';
+require_once __DIR__ . '/../../../../admin_dashboard/views/content_blocks/content_blocks_functions.php';
 
 // Fetch all contact-related blocks
 $blocks = getContentBlocks($db);
@@ -50,7 +50,7 @@ foreach ($blocks as $block) {
 
             <!-- CONTACT FORM BOX -->
             <form
-                    action="/cinema-website/frontpage/components/contact/contact-submit.php"
+                    action="/cinema-website/views/frontpage/components/contact/contact-submit.php"
                     method="post"
                     class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-8 py-10
                        flex flex-col gap-6 text-left text-white"

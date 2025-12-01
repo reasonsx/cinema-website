@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../../admin_dashboard/views/content_blocks/content_blocks_functions.php';
+require_once __DIR__ . '/../../../../admin_dashboard/views/content_blocks/content_blocks_functions.php';
 
 // Fetch About Us block
 $blocks = getContentBlocks($db);

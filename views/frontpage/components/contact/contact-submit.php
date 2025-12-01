@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/../../../backend/email_config.php';
-require_once __DIR__ . '/../../../backend/connection.php';
+require_once __DIR__ . '/../../../../backend/email_config.php';
+require_once __DIR__ . '/../../../../backend/connection.php';
 
 // 1. Anti-bot check
 if (!empty($_POST['website'])) {
