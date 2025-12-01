@@ -56,7 +56,7 @@
 
         <!-- Centered Button -->
         <div class="text-center mt-12">
-            <a href="views/all_news/all_news.php"
+            <a href="views/news_list/news_list.php"
                class="btn">
                 See all news
             </a>
