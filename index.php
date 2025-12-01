@@ -25,7 +25,7 @@ $newsList   = getNews($db);
 
     <!-- Video Element -->
     <video id="heroVideo" autoplay loop muted playsinline
-           class="absolute inset-0 w-full h-full object-cover opacity-40 transition-opacity duration-700">
+           class="absolute inset-0 w-full h-full object-cover opacity-75 transition-opacity duration-700">
         <source src="/cinema-website/assets/videos/hero1.mp4" type="video/mp4">
     </video>
 
