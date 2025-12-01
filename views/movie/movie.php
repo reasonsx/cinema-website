@@ -116,7 +116,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 
                 <!-- CTA -->
                 <div class="mt-8 flex flex-col items-center gap-3">
-                    <a href="../../book.php?movie_id=<?= $movie['id'] ?>"
+                   <a href="../booking/book.php?movie_id=<?= $movie['id'] ?>">
                        class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black">
                         <i class="pi pi-ticket"></i>
                         BOOK TICKETS
@@ -267,7 +267,8 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
                         <div id="showtimeButtons" class="flex flex-wrap justify-center gap-3">
                             <?php foreach ($groupedScreenings[$dates[0]] as $t): ?>
                                 <?php $time = date('H:i', strtotime($t['start_time'])); ?>
-                                <a href="../../book.php?screening_id=<?= $t['id'] ?>"
+                               <a href="../booking/book.php?screening_id=<?= $t['id'] ?>">
+
                                    class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
                                     <i class="pi pi-clock"></i>
                                     <?= $time ?>
@@ -280,11 +281,12 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
 <div class="pt-1 pb-6 text-center border-t border-white/10">
     <?php if (!empty($groupedScreenings[$dates[0]])): ?>
         <?php $firstScreening = $groupedScreenings[$dates[0]][0]; ?>
-        <a href="../../book.php?screening_id=<?= $firstScreening['id'] ?>"
-           class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+        <a href="../booking/book.php?screening_id=<?= $firstScreening['id'] ?>"
+        class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60 bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
             <i class="pi pi-ticket"></i>
             BOOK TICKETS
         </a>
+
     <?php endif; ?>
 </div>
 
@@ -320,7 +322,7 @@ $directorNames = $directors ? implode(', ', array_map(fn($d) => $d['first_name']
             const d = dates[index];
             showtimeDate.textContent = d.label;
             showtimeButtons.innerHTML = d.screenings.map(s => `
-      <a href="../../book.php?screening_id=${s.id}"
+     <a href="../booking/book.php?screening_id=${s.id}"
          class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50 bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)] hover:bg-black/70 transition">
         <i class="pi pi-clock"></i>
         ${s.time} <span class="text-xs opacity-70">· ${s.room}</span>
