@@ -10,23 +10,27 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Fetch session data
 $userId = $_SESSION['user_id'];
 $screeningId = $_SESSION['selected_screening'] ?? null;
 $selectedSeats = $_SESSION['selected_seats'] ?? [];
 
+// Validate access
 if (!$screeningId || empty($selectedSeats)) {
     header("Location: index.php");
     exit;
 }
 
+// Get screening info
 $screening = getScreeningById($db, $screeningId);
 
-// Get seat price
+// Get seat price for the room
 $stmt = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
 $stmt->execute([$screening['screening_room_id']]);
 $seatPrice = $stmt->fetchColumn();
-$totalPrice = $seatPrice * count($selectedSeats);
 
+// Calculate total cost
+$totalPrice = $seatPrice * count($selectedSeats);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,23 +41,24 @@ $totalPrice = $seatPrice * count($selectedSeats);
 
 <?php include __DIR__ . '/../../shared/header.php'; ?>
 
+<!-- CHECKOUT -->
 <section class="px-6 md:px-8 py-10 max-w-3xl mx-auto">
     <h1 class="text-4xl font-[Limelight] text-[#F8A15A] mb-6">Checkout</h1>
 
+    <!-- Checkout summary box -->
     <div class="bg-white/10 rounded-lg p-6 mb-6">
         <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($screening['movie_title']) ?></h2>
         <p class="text-white/80 mb-2">Room: <?= htmlspecialchars($screening['room_name']) ?></p>
         <p class="text-white/80 mb-2">Time: <?= htmlspecialchars($screening['start_time']) ?> - <?= htmlspecialchars($screening['end_time']) ?></p>
-        <p class="text-white/80">Selected seats: 
-            <?= implode(', ', array_map('htmlspecialchars', $selectedSeats)) ?>
-        </p>
+        <p class="text-white/80">Selected seats: <?= implode(', ', array_map('htmlspecialchars', $selectedSeats)) ?></p>
         <p class="mt-3 font-bold text-lg">Total: $<?= number_format($totalPrice, 2) ?></p>
     </div>
 
+    <!-- Payment form -->
     <form action="payment.php" method="POST">
         <input type="hidden" name="screening_id" value="<?= $screeningId ?>">
         <button type="submit"
-            class="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-8 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                class="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-8 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
             <i class="pi pi-credit-card"></i>
             Proceed to Payment
         </button>
@@ -61,5 +66,6 @@ $totalPrice = $seatPrice * count($selectedSeats);
 </section>
 
 <?php include __DIR__ . '/../../shared/footer.php'; ?>
+
 </body>
 </html>
