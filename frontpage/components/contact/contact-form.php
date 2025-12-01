@@ -112,47 +112,47 @@ foreach ($blocks as $block) {
             </form>
 
             <!-- CONTACT DETAILS BOX -->
-            <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-10 py-12
-                        flex flex-col gap-12">
+<div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl px-10 py-12
+            flex flex-col gap-12">
 
-                <!-- Contact Methods Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
+    <!-- Contact Methods Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
 
-                    <!-- Address -->
-<div class="flex flex-col items-center gap-2">
-    <i class="pi pi-map-marker text-3xl text-[var(--secondary)]"></i>
-    <p class="font-semibold text-white"><?= $contact['contact_address'] ? 'Visit Us' : '' ?></p>
-    <p class="text-white/80"><?= $contact['contact_address'] ?? 'N/A' ?></p>
-</div>
+        <!-- Address -->
+        <div class="flex flex-col items-center gap-2">
+            <i class="pi pi-map-marker text-3xl text-[var(--secondary)]"></i>
+            <p class="font-semibold text-white"><?= $contact['contact_address'] ? 'Visit Us' : '' ?></p>
+            <p class="text-white/80"><?= $contact['contact_address'] ?? 'N/A' ?></p>
+        </div>
 
-<!-- Phone -->
-<div class="flex flex-col items-center gap-2">
-    <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
-    <p class="font-semibold text-white"><?= $contact['contact_phone'] ? 'Call Us' : '' ?></p>
-    <p class="text-white/80"><?= $contact['contact_phone'] ?? 'N/A' ?></p>
-</div>
+        <!-- Phone -->
+        <div class="flex flex-col items-center gap-2">
+            <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
+            <p class="font-semibold text-white"><?= $contact['contact_phone'] ? 'Call Us' : '' ?></p>
+            <p class="text-white/80"><?= $contact['contact_phone'] ?? 'N/A' ?></p>
+        </div>
 
-<!-- Email -->
-<div class="flex flex-col items-center gap-2">
-    <i class="pi pi-envelope text-3xl text-[var(--secondary)]"></i>
-    <p class="font-semibold text-white"><?= $contact['contact_email'] ? 'Email' : '' ?></p>
-    <p class="text-white/80"><?= $contact['contact_email'] ?? 'N/A' ?></p>
-</div>
+        <!-- Email -->
+        <div class="flex flex-col items-center gap-2">
+            <i class="pi pi-envelope text-3xl text-[var(--secondary)]"></i>
+            <p class="font-semibold text-white"><?= $contact['contact_email'] ? 'Email' : '' ?></p>
+            <p class="text-white/80"><?= $contact['contact_email'] ?? 'N/A' ?></p>
+        </div>
 
-<!-- Opening Hours -->
-<div class="text-center">
-    <h4 class="text-2xl font-[Limelight] tracking-wide text-[var(--secondary)] mb-4">
-        <?= $contact['contact_hours'] ? 'OPENING HOURS' : '' ?>
-    </h4>
-    <div class="text-white/80 leading-relaxed">
-        <?= $contact['contact_hours'] ?? 'N/A' ?>
     </div>
+
+    <!-- Opening Hours - Full Width -->
+    <div class="mt-12 text-center bg-white/5 p-8 rounded-2xl">
+        <h4 class="text-3xl font-[Limelight] tracking-wide text-[var(--secondary)] mb-6">
+            <?= $contact['contact_hours'] ? 'OPENING HOURS' : '' ?>
+        </h4>
+        <div class="text-white/80 text-lg leading-relaxed space-y-2">
+            <?= $contact['contact_hours'] ?? 'N/A' ?>
+        </div>
+    </div>
+
 </div>
 
-
-            </div>
-
-        </div> <!-- END GRID -->
 
     </div>
 </section>
