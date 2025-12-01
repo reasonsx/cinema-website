@@ -1,5 +1,4 @@
 <?php
-// Start session
 session_start();
 
 // Load dependencies
