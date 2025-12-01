@@ -14,7 +14,7 @@ $userId = $session->getUserId();
 
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news',
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'content_blocks',
 //    'contact_messages'
 ];
 
@@ -62,6 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'news':
             require __DIR__ . "/views/news/news_controller.php";
             break;
+        
+        case 'content_blocks':
+            require __DIR__ . "/views/content_blocks/content_blocks_controller.php";
+        break;
+
     }
 }
 
@@ -155,6 +160,13 @@ include __DIR__ . '/../shared/header.php';
                         <i class="pi pi-book"></i> All News
                     </a>
                 </li>
+                <li>
+                    <a href="?view=content_blocks"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'content_blocks' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
+                        <i class="pi pi-align-left"></i> Content Blocks
+                    </a>
+                </li>
+
             </ul>
         </nav>
 
