@@ -18,23 +18,29 @@ function getBookings($db) {
 }
 
 // Add a new booking with selected seats.
-function addBooking($db, $data) {
+function addBooking(PDO $db, $data) {
     try {
+        $db->beginTransaction(); // START TRANSACTION
+
         $userId = (int)$data['user_id'];
         $screeningId = (int)$data['screening_id'];
-        $seatIds = $data['seat_ids'] ?? '';
+        $seatIds = $data['seat_ids'] ?? [];
 
-        $seatIds = is_string($seatIds) ? explode(',', $seatIds) : $seatIds;
+        if (is_string($seatIds)) $seatIds = explode(',', $seatIds);
         $seatIds = array_map('intval', $seatIds);
         $seatIds = array_filter($seatIds, fn($id) => $id > 0);
         $seatIds = array_unique($seatIds);
 
-        if (empty($seatIds)) throw new Exception("User, screening, and seats are required");
         if (!$userId || !$screeningId || empty($seatIds)) {
             throw new Exception("User, screening, and seats are required");
         }
 
-        $stmt = $db->prepare("SELECT seat_price FROM screening_rooms r JOIN screenings s ON r.id = s.screening_room_id WHERE s.id = ?");
+        $stmt = $db->prepare("
+            SELECT seat_price
+            FROM screening_rooms r
+            JOIN screenings s ON r.id = s.screening_room_id
+            WHERE s.id = ?
+        ");
         $stmt->execute([$screeningId]);
         $seatPrice = (float)$stmt->fetchColumn();
         $totalPrice = $seatPrice * count($seatIds);
@@ -45,24 +51,28 @@ function addBooking($db, $data) {
 
         $stmtInsert = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
         foreach ($seatIds as $seatId) {
-            $stmtInsert->execute([$bookingId, (int)$seatId, $screeningId]);
+            $stmtInsert->execute([$bookingId, $seatId, $screeningId]);
         }
 
+        $db->commit(); // COMMIT TRANSACTION
         return ['Booking added successfully!', ''];
     } catch (Exception $e) {
+        $db->rollBack(); // ROLLBACK if anything fails
         return ['', 'Error adding booking: '.$e->getMessage()];
     }
 }
 
 // Edit an existing booking and replace its seats.
-function editBooking($db, $data) {
+function editBooking(PDO $db, $data) {
     try {
+        $db->beginTransaction();
+
         $bookingId = (int)$data['booking_id'];
         $userId = (int)$data['user_id'];
         $screeningId = (int)$data['screening_id'];
-        $seatIds = $data['seat_ids'] ?? '';
+        $seatIds = $data['seat_ids'] ?? [];
 
-        $seatIds = is_string($seatIds) ? explode(',', $seatIds) : $seatIds;
+        if (is_string($seatIds)) $seatIds = explode(',', $seatIds);
         $seatIds = array_map('intval', $seatIds);
         $seatIds = array_filter($seatIds, fn($id) => $id > 0);
         $seatIds = array_unique($seatIds);
@@ -71,7 +81,12 @@ function editBooking($db, $data) {
             throw new Exception("Booking ID, user, screening, and seats are required");
         }
 
-        $stmt = $db->prepare("SELECT seat_price FROM screening_rooms r \n                              JOIN screenings s ON r.id = s.screening_room_id \n                              WHERE s.id = ?");
+        $stmt = $db->prepare("
+            SELECT seat_price
+            FROM screening_rooms r
+            JOIN screenings s ON r.id = s.screening_room_id
+            WHERE s.id = ?
+        ");
         $stmt->execute([$screeningId]);
         $seatPrice = (float)$stmt->fetchColumn();
         $totalPrice = $seatPrice * count($seatIds);
@@ -86,26 +101,34 @@ function editBooking($db, $data) {
             $stmtInsert->execute([$bookingId, $seatId, $screeningId]);
         }
 
+        $db->commit();
         return ['Booking updated successfully!', ''];
     } catch (Exception $e) {
+        $db->rollBack();
         return ['', 'Error updating booking: ' . $e->getMessage()];
     }
 }
 
+
 // Delete a booking and its associated seats.
-function deleteBooking($db, $bookingId) {
+function deleteBooking(PDO $db, $bookingId) {
     try {
+        $db->beginTransaction();
+
         $bookingId = (int)$bookingId;
         if (!$bookingId) throw new Exception("Invalid booking ID");
 
         $db->prepare("DELETE FROM booking_seats WHERE booking_id = ?")->execute([$bookingId]);
         $db->prepare("DELETE FROM bookings WHERE id = ?")->execute([$bookingId]);
 
+        $db->commit();
         return ['Booking deleted successfully!', ''];
     } catch (Exception $e) {
+        $db->rollBack();
         return ['', 'Error deleting booking: '.$e->getMessage()];
     }
 }
+
 
 // Retrieve bookings for a specific user.
 function getBookingsByUserId(PDO $db, int $userId): array {
