@@ -1,18 +1,12 @@
 <?php
 session_start();
-require_once __DIR__ . '/../backend/connection.php';
-require_once __DIR__ . '/../shared/csrf.php';
-
-// include all functions in one place
-require_once __DIR__ . '/includes/includes_functions.php';
-
-require_once __DIR__ . '/../auth/session.php';
+require_once __DIR__ . '/admin_includes.php';
 
 $session = new SessionManager($db);
-$session->requireLogin(); // ensures user is logged in
+$session->requireLogin();
 
 if (!$session->isAdmin()) {
-    header('Location: /cinema-website/views/profile/profile.php'); 
+    header('Location: /cinema-website/views/profile/profile.php');
     exit;
 }
 
