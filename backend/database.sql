@@ -451,3 +451,18 @@ JOIN users u ON b.user_id = u.id
 JOIN screenings s ON b.screening_id = s.id
 JOIN movies m ON s.movie_id = m.id
 JOIN screening_rooms r ON s.screening_room_id = r.id;
+
+
+CREATE OR REPLACE VIEW view_screenings_full AS
+SELECT 
+     s.id AS id,
+    s.movie_id,
+    s.screening_room_id,
+    s.start_time,
+    s.end_time,
+    m.title AS movie_title,
+    r.name AS room_name,
+    r.seat_price
+FROM screenings s
+JOIN movies m ON s.movie_id = m.id
+JOIN screening_rooms r ON s.screening_room_id = r.id;
