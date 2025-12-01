@@ -2,7 +2,7 @@
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-12 px-6">
 
         <!-- Image -->
-        <img src="images/frontpage/cinema-about.png" alt="Our Cinema" class="w-full md:w-1/2">
+        <img src="images/cinema-about.png" alt="Our Cinema" class="w-full md:w-1/2">
 
         <!-- Text -->
         <div class="md:w-1/2">
