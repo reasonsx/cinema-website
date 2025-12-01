@@ -466,3 +466,28 @@ SELECT
 FROM screenings s
 JOIN movies m ON s.movie_id = m.id
 JOIN screening_rooms r ON s.screening_room_id = r.id;
+
+
+CREATE TRIGGER trg_prevent_screening_delete
+BEFORE DELETE ON screenings
+FOR EACH ROW
+BEGIN
+    IF EXISTS (SELECT 1 FROM bookings WHERE screening_id = OLD.id) THEN
+        -- Raise an error
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete screening: bookings exist';
+    END IF;
+END;
+
+CREATE TRIGGER trg_prevent_double_booking
+BEFORE INSERT ON booking_seats
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM booking_seats
+        WHERE seat_id = NEW.seat_id AND screening_id = NEW.screening_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Seat already booked for this screening';
+    END IF;
+END;
+ 
