@@ -81,6 +81,8 @@ $screeningRooms = getScreeningRooms($db); // <-- NEW
 $screenings = getScreenings($db);
 $bookings = getBookings($db);
 $newsList = getNews($db);
+$contentBlocks = getContentBlocks($db);
+
 //$newContactMessagesCount = countNewContactMessages($db);
 //$contactMessages = listContactMessages($db);
 
