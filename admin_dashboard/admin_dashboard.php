@@ -2,28 +2,22 @@
 session_start();
 require_once __DIR__ . '/../backend/connection.php';
 require_once __DIR__ . '/../shared/csrf.php';
-require_once __DIR__ . '/views/actors/actors_functions.php';
-require_once __DIR__ . '/views/directors/directors_functions.php';
-require_once __DIR__ . '/views/movies/movies_functions.php';
-require_once __DIR__ . '/views/users/users_functions.php';
-require_once __DIR__ . '/views/screening_rooms/screening_rooms_functions.php';
-require_once __DIR__ . '/views/screenings/screenings_functions.php';
-require_once __DIR__ . '/views/bookings/bookings_functions.php';
-require_once __DIR__ . '/views/news/news_functions.php';
-//require_once __DIR__ . '/views/contact_messages/contact_functions.php';
+
+// include all functions in one place
+require_once __DIR__ . '/includes/includes_functions.php';
 
 require_once __DIR__ . '/../auth/session.php';
-
 
 $session = new SessionManager($db);
 $session->requireLogin(); // ensures user is logged in
 
 if (!$session->isAdmin()) {
-    header('Location: /cinema-website/views/profile/profile.php'); // redirect non-admins to profile
+    header('Location: /cinema-website/views/profile/profile.php'); 
     exit;
 }
 
 $userId = $session->getUserId();
+
 
 // ------------------- Determine view -------------------
 $allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news',
