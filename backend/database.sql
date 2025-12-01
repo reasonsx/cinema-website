@@ -500,9 +500,9 @@ END;
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO content_blocks (tag, title, text)
-VALUES
-('contact_header', 'CONTACT US', 'Some contact description'),
-('about_title', 'Our Cinema', 'About Us paragraph...'),
-('about_text', NULL, 'Long description...');
+INSERT INTO content_blocks (tag, title, text) VALUES
+('contact_address', 'Visit Us', 'Spangsbjerg Kirkevej 101B<br>6700 Esbjerg, Denmark'),
+('contact_phone', 'Call Us', '+45 12 34 56 78'),
+('contact_email', 'Email', 'contact@cinema-eclipse.com'),
+('contact_hours', 'Opening Hours', 'Monday – Thursday: 10:00 – 22:00<br>Friday – Saturday: 10:00 – 00:00<br>Sunday: 12:00 – 20:00');
 
