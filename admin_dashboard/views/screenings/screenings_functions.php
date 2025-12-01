@@ -113,7 +113,7 @@ function deleteScreening(PDO $db, int $id): array {
 function getScreeningById(PDO $db, int $screeningId): ?array {
     $stmt = $db->prepare("
         SELECT * FROM view_screenings_full
-        WHERE screening_id = ?
+        WHERE id = ?
     ");
     $stmt->execute([$screeningId]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
