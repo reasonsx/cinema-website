@@ -6,7 +6,7 @@ require_once __DIR__ . '/../../backend/stripe_config.php';
 $session_id = $_GET['session_id'] ?? null;
 
 if (!$session_id) {
-    header("Location: index.php");
+   header("Location: ../../home/index.php");
     exit;
 }
 
