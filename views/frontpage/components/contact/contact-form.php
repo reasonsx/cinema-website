@@ -129,7 +129,7 @@ foreach ($blocks as $block) {
         <div class="flex flex-col items-center gap-2">
             <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
             <p class="font-semibold text-white"><?= $contact['contact_phone'] ? 'Call Us' : '' ?></p>
-            <p class="text-white/80"><?= $contact['contact_phone'] ?? 'N/A' ?></p>
+            <p class="text-white/80 whitespace-nowrap"><?= $contact['contact_phone'] ?? 'N/A' ?></p>
         </div>
 
         <!-- Email -->
