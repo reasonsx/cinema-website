@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../backend/connection.php';
-require_once __DIR__ . '/../../auth/session.php'; // <-- your SessionManager class
+require_once __DIR__ . '/../../auth/session.php'; // SessionManager class
 require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
@@ -56,8 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <?php include __DIR__ . '/../../shared/head.php'; ?>
+
 <body class="bg-black text-white font-sans">
+
 <?php include __DIR__ . '/../../shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10">
