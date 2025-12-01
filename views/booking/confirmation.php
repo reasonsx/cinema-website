@@ -14,7 +14,7 @@ $payment_method = $_POST['payment_method'] ?? 'card';
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include 'shared/head.php'; ?>
+<?php include __DIR__ . '/../../shared/head.php'; ?>
 <body class="bg-light text-black font-sans">
 
 <?php include 'shared/header.php'; ?>
@@ -59,7 +59,6 @@ $payment_method = $_POST['payment_method'] ?? 'card';
         </div>
     </div>
 </section>
-
-<?php include 'shared/footer.php'; ?>
+<?php include __DIR__ . '/../../shared/footer.php'; ?>
 </body>
 </html>
