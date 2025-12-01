@@ -2,18 +2,19 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-// Generate CSRF once per session
-// TODO idk we need to think about this and IP for messages
 
-// Ensure CSRF exists
-if (empty($_SESSION['csrf'])) {
-    try {
-        $_SESSION['csrf'] = bin2hex(random_bytes(32));
-    } catch (Throwable $e) {
-        $_SESSION['csrf'] = bin2hex(openssl_random_pseudo_bytes(32));
-    }
+require_once __DIR__ . '/../../../admin_dashboard/views/content_blocks/content_blocks_functions.php';
+
+// Fetch all contact-related blocks
+$blocks = getContentBlocks($db);
+
+// Convert to associative array for easy access
+$contact = [];
+foreach ($blocks as $block) {
+    $contact[$block['tag']] = $block['text'];
 }
 ?>
+
 
 <section id="contact-us" class="py-20 bg-black text-white">
     <div class="mx-auto max-w-6xl px-6">
@@ -118,40 +119,36 @@ if (empty($_SESSION['csrf'])) {
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-10 text-center">
 
                     <!-- Address -->
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="pi pi-map-marker text-3xl text-[var(--secondary)]"></i>
-                        <p class="font-semibold text-white">Visit Us</p>
-                        <p class="text-white/80">
-                            Spangsbjerg Kirkevej 101B<br>6700 Esbjerg, Denmark
-                        </p>
-                    </div>
+<div class="flex flex-col items-center gap-2">
+    <i class="pi pi-map-marker text-3xl text-[var(--secondary)]"></i>
+    <p class="font-semibold text-white"><?= $contact['contact_address'] ? 'Visit Us' : '' ?></p>
+    <p class="text-white/80"><?= $contact['contact_address'] ?? 'N/A' ?></p>
+</div>
 
-                    <!-- Phone -->
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
-                        <p class="font-semibold text-white">Call Us</p>
-                        <p class="text-white/80">+45 12 34 56 78</p>
-                    </div>
+<!-- Phone -->
+<div class="flex flex-col items-center gap-2">
+    <i class="pi pi-phone text-3xl text-[var(--secondary)]"></i>
+    <p class="font-semibold text-white"><?= $contact['contact_phone'] ? 'Call Us' : '' ?></p>
+    <p class="text-white/80"><?= $contact['contact_phone'] ?? 'N/A' ?></p>
+</div>
 
-                    <!-- Email -->
-                    <div class="flex flex-col items-center gap-2">
-                        <i class="pi pi-envelope text-3xl text-[var(--secondary)]"></i>
-                        <p class="font-semibold text-white">Email</p>
-                        <p class="text-white/80">contact@cinema-eclipse.com</p>
-                    </div>
-                </div>
+<!-- Email -->
+<div class="flex flex-col items-center gap-2">
+    <i class="pi pi-envelope text-3xl text-[var(--secondary)]"></i>
+    <p class="font-semibold text-white"><?= $contact['contact_email'] ? 'Email' : '' ?></p>
+    <p class="text-white/80"><?= $contact['contact_email'] ?? 'N/A' ?></p>
+</div>
 
-                <!-- Opening Hours -->
-                <div class="text-center">
-                    <h4 class="text-2xl font-[Limelight] tracking-wide text-[var(--secondary)] mb-4">
-                        OPENING HOURS
-                    </h4>
-                    <div class="text-white/80 leading-relaxed">
-                        <p>Monday – Thursday: 10:00 – 22:00</p>
-                        <p>Friday – Saturday: 10:00 – 00:00</p>
-                        <p>Sunday: 12:00 – 20:00</p>
-                    </div>
-                </div>
+<!-- Opening Hours -->
+<div class="text-center">
+    <h4 class="text-2xl font-[Limelight] tracking-wide text-[var(--secondary)] mb-4">
+        <?= $contact['contact_hours'] ? 'OPENING HOURS' : '' ?>
+    </h4>
+    <div class="text-white/80 leading-relaxed">
+        <?= $contact['contact_hours'] ?? 'N/A' ?>
+    </div>
+</div>
+
 
             </div>
 
