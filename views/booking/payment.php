@@ -1,10 +1,10 @@
 <?php
 session_start();
 
-require_once 'backend/connection.php';
-require_once 'backend/stripe_config.php'; // Loads Stripe API key from .env
-require_once 'admin_dashboard/views/screenings/screenings_functions.php';
-require_once 'admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
+require_once __DIR__ . '/../../backend/connection.php';
+require_once __DIR__ . '/../../backend/stripe_config.php'; // Loads Stripe API key from .env
+require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
+require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
 // Require login
 if (!isset($_SESSION['user_id'])) {

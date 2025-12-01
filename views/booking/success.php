@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once 'backend/connection.php';
-require_once 'backend/stripe_config.php';
+require_once __DIR__ . '/../../backend/connection.php';
+require_once __DIR__ . '/../../backend/stripe_config.php';
 
 $session_id = $_GET['session_id'] ?? null;
 
