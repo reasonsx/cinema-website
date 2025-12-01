@@ -491,3 +491,18 @@ BEGIN
     END IF;
 END;
  
+
+ CREATE TABLE content_blocks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tag VARCHAR(100) NOT NULL UNIQUE, -- e.g. 'contact_header', 'about_text_1'
+    title VARCHAR(255) NULL,
+    text TEXT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO content_blocks (tag, title, text)
+VALUES
+('contact_header', 'CONTACT US', 'Some contact description'),
+('about_title', 'Our Cinema', 'About Us paragraph...'),
+('about_text', NULL, 'Long description...');
+
