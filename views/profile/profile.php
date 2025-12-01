@@ -25,6 +25,7 @@ $isEditing = isset($_GET['edit']) && $_GET['edit'] === 'true';
 // Handle profile update
 $updateMessage = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) {
+
     [$successMsg, $errorMsg] = updateUserProfile($db, $userId, [
         'firstname' => $_POST['firstname'],
         'lastname' => $_POST['lastname'],
@@ -56,10 +57,15 @@ $email = htmlspecialchars($user['email']);
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../../shared/head.php'; ?>
+
 <body class="bg-black text-white font-sans">
+
 <?php include '../../shared/header.php'; ?>
 
+<!-- Profile page -->
 <section class="px-6 md:px-8 py-10 max-w-4xl mx-auto">
+
+    <!-- Title -->
     <h1 class="text-4xl font-[Limelight] tracking-wide text-secondary mb-8">My Profile</h1>
 
     <!-- PROFILE CARD -->
@@ -166,5 +172,6 @@ $email = htmlspecialchars($user['email']);
 </section>
 
 <?php include '../../shared/footer.php'; ?>
+
 </body>
 </html>
