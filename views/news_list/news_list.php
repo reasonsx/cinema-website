@@ -78,7 +78,7 @@ $newsList = getNews($db);
 
                         <li class="news-row group" data-title="<?= strtolower($title) ?>">
 
-                            <a href="../news_details/news_details.php?id=<?= $id ?>"
+                            <a href="../news/news.php?id=<?= $id ?>"
                                class="flex items-start gap-6 px-8 py-6 transition rounded-2xl md:rounded-none hover:bg-white/10 focus:bg-white/10">
 
                                 <!-- Data Badge -->

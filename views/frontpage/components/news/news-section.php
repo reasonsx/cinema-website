@@ -42,7 +42,7 @@
                         <p class="text-white/85 leading-relaxed mb-5"><?= $excerpt ?></p>
 
                         <div class="mt-auto">
-                            <a href="views/news_details/news_details.php?id=<?= $id ?>" class="btn">
+                            <a href="views/news/news.php?id=<?= $id ?>" class="btn">
                                 <i class="pi pi-angle-right"></i>
                                 Read more
                             </a>
