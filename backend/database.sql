@@ -430,3 +430,39 @@ VALUES
     ('David Smith', 'david.smith@example.com', 'Website issue',
      'When I try to book seats for The Dark Knight, I get a payment error. Please help.',
      '203.0.113.17', 'Mozilla/5.0 (Windows NT 11.0; Win64; x64)', 'new', '2025-10-28 13:42:00');
+
+
+CREATE OR REPLACE VIEW view_full_bookings AS
+SELECT 
+    b.id AS booking_id,
+    b.user_id,
+    u.firstname,
+    u.lastname,
+    u.email,
+    b.screening_id,
+    s.start_time,
+    s.end_time,
+    m.title AS movie_title,
+    r.name AS room_name,
+    r.seat_price,
+    b.total_price
+FROM bookings b
+JOIN users u ON b.user_id = u.id
+JOIN screenings s ON b.screening_id = s.id
+JOIN movies m ON s.movie_id = m.id
+JOIN screening_rooms r ON s.screening_room_id = r.id;
+
+
+CREATE OR REPLACE VIEW view_screenings_full AS
+SELECT 
+     s.id AS id,
+    s.movie_id,
+    s.screening_room_id,
+    s.start_time,
+    s.end_time,
+    m.title AS movie_title,
+    r.name AS room_name,
+    r.seat_price
+FROM screenings s
+JOIN movies m ON s.movie_id = m.id
+JOIN screening_rooms r ON s.screening_room_id = r.id;

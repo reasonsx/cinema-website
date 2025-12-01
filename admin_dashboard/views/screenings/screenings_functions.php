@@ -4,12 +4,8 @@
 // Fetch all screenings with movie and room details
 function getScreenings(PDO $db): array {
     $stmt = $db->query("
-        SELECT s.id, s.movie_id, s.screening_room_id, s.start_time, s.end_time,
-               m.title AS movie_title, r.name AS room_name
-        FROM screenings s
-        JOIN movies m ON s.movie_id = m.id
-        JOIN screening_rooms r ON s.screening_room_id = r.id
-        ORDER BY s.start_time ASC
+        SELECT * FROM view_screenings_full
+        ORDER BY start_time ASC
     ");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -116,12 +112,8 @@ function deleteScreening(PDO $db, int $id): array {
 // Get a specific screening by ID
 function getScreeningById(PDO $db, int $screeningId): ?array {
     $stmt = $db->prepare("
-        SELECT s.id, s.movie_id, s.screening_room_id, s.start_time, s.end_time,
-               m.title AS movie_title, r.name AS room_name
-        FROM screenings s
-        JOIN movies m ON s.movie_id = m.id
-        JOIN screening_rooms r ON s.screening_room_id = r.id
-        WHERE s.id = ?
+        SELECT * FROM view_screenings_full
+        WHERE screening_id = ?
     ");
     $stmt->execute([$screeningId]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
