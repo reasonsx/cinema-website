@@ -491,3 +491,18 @@ BEGIN
     END IF;
 END;
  
+
+ CREATE TABLE content_blocks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tag VARCHAR(100) NOT NULL UNIQUE, -- e.g. 'contact_header', 'about_text_1'
+    title VARCHAR(255) NULL,
+    text TEXT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO content_blocks (tag, title, text) VALUES
+('contact_address', 'Address', 'Spangsbjerg Kirkevej 101B<br>6700 Esbjerg, Denmark'),
+('contact_phone', 'Phone', '+45 12 34 56 78'),
+('contact_email', 'Email', 'contact@cinema-eclipse.com'),
+('contact_hours', 'Opening Hours', 'Monday – Thursday: 10:00 – 22:00<br>Friday – Saturday: 10:00 – 00:00<br>Sunday: 12:00 – 20:00'),
+('about_us_text', 'About Us', 'Our cinema was founded with one simple goal: to bring unforgettable film experiences to our community. From timeless classics to the newest blockbusters, we’ve built a space where movie lovers can escape into storytelling, immerse themselves in breathtaking sound, and enjoy the magic of the big screen.<br><br>We believe that a cinema should be more than just a place to watch movies — it should be a gathering spot for friends, families, and film enthusiasts. That’s why we focus on comfort, modern technology, and friendly service. Whether you\'re here for a premiere night, a cozy late show, or a special event, we strive to make every visit feel special.');
