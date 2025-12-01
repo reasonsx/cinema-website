@@ -30,8 +30,11 @@ $totalPrice = $seatPrice * count($selectedSeats);
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <?php include __DIR__ . '/../../shared/head.php'; ?>
+
 <body class="bg-black text-white">
+
 <?php include __DIR__ . '/../../shared/header.php'; ?>
 
 <section class="px-6 md:px-8 py-10 max-w-3xl mx-auto">
