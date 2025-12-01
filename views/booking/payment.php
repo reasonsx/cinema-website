@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_r
 
 // Require login
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: ../profile/login.php");
     exit;
 }
 
@@ -17,7 +17,8 @@ $screeningId = $_SESSION['selected_screening'] ?? null;
 $selectedSeats = $_SESSION['selected_seats'] ?? [];
 
 if (!$screeningId || empty($selectedSeats)) {
-    header("Location: index.php");
+   header("Location: ../../home/index.php");
+
     exit;
 }
 
@@ -44,8 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'quantity' => 1,
             ]],
             'mode' => 'payment',
-            'success_url' => 'http://localhost/cinema-website/success.php?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => 'http://localhost/cinema-website/payment.php',
+           'success_url' => 'http://localhost/cinema-website/views/booking/success.php?session_id={CHECKOUT_SESSION_ID}',
+'cancel_url' => 'http://localhost/cinema-website/views/booking/payment.php',
+
             'metadata' => [
                 'user_id' => $userId,
                 'screening_id' => $screeningId,
