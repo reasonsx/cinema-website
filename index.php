@@ -16,7 +16,7 @@ $newsList   = getNews($db);
 
 <?php include 'shared/head.php'; ?>
 
-<body class="bg-light text-black font-sans">
+<body class="bg-black text-black font-sans">
 
 <?php include 'shared/header.php'; ?>
 
@@ -35,9 +35,9 @@ $newsList   = getNews($db);
     <!-- Bottom Fade -->
     <div class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-black"></div>
 
-    <!-- Foreground Content -->
+    <!-- Title + CTA Button -->
     <div class="relative z-[5] flex flex-col items-center gap-6 px-6 text-center">
-        <h1 class="text-6xl font-[Limelight]">Cinema Eclipse</h1>
+        <h1 class="text-6xl font-[Limelight] text-secondary">Cinema Eclipse</h1>
         <a href="#now-playing" class="btn-full">Explore Now</a>
     </div>
 </section>
