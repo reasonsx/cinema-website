@@ -478,3 +478,16 @@ BEGIN
     END IF;
 END;
 
+CREATE TRIGGER trg_prevent_double_booking
+BEFORE INSERT ON booking_seats
+FOR EACH ROW
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM booking_seats
+        WHERE seat_id = NEW.seat_id AND screening_id = NEW.screening_id
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Seat already booked for this screening';
+    END IF;
+END;
+ 
