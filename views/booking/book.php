@@ -28,6 +28,18 @@ if (!$screening) {
     echo "<p class='text-center text-red-500 mt-10'>Invalid screening selected.</p>";
     exit;
 }
+// Runtime calculationn from start/end time
+$start = strtotime($screening['start_time']);
+$end = strtotime($screening['end_time']);
+
+$runtimeMinutes = round(($end - $start) / 60);
+
+// Formatted version
+$runtimeFormatted = sprintf(
+    "%dh %02dm",
+    floor($runtimeMinutes / 60),
+    $runtimeMinutes % 60
+);
 
 // Get seats for room
 $seats = getSeatsByRoom($db, $screening['screening_room_id']);
@@ -63,66 +75,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php include __DIR__ . '/../../shared/header.php'; ?>
 
-<section class="px-6 md:px-8 py-10">
-    <div class="mx-auto max-w-7xl">
-        <h1 class="text-4xl md:text-5xl font-[Limelight] text-secondary mb-4">
-            Select Seats for <?= htmlspecialchars($screening['movie_title']) ?>
+<section class="px-6 md:px-8 py-14">
+    <div class="mx-auto max-w-7xl rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-10">
+
+        <!-- Title -->
+        <h1 class="text-4xl md:text-5xl font-[Limelight] text-[var(--secondary)] mb-4 text-center">
+            Select Your Seats
         </h1>
-        <p class="mb-6 text-white/80">
-            Room: <?= htmlspecialchars($screening['room_name']) ?> |
-            Start: <?= htmlspecialchars($screening['start_time']) ?> |
-            End: <?= htmlspecialchars($screening['end_time']) ?>
+
+        <!-- Screening info -->
+        <p class="text-center text-white/70 mb-10 leading-relaxed flex flex-col md:flex-row md:justify-center md:items-center gap-1 md:gap-4">
+
+            <!-- Movie -->
+            <span>
+                <i class="pi pi-video mr-1 text-[var(--secondary)]"></i>
+                <span class="text-white font-semibold">Movie:</span>
+                <?= htmlspecialchars($screening['movie_title']) ?>
+             </span>
+
+            <!-- Dot separator -->
+            <span class="hidden md:inline">•</span>
+
+            <!-- Room -->
+            <span>
+                 <i class="pi pi-building mr-1 text-[var(--secondary)]"></i>
+                 <span class="text-white font-semibold">Room:</span>
+                 <?= htmlspecialchars($screening['room_name']) ?>
+            </span>
+
+            <span class="hidden md:inline">•</span>
+
+            <!-- Time -->
+            <span>
+                <i class="pi pi-clock mr-1 text-[var(--secondary)]"></i>
+                <span class="text-white font-semibold">Time:</span>
+                <?= date('H:i', strtotime($screening['start_time'])) ?> –
+                <?= date('H:i', strtotime($screening['end_time'])) ?>
+            </span>
+
+            <span class="hidden md:inline">•</span>
+
+            <!-- Runtime -->
+            <span>
+                <i class="pi pi-hourglass mr-1 text-[var(--secondary)]"></i>
+                <span class="text-white font-semibold">Runtime:</span>
+                <?= $runtimeFormatted ?> (<?= $runtimeMinutes ?> min)
+            </span>
         </p>
 
+        <!-- Error box -->
         <?php if ($errors): ?>
-            <div class="rounded-lg bg-red-800/40 p-4 mb-4">
-                <?php foreach ($errors as $e) echo "<p class='text-red-300'>$e</p>"; ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($success): ?>
-            <div class="rounded-lg bg-green-800/40 p-4 mb-4">
-                <p class="text-green-300"><?= $success ?></p>
-            </div>
-        <?php endif; ?>
-            <p id="gap-warning" class="hidden text-red-300 mb-4 rounded-lg bg-red-800/40 p-4 mb-4"></p>
-        <form method="POST" id="seatForm" class="space-y-6">
-            <div class="flex justify-center flex-col items-center">
-                <div class="mb-3 text-sm text-white/70">Screen</div>
-                <div class="h-2 w-80 bg-gradient-to-r from-white/10 via-white/30 to-white/10 rounded-full mb-8"></div>
-            </div>
-
-            <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 justify-center">
-                <?php foreach ($seats as $seat): 
-    // Safely get seat fields (some DBs might return seat_id instead of id)
-    $seatId = $seat['id'] ?? $seat['seat_id'] ?? null;
-    $row = $seat['row_number'] ?? $seat['row'] ?? '';
-    $number = $seat['seat_number'] ?? $seat['number'] ?? '';
-    $seatCode = htmlspecialchars($row . $number);
-
-    if (!$seatId) continue; // skip malformed rows
-
-    $isBooked = in_array($seatId, $bookedSeats);
-?>
-
-                <label 
-                    class="seat relative flex items-center justify-center h-10 w-10 rounded-lg text-sm font-semibold 
-                        <?= $isBooked 
-                            ? 'bg-red-600/70 text-white cursor-not-allowed opacity-70' 
-                            : 'bg-green-600 text-white cursor-pointer hover:bg-green-500 transition' ?>">
-                    <input type="checkbox" name="seats[]" value="<?= $seatId ?>" <?= $isBooked ? 'disabled' : '' ?> hidden>
-                    <?= $seatCode ?>
-                </label>
+            <div class="rounded-xl bg-red-800/40 border border-red-600/40 p-4 mb-4 text-red-300 text-center">
+                <?php foreach ($errors as $e): ?>
+                    <p><?= $e ?></p>
                 <?php endforeach; ?>
             </div>
+        <?php endif; ?>
 
-            <div class="flex justify-center mt-8">
-                <button type="submit"
-                        class="btn-full">
+        <!-- Gap warning -->
+        <p id="gap-warning"
+           class="hidden rounded-xl bg-red-800/40 border border-red-600/40 p-4 mb-6 text-red-300 text-center">
+        </p>
+
+        <!-- Screen -->
+        <div class="flex flex-col items-center mb-10">
+            <div class="text-sm text-white/70 mb-2">SCREEN</div>
+            <div class="h-2 w-72 md:w-96 bg-gradient-to-r from-white/10 via-white/40 to-white/10 rounded-full"></div>
+        </div>
+
+        <!-- Seat selection form -->
+        <form method="POST" id="seatForm" class="space-y-10">
+
+            <!-- Seats grid -->
+            <div class="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2 justify-center">
+
+                <?php foreach ($seats as $seat):
+                    $seatId = $seat['id'] ?? $seat['seat_id'];
+                    $row = $seat['row_number'] ?? $seat['row'];
+                    $number = $seat['seat_number'] ?? $seat['number'];
+                    $seatCode = htmlspecialchars($row . $number);
+
+                    if (!$seatId) continue;
+
+                    $isBooked = in_array($seatId, $bookedSeats);
+                    ?>
+
+                    <label class="
+                    seat relative flex items-center justify-center h-10 w-10 rounded-lg text-xs font-bold transition
+                    <?= $isBooked
+                        ? 'bg-red-600/70 text-white cursor-not-allowed opacity-60'
+                        : 'bg-green-600 text-white cursor-pointer hover:bg-green-500'
+                    ?>
+                ">
+                        <input type="checkbox"
+                               name="seats[]"
+                               value="<?= $seatId ?>"
+                            <?= $isBooked ? 'disabled' : '' ?>
+                               hidden
+                        >
+                        <?= $seatCode ?>
+                    </label>
+
+                <?php endforeach; ?>
+
+            </div>
+
+            <!-- Book button -->
+            <div class="text-center mt-8">
+                <button type="submit" class="btn-full px-10">
                     <i class="pi pi-ticket"></i>
                     Book Selected Seats
                 </button>
             </div>
+
         </form>
     </div>
 </section>
@@ -130,13 +195,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
     function groupSeats() {
         const rows = {};
-
         document.querySelectorAll('.seat').forEach(label => {
-            const seatText = label.textContent.trim(); // ex: A7
+            const seatText = label.textContent.trim();
             const row = seatText[0];
             const seatNumber = parseInt(seatText.substring(1));
             const checkbox = label.querySelector('input');
-
             if (!rows[row]) rows[row] = [];
             rows[row].push({
                 number: seatNumber,
@@ -146,25 +209,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 label
             });
         });
-
-        // Sort seats in each row
         for (const row in rows) {
             rows[row].sort((a, b) => a.number - b.number);
         }
-
         return rows;
     }
 
     function causesGap(rows) {
         for (const row in rows) {
             const seats = rows[row];
-
             for (let i = 0; i < seats.length - 2; i++) {
                 const a = seats[i];
                 const b = seats[i + 1];
                 const c = seats[i + 2];
-
-                // forbidden patterns
                 if (a.selected && !b.selected && !b.disabled && c.selected) return true;
                 if (a.disabled && !b.selected && !b.disabled && c.selected) return true;
                 if (a.selected && !b.selected && !b.disabled && c.disabled) return true;
@@ -176,34 +233,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)').forEach(checkbox => {
         const label = checkbox.closest('.seat');
 
-        label.addEventListener('click', (event) => {
-            event.preventDefault(); // stop auto-toggle
+        label.addEventListener('click', event => {
+            event.preventDefault();
 
-            // simulate toggle
             checkbox.checked = !checkbox.checked;
+
             label.classList.toggle('bg-orange-400', checkbox.checked);
             label.classList.toggle('text-black', checkbox.checked);
             label.classList.toggle('bg-green-600', !checkbox.checked);
             label.classList.toggle('text-white', !checkbox.checked);
 
             const rows = groupSeats();
-
             if (causesGap(rows)) {
-                // revert
                 checkbox.checked = !checkbox.checked;
                 label.classList.toggle('bg-orange-400', checkbox.checked);
                 label.classList.toggle('text-black', checkbox.checked);
                 label.classList.toggle('bg-green-600', !checkbox.checked);
                 label.classList.toggle('text-white', !checkbox.checked);
 
-                // feedback message (better than alert)
                 const msg = document.getElementById("gap-warning");
                 msg.classList.remove("hidden");
-                msg.textContent = "You cannot leave a single empty seat gap.";
+                msg.textContent = "You cannot leave a single empty seat gap!";
                 return;
             }
 
-            // hide warning if fixed
             document.getElementById("gap-warning").classList.add("hidden");
         });
     });

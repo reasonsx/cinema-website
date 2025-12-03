@@ -10,6 +10,8 @@ require_once __DIR__ . '/../../admin_dashboard/views/directors/directors_functio
 require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/../../shared/helpers.php';
 
+
+
 // Get movie ID
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);
@@ -18,6 +20,14 @@ $movie = getMovieById($db, $movieId);
 if (!$movie) {
     showError(404, 'Movie not found.');
 }
+
+// Convert runtime (in minutes) into 2h 22m format
+$runtimeMinutes = (int) $movie['length'];
+$runtimeHours = floor($runtimeMinutes / 60);
+$runtimeRemaining = $runtimeMinutes % 60;
+
+$runtimeFormatted = ($runtimeHours > 0) ? "{$runtimeHours}h {$runtimeRemaining}m" : "{$runtimeRemaining}m";
+
 
 // Fetch linked actors
 $stmt = $db->prepare("
@@ -84,16 +94,25 @@ foreach ($screenings as $s) {
 
                 <div class="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur px-3 py-1
                             text-xs md:text-sm border border-white/15">
-                    <i class="pi pi-calendar"></i> <?= htmlspecialchars($movie['release_year']) ?>
+
+                    <i class="pi pi-calendar"></i>
+                    <?= htmlspecialchars($movie['release_year']) ?>
+
                     <span class="opacity-40">•</span>
-                    <i class="pi pi-clock"></i> <?= htmlspecialchars($movie['length']) ?> min
+
+                    <i class="pi pi-clock"></i>
+                    <?= $runtimeFormatted ?>
+                    <span class="opacity-50">(<?= $runtimeMinutes ?> min)</span>
+
                     <span class="opacity-40">•</span>
+
                     <?= htmlspecialchars($movie['rating']) ?>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
 
 <!-- Movie Details -->
 <section class="px-6 md:px-8 py-8">
@@ -121,12 +140,6 @@ foreach ($screenings as $s) {
 
                 <!-- Call to actions buttons -->
                 <div class="mt-8 flex flex-col items-center gap-3">
-
-                    <a href="/cinema-website/views/booking/book.php?movie_id=<?= $movie['id'] ?>"
-                       class="btn-full w-full">
-                        <i class="pi pi-ticket"></i>
-                        Book Tickets
-                    </a>
 
                     <a href="#showtimes"
                        class="btn-white w-full">
@@ -211,11 +224,15 @@ foreach ($screenings as $s) {
 
                     <!-- Runtime -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i
-                                    class="pi pi-clock text-[var(--secondary)]"></i> Runtime
+                        <dt class="flex items-center gap-2 font-semibold">
+                            <i class="pi pi-clock text-[var(--secondary)]"></i> Runtime
                         </dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['length']) ?> min</dd>
+                        <dd class="mt-1 text-white/80">
+                            <?= htmlspecialchars($runtimeFormatted) ?>
+                            <span class="opacity-50">(<?= htmlspecialchars($runtimeMinutes) ?> min)</span>
+                        </dd>
                     </div>
+
 
                     <!-- Release Year -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
@@ -314,7 +331,7 @@ foreach ($screenings as $s) {
                         <div class="pt-5 text-center border-t border-white/10">
                             <?php $first = $groupedScreenings[$dates[0]][0]; ?>
                             <a href="/cinema-website/views/booking/book.php?screening_id=<?= $first['id'] ?>"
-                               class="btn">
+                               class="btn-full">
                                 <i class="pi pi-ticket"></i>
                                 Book Tickets
                             </a>
