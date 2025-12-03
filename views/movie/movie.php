@@ -123,16 +123,13 @@ foreach ($screenings as $s) {
                 <div class="mt-8 flex flex-col items-center gap-3">
 
                     <a href="/cinema-website/views/booking/book.php?movie_id=<?= $movie['id'] ?>"
-                       class="w-full inline-flex items-center justify-center gap-2 rounded-full
-                              bg-[var(--secondary)] px-6 py-3 text-sm font-semibold text-black">
+                       class="btn-full w-full">
                         <i class="pi pi-ticket"></i>
                         Book Tickets
                     </a>
 
                     <a href="#showtimes"
-                       class="w-full inline-flex items-center justify-center gap-2 rounded-full
-                              border border-white/20 bg-transparent px-6 py-3 text-sm font-semibold
-                              text-white hover:bg-white/10 transition">
+                       class="btn-white w-full">
                         <i class="pi pi-clock"></i>
                         See Showtimes
                     </a>
@@ -259,53 +256,65 @@ foreach ($screenings as $s) {
             <?php if ($groupedScreenings): ?>
                 <?php $dates = array_keys($groupedScreenings); ?>
 
-                <div class="px-6 py-5">
-                    <div id="showtime-container" data-index="0" data-total="<?= count($dates) ?>" class="space-y-5">
+                <div class="px-6 py-6">
+                    <div id="showtime-container"
+                         data-index="0"
+                         data-total="<?= count($dates) ?>"
+                         class="space-y-6">
 
                         <!-- Date Switcher -->
-                        <div class="flex items-center justify-center gap-3">
+                        <div class="flex items-center justify-center gap-4">
+
+                            <!-- Prev -->
                             <button id="prevDateBtn"
-                                    class="h-10 w-10 rounded-full border border-white/15 bg-black/40
-                                           hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed
-                                           transition flex items-center justify-center">
+                                    class="h-10 w-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm
+                           hover:bg-white/10 transition flex items-center justify-center
+                           disabled:opacity-30 disabled:cursor-not-allowed">
                                 <i class="pi pi-chevron-left"></i>
                             </button>
 
+                            <!-- Date Display -->
                             <div id="showtimeDate"
-                                 class="min-w-[180px] rounded-full border border-white/15 bg-black/30
-                                        px-5 py-2 text-center font-medium">
+                                 class="min-w-[200px] rounded-full border border-white/10 bg-white/5 backdrop-blur-sm
+                        px-6 py-2 text-center text-lg font-semibold text-white">
                                 <?= strtoupper(date('D j M', strtotime($dates[0]))) ?>
                             </div>
 
+                            <!-- Next -->
                             <button id="nextDateBtn"
-                                    class="h-10 w-10 rounded-full border border-white/15 bg-black/40
-                                           hover:bg-black/60 disabled:opacity-30 disabled:cursor-not-allowed
-                                           transition flex items-center justify-center">
+                                    class="h-10 w-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm
+                           hover:bg-white/10 transition flex items-center justify-center
+                           disabled:opacity-30 disabled:cursor-not-allowed">
                                 <i class="pi pi-chevron-right"></i>
                             </button>
                         </div>
 
                         <!-- Screening Times -->
-                        <div id="showtimeButtons" class="flex flex-wrap justify-center gap-3">
+                        <div id="showtimeButtons"
+                             class="flex flex-wrap justify-center gap-3 mt-4">
+
                             <?php foreach ($groupedScreenings[$dates[0]] as $t): ?>
                                 <a href="/cinema-website/views/booking/book.php?screening_id=<?= $t['id'] ?>"
                                    class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50
-                                          bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)]
-                                          hover:bg-black/70 transition">
-                                    <i class="pi pi-clock"></i>
+                          bg-white/5 backdrop-blur-sm px-5 py-2.5 text-sm font-semibold text-[var(--secondary)]
+                          hover:bg-[var(--secondary)] hover:text-black transition">
+
+                                    <i class="pi pi-clock text-[var(--secondary)] hover:text-black"></i>
                                     <?= date('H:i', strtotime($t['start_time'])) ?>
-                                    <span class="text-xs opacity-70">· <?= htmlspecialchars($t['room_name']) ?></span>
+
+                                    <span class="text-xs opacity-70">
+                        · <?= htmlspecialchars($t['room_name']) ?>
+                    </span>
                                 </a>
                             <?php endforeach; ?>
+
                         </div>
 
                         <!-- CTA -->
-                        <div class="pt-1 pb-6 text-center border-t border-white/10">
+                        <div class="pt-5 text-center border-t border-white/10">
                             <?php $first = $groupedScreenings[$dates[0]][0]; ?>
                             <a href="/cinema-website/views/booking/book.php?screening_id=<?= $first['id'] ?>"
-                               class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/60
-                                      bg-[var(--secondary)] px-7 py-3 text-sm font-semibold text-black
-                                      hover:shadow-[0_0_25px_var(--secondary)] transition">
+                               class="btn">
                                 <i class="pi pi-ticket"></i>
                                 Book Tickets
                             </a>
@@ -313,6 +322,7 @@ foreach ($screenings as $s) {
 
                     </div>
                 </div>
+
 
             <?php endif; ?>
 
