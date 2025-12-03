@@ -38,7 +38,7 @@ if (!function_exists('renderTable')) {
 
         <section class="flex flex-col gap-4">
 
-            <!-- ---------- TITLE + ADD BUTTON ---------- -->
+            <!--Title + 'Add' Button -->
             <div class="flex items-center justify-between">
 
                 <!-- Left: title + auto count -->
@@ -68,14 +68,14 @@ if (!function_exists('renderTable')) {
 
             </div>
 
-            <!-- ---------- ADD FORM ---------- -->
+            <!--Add form -->
             <?php if ($addForm): ?>
                 <div id="add-form-<?= $id ?>" class="hidden p-6 bg-gray-50 border rounded-lg shadow-inner">
                     <?= $addForm ?>
                 </div>
             <?php endif; ?>
 
-            <!-- ---------- SEARCH BAR ---------- -->
+            <!--Search bar -->
             <?php if ($searchable): ?>
                 <input id="<?= $id ?>_search"
                        type="text"
@@ -83,7 +83,7 @@ if (!function_exists('renderTable')) {
                        class="px-3 py-2 border rounded-md w-64"/>
             <?php endif; ?>
 
-            <!-- ---------- EMPTY STATE ---------- -->
+            <!-- Empty state -->
             <?php if (empty($rows)): ?>
                 <div class="p-6 border bg-gray-50 text-gray-600 text-center rounded">
                     <?= e($emptyText) ?>
@@ -91,7 +91,7 @@ if (!function_exists('renderTable')) {
 
             <?php else: ?>
 
-                <!-- ---------- TABLE WRAPPER ---------- -->
+                <!--Table Wrapper -->
                 <div class="overflow-x-auto rounded-lg border bg-white shadow">
 
                     <table id="<?= $id ?>" class="min-w-full <?= $compact ? 'text-xs' : 'text-sm' ?>">
@@ -125,7 +125,7 @@ if (!function_exists('renderTable')) {
                                 </td>
                             </tr>
 
-                            <!-- INLINE EDIT FORM -->
+                            <!--Inline Edit Form -->
                             <?php if ($renderEditRow): ?>
                                 <tr id="edit-row-<?= $row['id'] ?>" class="hidden bg-gray-50">
                                     <td colspan="<?= count($headers) + 1 ?>" class="p-6">
@@ -145,7 +145,7 @@ if (!function_exists('renderTable')) {
 
         </section>
 
-        <!-- ---------- SEARCH SCRIPT ---------- -->
+        <!-- Search input script -->
         <?php if ($searchable): ?>
         <script>
             document.getElementById("<?= $id ?>_search")?.addEventListener("input", e => {
@@ -180,7 +180,7 @@ if (!function_exists('renderTable')) {
         </script>
     <?php endif; ?>
 
-        <!-- ---------- TOGGLE EDIT ROW ---------- -->
+        <!-- Toggle Edit Form -->
         <script>
             function toggleEditRow(id) {
                 const row = document.getElementById("edit-row-" + id);
@@ -192,7 +192,7 @@ if (!function_exists('renderTable')) {
             }
         </script>
 
-        <!-- ---------- TOGGLE ADD FORM ---------- -->
+        <!-- Toggle Add Form -->
         <script>
             function toggleAddForm_<?= $id ?>() {
                 const form = document.getElementById("add-form-<?= $id ?>");
@@ -205,6 +205,6 @@ if (!function_exists('renderTable')) {
         </script>
 
         <?php
-    } // end function
-} // end if not exists
+    }
+}
 ?>
