@@ -40,6 +40,12 @@ function bookingSeatBadge(string $label): string {
         . e($label) .
         '</span>';
 }
+foreach ($bookings as &$b) {
+    if (isset($b['booking_id'])) {
+        $b['id'] = $b['booking_id'];
+    }
+}
+unset($b);
 
 // ------------------------
 // Render Table
@@ -101,8 +107,8 @@ renderTable([
             <input type="hidden" name="seat_ids" id="add_selected_seats">
 
             <button type="submit" name="add_booking"
-                    class="bg-[var(--primary)] text-white px-6 py-2 rounded-lg hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg self-start mt-2">
-                Add Booking
+                    class="btn-square bg-green-600">
+                <i class="pi pi-plus"></i>Add Booking
             </button>
         </form>
         <?php
@@ -142,14 +148,14 @@ renderTable([
         <div class="flex flex-row items-center gap-2">
             <button type="button"
                     onclick="toggleEditRow(<?= (int)$b['id'] ?>)"
-                    class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
             <form method="post" onsubmit="return confirm('Delete this booking?')" class="m-0 p-0">
                 <input type="hidden" name="delete_booking" value="<?= (int)$b['id'] ?>">
                 <button type="submit"
-                        class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition">
+                        class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -218,14 +224,14 @@ renderTable([
 
             <div class="flex gap-4 mt-3">
                 <button type="submit" name="edit_booking"
-                        class="bg-[var(--primary)] text-[var(--white)] px-6 py-2 rounded-lg hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
-                    Save Changes
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i>Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $bookingId ?>)"
-                        class="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 transition-colors duration-300 font-[Limelight] text-lg">
-                    Cancel
+                        class="bg-gray-300 text-gray-700 btn-square">
+                    <i class="pi pi-times"></i>Cancel
                 </button>
             </div>
         </form>

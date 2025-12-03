@@ -59,9 +59,7 @@ if (!function_exists('renderTable')) {
                 <!-- Right: Add button -->
                 <?php if ($addForm): ?>
                     <button onclick="toggleAddForm_<?= $id ?>()"
-                            class="flex items-center gap-2 px-4 py-2 rounded-lg
-                    bg-green-600 text-white text-sm font-semibold
-                    hover:bg-green-700 transition">
+                            class="btn-square bg-green-600">
                         <i class="pi pi-plus"></i> <?= e($addLabel) ?>
                     </button>
                 <?php endif; ?>

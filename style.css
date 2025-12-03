@@ -33,23 +33,26 @@ body, p, li, a {
 .border-black { border-color: var(--black); }
 
 /*  BUTTONS   */
-/*  BUTTONS   */
 .btn,
 .btn-white,
 .btn-full {
     display: inline-flex;
     align-items: center;
-    justify-content: center; /* keeps centered */
+    justify-content: center;
     gap: 0.5rem;
-    height: 42px !important;
-    padding: 0 1.25rem !important;
+
+    height: 40px !important;
+    padding: 0 1.1rem !important; /* balanced padding */
+
     border-radius: 9999px;
     font-weight: 600;
     font-size: 0.9rem;
+
     white-space: nowrap;
     text-decoration: none;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    transition: 0.15s ease;
 }
+
 
 /* Outline button */
 .btn {
@@ -85,6 +88,36 @@ body, p, li, a {
     background-color: transparent;
     color: var(--secondary);
     border-color: var(--secondary);
+}
+
+/* Universal Square Button */
+.btn-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
+    height: 38px;
+    padding: 0 1.1rem;
+
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    color: white;
+    border: 1px solid transparent;
+
+    cursor: pointer;
+    transition:
+            background-color 0.2s ease,
+            border-color 0.2s ease,
+            color 0.2s ease,
+            filter 0.2s ease;
+}
+
+/* Auto hover tint → darken 10% */
+.btn-square:hover {
+    filter: brightness(0.90);
 }
 
 /*  FORM INPUTS   */
@@ -167,4 +200,22 @@ form {
     padding: 0;
     margin: 0;
     line-height: 1;
+}
+input {
+    display: flex;
+    align-items: center;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    height: 40px;
+    padding: 0 1rem;
+    line-height: 40px;
+}
+
+textarea {
+    min-height: 90px;
+    padding: 0.5rem 1rem;
+    line-height: 1.4;
 }
