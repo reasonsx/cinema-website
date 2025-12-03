@@ -105,13 +105,12 @@ $email = htmlspecialchars($user['email']);
 
                     <div class="flex gap-3">
                         <button type="submit"
-                                class="flex-1 bg-[var(--secondary)] text-black font-semibold py-3 rounded-full">
+                                class="btn-full w-1/2">
                             Save Changes
                         </button>
 
                         <a href="profile.php"
-                           class="flex-1 border border-white/20 text-white font-semibold py-3 rounded-full
-                                  hover:bg-white/10 transition text-center">
+                           class="w-1/2 btn-white">
                             Cancel
                         </a>
                     </div>
