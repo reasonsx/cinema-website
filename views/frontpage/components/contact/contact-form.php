@@ -101,7 +101,7 @@ foreach ($blocks as $block) {
                                placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
                     ></textarea>
                 </div>
-
+        
                 <!-- Submit Button -->
                 <div class="text-center pt-3">
                     <button type="submit" class="btn">

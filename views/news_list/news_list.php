@@ -26,7 +26,7 @@ $newsList = getNews($db);
 
     <div class="container mx-auto px-6 py-14 md:py-16 lg:py-18 max-w-7xl">
         <h1 class="text-4xl md:text-6xl font-[Limelight] mb-4 md:mb-6">All News</h1>
-        <p class="text-base md:text-lg max-w-2xl mx-auto mb-6 md:mb-8 text-black/80">Browse the latest updates,
+        <p class="text-base md:text-lg max-w-3xl mx-auto mb-6 md:mb-8 text-black/80">Browse the latest updates,
             announcements, and important news from our cinema.</p>
 
         <!-- Search Bar -->

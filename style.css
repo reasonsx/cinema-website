@@ -50,6 +50,9 @@ body, p, li, a {
     border: 1px solid var(--secondary);
     background-color: transparent;
     color: var(--secondary);
+    height: 42px !important;
+    min-width: 140px !important;
+    padding: 0 1.25rem !important;
 }
 
 .btn:hover {
