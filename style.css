@@ -33,26 +33,39 @@ body, p, li, a {
 .border-black { border-color: var(--black); }
 
 /*  BUTTONS   */
+/*  BUTTONS   */
 .btn,
+.btn-white,
 .btn-full {
     display: inline-flex;
     align-items: center;
+    justify-content: center; /* keeps centered */
     gap: 0.5rem;
-    padding: 0.625rem 1.25rem;
+    height: 42px !important;
+    padding: 0 1.25rem !important;
     border-radius: 9999px;
     font-weight: 600;
     font-size: 0.9rem;
+    white-space: nowrap;
     text-decoration: none;
-    transition: background-color 0.15s ease, color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
+/* Outline button */
 .btn {
     border: 1px solid var(--secondary);
     background-color: transparent;
     color: var(--secondary);
-    height: 42px !important;
-    min-width: 140px !important;
-    padding: 0 1.25rem !important;
+}
+
+.btn-white {
+    border: 1px solid var(--white);
+    background-color: transparent;
+    color: var(--white);
+}
+.btn-white:hover {
+    background-color: var(--white);
+    color: var(--black);
 }
 
 .btn:hover {
@@ -60,16 +73,19 @@ body, p, li, a {
     color: var(--black);
 }
 
+/* Filled button */
 .btn-full {
     border: 1px solid var(--secondary);
     background-color: var(--secondary);
     color: var(--black);
 }
 
-/*.btn-full:hover {*/
-/*    background-color: transparent;*/
-/*    color: var(--secondary);*/
-/*}*/
+/* Filled button hover should behave like .btn default */
+.btn-full:hover {
+    background-color: transparent;
+    color: var(--secondary);
+    border-color: var(--secondary);
+}
 
 /*  FORM INPUTS   */
 input[type="text"],

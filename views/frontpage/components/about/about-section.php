@@ -17,9 +17,9 @@ foreach ($blocks as $block) {
 
         <!-- Text -->
         <div class="md:w-1/2">
-            <h2 class="text-5xl font-[Limelight] uppercase mb-6">Our Cinema</h2>
+            <h2 class="text-5xl font-[Limelight] text-secondary uppercase mb-6">Our Cinema</h2>
 
-            <div class="leading-relaxed text-lg space-y-4">
+            <div class="leading-relaxed text-secondary text-lg space-y-4">
                 <?= $about['about_us_text'] ?? 'About us content coming soon...' ?>
             </div>
         </div>

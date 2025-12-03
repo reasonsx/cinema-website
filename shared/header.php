@@ -95,16 +95,16 @@ foreach ($blocks as $block) {
                 <div class="flex items-center gap-2 ml-2">
                     <?php if ($userName): ?>
                         <a href="/cinema-website/views/profile/profile.php"
-                           class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition flex items-center gap-2">
+                           class="btn">
                             <i class="pi pi-user"></i> <?= $userName ?>
                         </a>
                     <?php else: ?>
                         <a href="/cinema-website/auth/login.php"
-                           class="px-4 py-2 rounded-full border border-white/30 text-white hover:bg-white hover:text-black transition">
+                           class="btn-white">
                             Login
                         </a>
                         <a href="/cinema-website/auth/signup.php"
-                           class="px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold border border-[var(--secondary)]/60">
+                           class="btn-full">
                             Sign Up
                         </a>
                     <?php endif; ?>
@@ -139,16 +139,16 @@ foreach ($blocks as $block) {
                 <div class="flex gap-2 pt-2">
                     <?php if ($userName): ?>
                         <a href="/cinema-website/views/profile/profile.php"
-                           class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">
+                           class="btn">
                             <i class="pi pi-user"></i> <?= $userName ?>
                         </a>
                     <?php else: ?>
                         <a href="/cinema-website/auth/login.php"
-                           class="flex-1 px-4 py-2 rounded-full border border-white/30 text-white text-center hover:bg-white hover:text-black transition">
+                           class="btn-white">
                             Login
                         </a>
                         <a href="/cinema-website/auth/signup.php"
-                           class="flex-1 px-4 py-2 rounded-full bg-[var(--secondary)] text-black font-semibold text-center border border-[var(--secondary)]/60 hover:shadow-[0_0_18px_var(--secondary)] transition">
+                           class="btn-full">
                             Sign Up
                         </a>
                     <?php endif; ?>

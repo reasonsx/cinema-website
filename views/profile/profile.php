@@ -136,7 +136,8 @@ $email = htmlspecialchars($user['email']);
                     <?php endif; ?>
 
                     <a href="../../auth/logout.php"
-                       class="px-6 py-3 rounded-full border border-white/20 hover:bg-white/10 transition font-semibold">
+                       class="btn-white">
+                        <i class="pi pi-sign-out"></i>
                         Logout
                     </a>
                 </div>
