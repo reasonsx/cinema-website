@@ -46,7 +46,9 @@ $newsList   = getNews($db);
     const videos = [
         "/cinema-website/assets/videos/hero1.mp4",
         "/cinema-website/assets/videos/hero2.mp4",
-        "/cinema-website/assets/videos/hero3.mp4"
+        "/cinema-website/assets/videos/hero3.mp4",
+        "/cinema-website/assets/videos/hero4.mp4",
+        "/cinema-website/assets/videos/hero5.mp4"
     ];
 
     let index = 0;
