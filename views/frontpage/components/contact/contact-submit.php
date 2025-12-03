@@ -48,12 +48,15 @@ $stmt->execute([$name, $email, $subject, $message]);
 
 // 5. Send email
 $body = "
-<strong>New contact message:</strong><br><br>
-Name: $name<br>
-Email: $email<br><br>
-Subject: $subject<br>
-Message:<br>
-$message
+<h2 style='margin:10px;'>New Contact Message</h2>
+<p style='margin:10px;'><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
+<p style='margin:10px;'><strong>Email:</strong> " . htmlspecialchars($email) . "</p>
+<p style='margin:10px;'><strong>Subject:</strong> " . htmlspecialchars($subject) . "</p>
+
+<hr style='margin:10px 0;'>
+
+<p style='margin:10px;'><strong>Message:</strong></p>
+<p style='margin:10px;'>" . nl2br(htmlspecialchars($message)) . "</p>
 ";
 
 $sent = sendMail(
