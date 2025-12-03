@@ -64,7 +64,7 @@ renderTable([
     'id'        => 'screeningsTable',
     'title'     => 'All Screenings',
     'searchable'=> true,
-    'addLabel'  => 'Add New Screening',
+    'addLabel'  => 'Add Screening',
     'addForm'   => $addForm,
 
     // Table headers

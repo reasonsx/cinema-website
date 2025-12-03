@@ -115,7 +115,7 @@ renderTable([
                         name="add_room"
                     class="btn-square bg-green-600">
                     <i class="pi pi-plus"></i>
-                    Add Room
+                    Add Screening Room
                 </button>
             </div>
         </form>
@@ -208,18 +208,19 @@ renderTable([
             <div class="flex gap-4 mt-2">
                 <button type="button"
                         onclick="switchEditSeatMode(<?= $rowId ?>, 'grid')"
-                        class="bg-[var(--primary)] text-white px-4 py-2 rounded shadow hover:bg-[var(--secondary)] text-sm">
+                        class="btn-square bg-purple-600">
                     Grid Mode
                 </button>
                 <button type="button"
                         onclick="switchEditSeatMode(<?= $rowId ?>, 'manual')"
-                        class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600 text-sm">
+                        class="btn-square bg-gray-500">
                     Manual Mode
                 </button>
             </div>
 
             <!-- GRID EDITOR -->
             <div id="edit-grid-editor-<?= $rowId ?>" class="flex flex-col gap-3 mt-4">
+
                 <div class="flex gap-4">
                     <div class="flex flex-col gap-1">
                         <label class="text-sm text-gray-700">Rows</label>
@@ -228,8 +229,11 @@ renderTable([
                                min="1"
                                value="<?= $layout['rowCount'] ?>"
                                placeholder="Rows"
-                               class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 w-24">
+                               class="w-24 px-3 py-1.5 rounded-md bg-white border border-gray-300 h-[38px]
+                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
+                          focus:border-[var(--primary)] text-black transition">
                     </div>
+
                     <div class="flex flex-col gap-1">
                         <label class="text-sm text-gray-700">Seats per Row</label>
                         <input type="number"
@@ -237,9 +241,12 @@ renderTable([
                                min="1"
                                value="<?= $layout['maxSeatsPerRow'] ?>"
                                placeholder="Seats/Row"
-                               class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 w-24">
+                               class="w-24 px-3 py-1.5 rounded-md bg-white border border-gray-300 h-[38px]
+                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
+                          focus:border-[var(--primary)] text-black transition">
                     </div>
                 </div>
+
                 <p class="text-sm text-gray-600">
                     If you change rows/seats per row, the existing seat layout will be replaced.
                 </p>
@@ -248,10 +255,15 @@ renderTable([
             <!-- MANUAL EDITOR -->
             <div id="edit-manual-editor-<?= $rowId ?>" class="hidden mt-4">
                 <label class="text-sm text-gray-700">Seats (manual)</label>
+
                 <textarea name="seats_text"
                           rows="4"
-                          class="w-full border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-gray-400 focus:outline-none focus:border-[var(--secondary)]"><?= e($layout['manualSeats']) ?></textarea>
+                          class="w-full px-3 py-2 rounded-md bg-white border border-gray-300
+                     text-black placeholder-gray-400
+                     focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
+                     focus:border-[var(--primary)] transition"><?= e($layout['manualSeats']) ?></textarea>
             </div>
+
 
             <div class="flex gap-4 mt-4">
                 <button type="submit"

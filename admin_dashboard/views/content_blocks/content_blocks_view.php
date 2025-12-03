@@ -125,7 +125,7 @@ renderTable([
             <div class="flex gap-4 mt-2">
                 <button type="submit"
                         class="btn-square bg-green-600">
-                    <i class="pi pi-plus"></i> Add Block
+                    <i class="pi pi-plus"></i>Add Content Block
                 </button>
 
                 <button type="button"
