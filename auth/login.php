@@ -60,39 +60,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <?php include '../shared/head.php'; ?>
-<body class="bg-light text-black font-sans">
+<body class="bg-black text-black font-sans">
 <?php include '../shared/header.php'; ?>
 
-<section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
-    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h2 class="text-3xl font-header mb-6 text-center text-primary">Log in</h2>
+<section class="flex justify-center items-center min-h-[70vh] bg-black px-4 py-10">
+    <div class="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-8">
+
+        <h2 class="text-4xl font-[Limelight] tracking-wide text-center text-[var(--secondary)] mb-8">
+            LOGIN
+        </h2>
 
         <?php if (isset($_SESSION['error'])): ?>
-            <p class="text-red-500 text-center mb-4"><?= $_SESSION['error']; unset($_SESSION['error']); ?></p>
+            <p class="text-red-400 text-center mb-4"><?= $_SESSION['error'];
+                unset($_SESSION['error']); ?></p>
         <?php endif; ?>
 
-        <form action="" method="POST" class="flex flex-col gap-4">
-            <input type="email" name="email" placeholder="Email" required
-                   class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
+        <form action="" method="POST" class="flex flex-col gap-5">
 
+            <!-- Email -->
+            <div>
+                <input type="email" name="email"
+                       placeholder="Enter your email"
+                       required
+                >
+            </div>
+
+            <!-- Password -->
             <div class="relative">
-                <input id="login-password" type="password" name="password" placeholder="Password" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary w-full">
+                <input id="login-password" type="password" name="password"
+                       placeholder="Enter your password"
+                       required
+                >
+
                 <button type="button" id="toggle-login-password"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black focus:outline-none">
+                        class="absolute right-3 top-1/2 -translate-y-1/2">
                     <i class="pi pi-eye"></i>
                 </button>
             </div>
 
-            <button type="submit"
-                    class="btn w-full text-center justify-center items-center bg-primary text-white hover:bg-secondary">
+            <!-- Submit Button -->
+            <button type="submit" class="btn-full w-full">
                 <i class="pi pi-sign-in"></i> Login
             </button>
+
         </form>
 
-        <p class="text-center text-sm text-gray-500 mt-4">
-            Don't have an account? <a href="signup.php" class="text-primary hover:text-secondary">Sign Up</a>
+        <p class="text-center text-sm text-white/60 mt-6">
+            Don't have an account?
+            <a href="signup.php" class="text-[var(--secondary)]">Sign Up</a>
         </p>
+
     </div>
 </section>
 

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../backend/connection.php'; // keep this path since your folder is "backend"
+require_once '../backend/connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = trim($_POST['firstname']);
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['error'] = 'Email already registered!';
             } else {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-               // Check if admin checkbox is checked
+                // Check if admin checkbox is checked
                 $isAdmin = isset($_POST['isAdmin']) && $_POST['isAdmin'] == '1' ? 1 : 0;
 
                 $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES (?, ?, ?, ?, ?)");
@@ -40,116 +40,133 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <?php include '../shared/head.php'; ?>
-<body class="bg-light text-black font-sans">
+
+<body class="bg-black text-black font-sans">
 
 <?php include '../shared/header.php'; ?>
 
-<section class="flex justify-center items-center min-h-[80vh] bg-light px-4">
-    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h2 class="text-3xl font-header mb-6 text-center text-primary">Create an Account</h2>
+<section class="flex justify-center items-center min-h-[70vh] bg-black px-4 py-10">
+    <div class="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-8">
+
+        <h2 class="text-4xl font-[Limelight] tracking-wide text-center text-[var(--secondary)] mb-8">
+            CREATE ACCOUNT
+        </h2>
+
         <?php
-            if (isset($_SESSION['error'])) {
-                echo '<p class="text-red-500 text-center mb-4">'.$_SESSION['error'].'</p>';
-                unset($_SESSION['error']);
-            }
-            if (isset($_SESSION['success'])) {
-                echo '<p class="text-green-500 text-center mb-4">'.$_SESSION['success'].'</p>';
-                unset($_SESSION['success']);
-            }
-            ?>
+        if (isset($_SESSION['error'])) {
+            echo '<p class="text-red-400 text-center mb-4">' . $_SESSION['error'] . '</p>';
+            unset($_SESSION['error']);
+        }
+        if (isset($_SESSION['success'])) {
+            echo '<p class="text-green-400 text-center mb-4">' . $_SESSION['success'] . '</p>';
+            unset($_SESSION['success']);
+        }
+        ?>
 
-       <form action="" method="POST" class="flex flex-col gap-4">
+        <form action="" method="POST" class="flex flex-col gap-5">
 
-           <!-- First Name -->
-<div class="flex flex-col">
-    <label for="firstname" class="sr-only">First Name</label>
-    <input id="firstname" type="text" name="firstname" placeholder="First Name" required
-           class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-</div>
+            <!-- First Name -->
+            <div>
+                <input id="firstname" type="text" name="firstname"
+                       placeholder="First Name" required>
+            </div>
 
-<!-- Last Name -->
-<div class="flex flex-col">
-    <label for="lastname" class="sr-only">Last Name</label>
-    <input id="lastname" type="text" name="lastname" placeholder="Last Name" required
-           class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
-</div>
-
+            <!-- Last Name -->
+            <div>
+                <input id="lastname" type="text" name="lastname"
+                       placeholder="Last Name" required>
+            </div>
 
             <!-- Email -->
-            <div class="flex flex-col">
-                <label for="email" class="sr-only">Email</label>
-                <input id="email" type="email" name="email" placeholder="Email" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary">
+            <div>
+                <input id="email" type="email" name="email"
+                       placeholder="Email" required>
             </div>
 
             <!-- Password -->
-            <div class="flex flex-col relative">
-                <label for="signup-password" class="sr-only">Password</label>
-                <input id="signup-password" type="password" name="password" placeholder="Password" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary w-full">
+            <div class="relative">
+                <input id="signup-password" type="password" name="password"
+                       placeholder="Password" required>
+
                 <button type="button" id="toggle-signup-password"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black focus:outline-none">
+                        class="absolute right-3 top-1/2 -translate-y-1/2">
                     <i class="pi pi-eye"></i>
                 </button>
             </div>
 
             <!-- Confirm Password -->
-            <div class="flex flex-col relative">
-                <label for="signup-confirm-password" class="sr-only">Confirm Password</label>
-                <input id="signup-confirm-password" type="password" name="confirm_password" placeholder="Confirm Password" required
-                       class="px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary w-full">
+            <div class="relative">
+                <input id="signup-confirm-password" type="password" name="confirm_password"
+                       placeholder="Confirm Password" required>
+
                 <button type="button" id="toggle-signup-confirm-password"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black focus:outline-none">
-                    <i class="pi pi-eye"></i>
+                        class="absolute right-3 top-1/2 -translate-y-1/2">
+                    <i class="pi pi-eye text-black"></i>
                 </button>
             </div>
-<!-- Admin Checkbox (development only) -->
-<div class="flex items-center gap-2">
-    <input type="checkbox" id="isAdmin" name="isAdmin" value="1">
-    <label for="isAdmin" class="text-sm text-gray-700">Make user admin (development feature)</label>
-</div>
 
+            <!-- Admin Checkbox (dev only) -->
+            <div class="flex items-center gap-2 text-white/80">
+                <input type="checkbox" id="isAdmin" name="isAdmin" value="1">
+                <label for="isAdmin" class="text-sm">Make user admin (development feature)</label>
+            </div>
 
-            <button id="signup-button" type="submit" class="btn w-full text-center justify-center items-center opacity-50 cursor-not-allowed" disabled>
+            <!-- Submit Button -->
+            <button id="signup-button" type="submit"
+                    class="btn-full w-full opacity-50 cursor-not-allowed">
                 <i class="pi pi-user-plus"></i> Sign Up
             </button>
 
         </form>
-        <p class="text-center text-sm text-gray-500 mt-4">
-            Already have an account? <a href="login.php" class="text-primary hover:text-secondary">Login</a>
+
+        <p class="text-center text-sm text-white/60 mt-6">
+            Already have an account?
+            <a href="login.php" class="text-[var(--secondary)]">Login</a>
         </p>
+
     </div>
 </section>
 
 <script>
-   const signupInputs = [
-    document.getElementById('firstname'),
-    document.getElementById('lastname'),
-    document.getElementById('email'),
-    document.getElementById('signup-password'),
-    document.getElementById('signup-confirm-password')
-];
+    // Toggle password visibility
+    function setupPasswordToggle(inputId, toggleId) {
+        const input = document.getElementById(inputId);
+        const toggle = document.getElementById(toggleId);
 
+        toggle.addEventListener('click', () => {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            toggle.innerHTML = isPassword ? '<i class="pi pi-eye-slash"></i>' : '<i class="pi pi-eye"></i>';
+        });
+    }
+
+    // Apply toggles
+    setupPasswordToggle('signup-password', 'toggle-signup-password');
+    setupPasswordToggle('signup-confirm-password', 'toggle-signup-confirm-password');
+
+
+    // Enable / disable submit button
     const signupButton = document.getElementById('signup-button');
+    const signupInputs = [
+        'firstname',
+        'lastname',
+        'email',
+        'signup-password',
+        'signup-confirm-password'
+    ].map(id => document.getElementById(id));
 
     function checkInputs() {
         const allFilled = signupInputs.every(input => input.value.trim() !== '');
         signupButton.disabled = !allFilled;
 
-        if (allFilled) {
-            signupButton.classList.remove('opacity-50', 'cursor-not-allowed');
-        } else {
-            signupButton.classList.add('opacity-50', 'cursor-not-allowed');
-        }
+        signupButton.classList.toggle('opacity-50', !allFilled);
+        signupButton.classList.toggle('cursor-not-allowed', !allFilled);
     }
 
-    signupInputs.forEach(input => {
-        input.addEventListener('input', checkInputs);
-    });
+    signupInputs.forEach(input => input.addEventListener('input', checkInputs));
 </script>
-
-
 
 <?php include '../shared/footer.php'; ?>
 
