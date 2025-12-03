@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../backend/connection.php';
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $firstname = trim($_POST['firstname']);
     $lastname = trim($_POST['lastname']);
@@ -21,11 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['error'] = 'Email already registered!';
             } else {
                 $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-                // Check if admin checkbox is checked
-                $isAdmin = isset($_POST['isAdmin']) && $_POST['isAdmin'] == '1' ? 1 : 0;
 
-                $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$email, $passwordHash, $firstname, $lastname, $isAdmin]);
+                $stmt = $db->prepare("INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES (?, ?, ?, ?, 0)");
+                $stmt->execute([$email, $passwordHash, $firstname, $lastname]);
 
                 $_SESSION['success'] = 'Account created successfully! Please log in.';
                 header('Location: login.php');
@@ -105,12 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         class="absolute right-3 top-1/2 -translate-y-1/2">
                     <i class="pi pi-eye text-black"></i>
                 </button>
-            </div>
-
-            <!-- Admin Checkbox (dev only) -->
-            <div class="flex items-center gap-2 text-white/80">
-                <input type="checkbox" id="isAdmin" name="isAdmin" value="1">
-                <label for="isAdmin" class="text-sm">Make user admin (development feature)</label>
             </div>
 
             <!-- Submit Button -->
