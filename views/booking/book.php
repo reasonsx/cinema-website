@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <section class="px-6 md:px-8 py-10">
     <div class="mx-auto max-w-7xl">
-        <h1 class="text-4xl md:text-5xl font-[Limelight] text-[#F8A15A] mb-4">
+        <h1 class="text-4xl md:text-5xl font-[Limelight] text-secondary mb-4">
             Select Seats for <?= htmlspecialchars($screening['movie_title']) ?>
         </h1>
         <p class="mb-6 text-white/80">
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <p class="text-green-300"><?= $success ?></p>
             </div>
         <?php endif; ?>
-
+            <p id="gap-warning" class="hidden text-red-300 mb-4 rounded-lg bg-red-800/40 p-4 mb-4"></p>
         <form method="POST" id="seatForm" class="space-y-6">
             <div class="flex justify-center flex-col items-center">
                 <div class="mb-3 text-sm text-white/70">Screen</div>
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="flex justify-center mt-8">
                 <button type="submit"
-                        class="inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-8 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+                        class="btn-full">
                     <i class="pi pi-ticket"></i>
                     Book Selected Seats
                 </button>
@@ -128,16 +128,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <script>
-    const seatLabels = document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)');
-    seatLabels.forEach(checkbox => {
+    function groupSeats() {
+        const rows = {};
+
+        document.querySelectorAll('.seat').forEach(label => {
+            const seatText = label.textContent.trim(); // ex: A7
+            const row = seatText[0];
+            const seatNumber = parseInt(seatText.substring(1));
+            const checkbox = label.querySelector('input');
+
+            if (!rows[row]) rows[row] = [];
+            rows[row].push({
+                number: seatNumber,
+                selected: checkbox.checked,
+                disabled: checkbox.disabled,
+                checkbox,
+                label
+            });
+        });
+
+        // Sort seats in each row
+        for (const row in rows) {
+            rows[row].sort((a, b) => a.number - b.number);
+        }
+
+        return rows;
+    }
+
+    function causesGap(rows) {
+        for (const row in rows) {
+            const seats = rows[row];
+
+            for (let i = 0; i < seats.length - 2; i++) {
+                const a = seats[i];
+                const b = seats[i + 1];
+                const c = seats[i + 2];
+
+                // forbidden patterns
+                if (a.selected && !b.selected && !b.disabled && c.selected) return true;
+                if (a.disabled && !b.selected && !b.disabled && c.selected) return true;
+                if (a.selected && !b.selected && !b.disabled && c.disabled) return true;
+            }
+        }
+        return false;
+    }
+
+    document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)').forEach(checkbox => {
         const label = checkbox.closest('.seat');
-        label.addEventListener('click', () => {
-            if (checkbox.disabled) return;
+
+        label.addEventListener('click', (event) => {
+            event.preventDefault(); // stop auto-toggle
+
+            // simulate toggle
             checkbox.checked = !checkbox.checked;
             label.classList.toggle('bg-orange-400', checkbox.checked);
             label.classList.toggle('text-black', checkbox.checked);
             label.classList.toggle('bg-green-600', !checkbox.checked);
             label.classList.toggle('text-white', !checkbox.checked);
+
+            const rows = groupSeats();
+
+            if (causesGap(rows)) {
+                // revert
+                checkbox.checked = !checkbox.checked;
+                label.classList.toggle('bg-orange-400', checkbox.checked);
+                label.classList.toggle('text-black', checkbox.checked);
+                label.classList.toggle('bg-green-600', !checkbox.checked);
+                label.classList.toggle('text-white', !checkbox.checked);
+
+                // feedback message (better than alert)
+                const msg = document.getElementById("gap-warning");
+                msg.classList.remove("hidden");
+                msg.textContent = "You cannot leave a single empty seat gap.";
+                return;
+            }
+
+            // hide warning if fixed
+            document.getElementById("gap-warning").classList.add("hidden");
         });
     });
 </script>

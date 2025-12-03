@@ -42,28 +42,60 @@ $totalPrice = $seatPrice * count($selectedSeats);
 <?php include __DIR__ . '/../../shared/header.php'; ?>
 
 <!-- CHECKOUT -->
-<section class="px-6 md:px-8 py-10 max-w-3xl mx-auto">
-    <h1 class="text-4xl font-[Limelight] text-[#F8A15A] mb-6">Checkout</h1>
+<section class="px-6 md:px-8 py-10 h-[70vh] max-w-3xl mx-auto">
 
-    <!-- Checkout summary box -->
-    <div class="bg-white/10 rounded-lg p-6 mb-6">
-        <h2 class="text-xl font-semibold mb-2"><?= htmlspecialchars($screening['movie_title']) ?></h2>
-        <p class="text-white/80 mb-2">Room: <?= htmlspecialchars($screening['room_name']) ?></p>
-        <p class="text-white/80 mb-2">Time: <?= htmlspecialchars($screening['start_time']) ?> - <?= htmlspecialchars($screening['end_time']) ?></p>
-        <p class="text-white/80">Selected seats: <?= implode(', ', array_map('htmlspecialchars', $selectedSeats)) ?></p>
-        <p class="mt-3 font-bold text-lg">Total: $<?= number_format($totalPrice, 2) ?></p>
+    <h1 class="text-5xl font-[Limelight] text-[var(--secondary)] mb-10 text-center">
+        Checkout
+    </h1>
+
+    <!-- Checkout Summary -->
+    <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-8 mb-10">
+
+        <h2 class="text-3xl font-[Limelight] text-white mb-4">
+            <?= htmlspecialchars($screening['movie_title']) ?>
+        </h2>
+
+        <div class="space-y-2 text-white/80 text-lg">
+            <p><strong class="text-white">Room:</strong> <?= htmlspecialchars($screening['room_name']) ?></p>
+            <p><strong class="text-white">Time:</strong> <?= htmlspecialchars($screening['start_time']) ?> → <?= htmlspecialchars($screening['end_time']) ?></p>
+
+            <p>
+                <strong class="text-white">Seats:</strong>
+                <span class="text-[var(--secondary)] font-semibold">
+                <?= implode(', ', array_map('htmlspecialchars', $selectedSeats)) ?>
+            </span>
+            </p>
+
+            <p>
+                <strong class="text-white">Tickets:</strong>
+                <?= count($selectedSeats) ?> ticket<?= count($selectedSeats) > 1 ? 's' : '' ?>
+            </p>
+
+            <p>
+                <strong class="text-white">Price per ticket:</strong>
+                <span class="text-[var(--secondary)]">$<?= number_format($seatPrice, 2) ?></span>
+            </p>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/10">
+            <p class="text-2xl font-bold text-white">
+                Total:
+                <span class="text-[var(--secondary)]">$<?= number_format($totalPrice, 2) ?></span>
+            </p>
+        </div>
     </div>
 
-    <!-- Payment form -->
-    <form action="payment.php" method="POST">
+    <!-- Payment Button -->
+    <form action="payment.php" method="POST" class="text-center">
         <input type="hidden" name="screening_id" value="<?= $screeningId ?>">
-        <button type="submit"
-                class="w-full md:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[var(--secondary)] px-8 py-3 text-sm font-semibold text-black hover:shadow-[0_0_25px_var(--secondary)] transition">
+        <button type="submit" class="btn-full w-full md:w-auto px-10">
             <i class="pi pi-credit-card"></i>
             Proceed to Payment
         </button>
     </form>
+
 </section>
+
 
 <?php include __DIR__ . '/../../shared/footer.php'; ?>
 
