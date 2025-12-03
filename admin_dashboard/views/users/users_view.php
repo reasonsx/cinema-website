@@ -26,14 +26,14 @@ renderTable([
         <div class="flex items-center gap-2">
 
             <button onclick="toggleEditRow(<?= $user['id'] ?>)"
-                    class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
             <form method="post" onsubmit="return confirm('Delete this user?')" class="m-0 p-0">
                 <input type="hidden" name="delete_user_id" value="<?= $user['id'] ?>">
                 <button type="submit" name="delete_user"
-                        class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition">
+                        class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -71,14 +71,13 @@ renderTable([
 
             <div class="md:col-span-2 flex gap-4 mt-2">
                 <button type="submit" name="edit_user"
-                        class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">
-                    <i class="pi pi-check"></i> Save
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i> Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $user['id'] ?>)"
-                        class="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 hover:bg-gray-400 transition">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel
                 </button>
             </div>
         </form>
@@ -120,13 +119,12 @@ renderTable([
 
             <div class="md:col-span-2 flex gap-4 mt-2">
                 <button type="submit"
-                        class="px-4 py-2 rounded-lg bg-green-500 text-white hover:bg-green-600 transition">
-                    <i class="pi pi-check"></i> Add User
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-plus"></i> Add User
                 </button>
 
                 <button type="button" onclick="toggleAddForm_usersTable()"
-                        class="px-4 py-2 rounded-lg bg-gray-300 text-gray-700 hover:bg-gray-400 transition">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel
                 </button>
             </div>
 

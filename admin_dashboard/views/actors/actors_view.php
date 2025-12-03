@@ -48,9 +48,7 @@ renderTable([
         <div class="flex items-center gap-2">
 
             <button onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                    class="flex items-center justify-center gap-2
-                           px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold
-                           hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
@@ -60,9 +58,7 @@ renderTable([
                 <input type="hidden" name="delete_actor_id" value="<?= $actor['id'] ?>">
 
                 <button type="submit" name="delete_actor"
-                        class="flex items-center justify-center gap-2
-                               px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold
-                               hover:bg-red-600 transition">
+                        class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -115,15 +111,13 @@ renderTable([
             <!-- BUTTONS -->
             <div class="md:col-span-2 flex gap-4 mt-2">
                 <button type="submit" name="edit_actor"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg
-                               bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition">
-                    <i class="pi pi-check"></i> Save
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i> Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg
-                               bg-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-400 transition">
+                        class="btn-square bg-gray-300 text-gray-700">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
@@ -167,14 +161,12 @@ renderTable([
 
             <div class="md:col-span-2 flex gap-4 mt-2">
                 <button type="submit"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg
-                               bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition">
-                    <i class="pi pi-check"></i> Save
+                        class="btn-square bg-green-600">
+                <i class="pi pi-plus"></i> Add Actor
                 </button>
 
                 <button type="button" onclick="toggleAddForm_actorsTable()"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg
-                               bg-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-400 transition">
+                        class="btn-square bg-gray-300 text-gray-700">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>

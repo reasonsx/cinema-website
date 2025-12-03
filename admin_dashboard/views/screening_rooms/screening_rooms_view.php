@@ -72,12 +72,12 @@ renderTable([
             <div class="flex gap-4 mt-2">
                 <button type="button"
                         onclick="switchAddSeatEditMode('grid')"
-                        class="bg-[var(--primary)] text-white px-4 py-2 rounded shadow hover:bg-[var(--secondary)] text-sm">
+                        class="btn-square bg-purple-600">
                     Grid Mode
                 </button>
                 <button type="button"
                         onclick="switchAddSeatEditMode('manual')"
-                        class="bg-gray-500 text-white px-4 py-2 rounded shadow hover:bg-gray-600 text-sm">
+                        class="btn-square bg-gray-500">
                     Manual Mode
                 </button>
             </div>
@@ -113,7 +113,8 @@ renderTable([
             <div class="flex gap-4 mt-4">
                 <button type="submit"
                         name="add_room"
-                        class="bg-[var(--primary)] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] transition-colors duration-300 font-[Limelight] text-lg">
+                    class="btn-square bg-green-600">
+                    <i class="pi pi-plus"></i>
                     Add Room
                 </button>
             </div>
@@ -156,14 +157,14 @@ renderTable([
         <div class="flex items-center gap-2">
 
             <button onclick="toggleEditRow(<?= $room['id'] ?>)"
-                    class="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
             <form method="post" onsubmit="return confirm('Delete this room?')" class="m-0 p-0">
                 <input type="hidden" name="room_id" value="<?= $room['id'] ?>">
                 <button type="submit" name="delete_room"
-                        class="px-4 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition">
+                        class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -255,12 +256,14 @@ renderTable([
             <div class="flex gap-4 mt-4">
                 <button type="submit"
                         name="edit_room"
-                        class="bg-[var(--primary)] text-white px-6 py-2 rounded-lg shadow-md hover:bg-[var(--secondary)] text-lg">
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i>
                     Save Changes
                 </button>
                 <button type="button"
                         onclick="toggleEditRow(<?= $rowId ?>)"
-                        class="bg-gray-400 text-white px-6 py-2 rounded-lg shadow-md hover:bg-gray-500 text-lg">
+                        class="btn-square bg-gray-300 text-gray-700">
+                    <i class="pi pi-times"></i>
                     Cancel
                 </button>
             </div>

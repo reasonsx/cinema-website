@@ -48,7 +48,8 @@ $addForm = (function () use ($movies, $screeningRooms) {
         </div>
 
         <button type="submit" name="add_screening"
-                class="btn w-full">
+                class="btn-square bg-green-600">
+            <i class="pi pi-plus"></i>
             Add Screening
         </button>
 
@@ -90,9 +91,7 @@ renderTable([
         <div class="flex items-center gap-2">
 
             <button onclick="toggleEditRow(<?= $s['id'] ?>)"
-                    class="flex items-center justify-center gap-2
-                           px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold
-                           hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
@@ -102,9 +101,7 @@ renderTable([
                 <input type="hidden" name="screening_id" value="<?= $s['id'] ?>">
 
                 <button type="submit" name="delete_screening"
-                        class="flex items-center justify-center gap-2
-                               px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold
-                               hover:bg-red-600 transition">
+                        class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -159,9 +156,11 @@ renderTable([
             </div>
 
             <div class="flex gap-3">
-                <button type="submit" name="edit_screening" class="btn flex-1">Save</button>
+                <button type="submit" name="edit_screening"
+                        class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i> Save Changes</button>
                 <button type="button" onclick="toggleEditRow(<?= $s['id'] ?>)"
-                        class="px-6 py-2 rounded bg-gray-300">Cancel</button>
+                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel</button>
             </div>
 
             <p class="text-red-500 font-semibold errorMsgEdit"></p>

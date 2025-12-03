@@ -134,9 +134,7 @@ renderTable([
 
         <div class="flex items-center gap-2">
             <button onclick="toggleEditRow(<?= $movie['id'] ?>)"
-                    class="flex items-center justify-center gap-2
-                           px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold
-                           hover:bg-blue-700 transition">
+                    class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
             </button>
 
@@ -144,7 +142,7 @@ renderTable([
                   class="flex items-center justify-center p-0 m-0 leading-none">
 
                 <input type="hidden" name="delete_movie" value="<?= $movie['id'] ?>">
-                <button class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition">
+                <button class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
@@ -223,11 +221,11 @@ renderTable([
             </div>
 
             <div class="md:col-span-2 flex gap-4 mt-4">
-                <button class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-                    <i class="pi pi-check"></i> Save
+                <button class="btn-square bg-green-600">
+                    <i class="pi pi-check"></i> Save Changes
                 </button>
                 <button type="button" onclick="toggleEditRow(<?= $movie['id'] ?>)"
-                        class="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400">
+                        class="btn-square bg-gray-300 text-gray-700">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
@@ -302,12 +300,12 @@ renderTable([
             </div>
 
             <div class="md:col-span-2 flex justify-end gap-4 mt-4">
-                <button class="px-4 py-2 bg-[var(--primary)] text-white rounded hover:bg-[var(--secondary)]">
-                    <i class="pi pi-check"></i> Add Movie
+                <button  class="btn-square bg-green-600">
+                    <i class="pi pi-plus"></i> Add Movie
                 </button>
 
                 <button type="button" onclick="toggleAddForm_moviesTable()"
-                        class="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400">
+                        class="btn-square bg-gray-300 text-gray-700">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
