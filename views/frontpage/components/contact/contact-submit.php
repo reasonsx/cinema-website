@@ -29,6 +29,16 @@ if (!$name || !$email || !$subject || !$message) {
     exit;
 }
 
+// Message length validation
+if (strlen($message) < 10 || strlen($message) > 1000) {
+    $_SESSION['contact_status'] = [
+        'type' => 'error',
+        'msg'  => 'Message must be between 10 and 1000 characters.'
+    ];
+    header("Location: /cinema-website/#contact-us");
+    exit;
+}
+
 // 4. Save message to DB
 $stmt = $db->prepare("
     INSERT INTO contact_messages (name, email, subject, message, created_at)

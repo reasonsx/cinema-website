@@ -96,9 +96,10 @@ foreach ($blocks as $block) {
                     <label class="block text-sm uppercase tracking-wide text-white/60 mb-2">Message</label>
                     <textarea
                             name="message" rows="5" required
+                            minlength="10"
+                            maxlength="1000"
                             placeholder="Type your message here..."
-                            class="w-full rounded-2xl bg-white/5 border border-white/15 px-5 py-3
-                               placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
+                            class="w-full rounded-2xl bg-white/5 border border-white/15 px-5 py-3 placeholder-white/40 focus:ring-2 focus:ring-[var(--secondary)]"
                     ></textarea>
                 </div>
         
