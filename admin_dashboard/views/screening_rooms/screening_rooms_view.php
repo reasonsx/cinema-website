@@ -55,69 +55,81 @@ renderTable([
     // ADD FORM
     'addForm' => (function () {
         ob_start(); ?>
-        <form method="post" class="flex flex-col gap-4">
+        <form method="post" class="flex flex-col gap-6">
             <input type="hidden" name="seat_edit_mode" id="add_seat_edit_mode" value="grid">
 
             <!-- Room name -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">Room Name</label>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Room Name</label>
                 <input type="text"
                        name="name"
                        placeholder="Room Name"
-                       required
-                       class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-[var(--primary)] focus:outline-none focus:border-[var(--secondary)]">
+                       required>
             </div>
 
             <!-- Mode switch -->
-            <div class="flex gap-4 mt-2">
+            <div class="flex gap-4">
                 <button type="button"
                         onclick="switchAddSeatEditMode('grid')"
-                        class="btn-square bg-purple-600">
+                        class="btn-square bg-purple-600 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-table"></i>
                     Grid Mode
                 </button>
+
                 <button type="button"
                         onclick="switchAddSeatEditMode('manual')"
-                        class="btn-square bg-gray-500">
+                        class="btn-square bg-gray-500 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-pencil"></i>
                     Manual Mode
                 </button>
             </div>
 
             <!-- GRID EDITOR -->
-            <div id="add-grid-editor" class="flex flex-col gap-3 mt-4">
-                <div class="flex gap-4">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm text-gray-700">Rows</label>
-                        <input type="number" name="rows" min="1" placeholder="Rows"
-                               class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 w-24">
+            <div id="add-grid-editor" class="flex flex-col gap-4">
+                <div class="flex gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm text-gray-700 font-semibold">Rows</label>
+                        <input type="number" min="1" name="rows"
+                               placeholder="Rows">
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm text-gray-700">Seats per Row</label>
-                        <input type="number" name="seats_per_row" min="1" placeholder="Seats/Row"
-                               class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 w-24">
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm text-gray-700 font-semibold">Seats per Row</label>
+                        <input type="number" min="1" name="seats_per_row"
+                               placeholder="Seats">
                     </div>
                 </div>
+
                 <p class="text-sm text-gray-600">
-                    Example: 5 rows × 10 seats = 50 total seats
+                    Example: 5 rows × 10 seats = 50 seats total.
                 </p>
             </div>
 
             <!-- MANUAL EDITOR -->
-            <div id="add-manual-editor" class="hidden mt-4">
-                <label class="text-sm text-gray-700">Seats (manual)</label>
-                <textarea name="seats_text"
-                          rows="4"
-                          placeholder="Example: A1 A2 A3 B1 B2 ..."
-                          class="w-full border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 placeholder-gray-400 focus:outline-none focus:border-[var(--secondary)]"></textarea>
+            <div id="add-manual-editor" class="hidden flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Seats (manual)</label>
+
+                <textarea name="seats_text" rows="4"
+                          placeholder="Example: A1 A2 A3 B1 B2 ..."></textarea>
             </div>
 
-            <div class="flex gap-4 mt-4">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit"
                         name="add_room"
-                    class="btn-square bg-green-600">
+                        class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
                     <i class="pi pi-plus"></i>
                     Add Screening Room
                 </button>
+
+                <button type="button"
+                        onclick="toggleAddForm_roomsTable()"
+                        class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
+                </button>
             </div>
+
         </form>
         <?php
         return ob_get_clean();
@@ -177,111 +189,97 @@ renderTable([
     // INLINE EDIT FORM
     'renderEditRow' => function ($room) use ($db) {
         $layout = buildSeatLayout($db, (int)$room['id']);
-        $rowId  = (int)$room['id'];
+        $id = (int)$room['id'];
 
         ob_start(); ?>
-        <form method="post" class="flex flex-col gap-4">
-            <input type="hidden" name="room_id" value="<?= $rowId ?>">
-            <input type="hidden" name="seat_edit_mode" id="edit_seat_edit_mode_<?= $rowId ?>" value="grid">
+        <form method="post" class="flex flex-col gap-6">
+            <input type="hidden" name="room_id" value="<?= $id ?>">
+            <input type="hidden" id="edit_seat_edit_mode_<?= $id ?>" name="seat_edit_mode" value="grid">
 
-            <!-- Name -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">Room Name</label>
+            <!-- Room Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Room Name</label>
                 <input type="text"
                        name="name"
                        value="<?= e($room['name']) ?>"
-                       required
-                       class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 focus:outline-none focus:border-[var(--secondary)]">
+                       required>
             </div>
 
             <!-- Capacity (readonly) -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">Capacity</label>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Capacity</label>
                 <input type="number"
                        value="<?= (int)$room['capacity'] ?>"
                        readonly
-                       class="border-b-2 border-gray-300 bg-gray-100 text-gray-500 px-2 py-1 cursor-not-allowed"
-                       title="Capacity is calculated automatically from seats">
+                       class="cursor-not-allowed">
             </div>
 
-            <!-- Mode switch -->
-            <div class="flex gap-4 mt-2">
+            <!-- Mode toggle -->
+            <div class="flex gap-4">
                 <button type="button"
-                        onclick="switchEditSeatMode(<?= $rowId ?>, 'grid')"
-                        class="btn-square bg-purple-600">
+                        onclick="switchEditSeatMode(<?= $id ?>, 'grid')"
+                        class="btn-square bg-purple-600 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-table"></i>
                     Grid Mode
                 </button>
+
                 <button type="button"
-                        onclick="switchEditSeatMode(<?= $rowId ?>, 'manual')"
-                        class="btn-square bg-gray-500">
+                        onclick="switchEditSeatMode(<?= $id ?>, 'manual')"
+                        class="btn-square bg-gray-500 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-pencil"></i>
                     Manual Mode
                 </button>
             </div>
 
             <!-- GRID EDITOR -->
-            <div id="edit-grid-editor-<?= $rowId ?>" class="flex flex-col gap-3 mt-4">
-
-                <div class="flex gap-4">
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm text-gray-700">Rows</label>
-                        <input type="number"
+            <div id="edit-grid-editor-<?= $id ?>" class="flex flex-col gap-4">
+                <div class="flex gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm text-gray-700 font-semibold">Rows</label>
+                        <input type="number" min="1"
                                name="rows"
-                               min="1"
-                               value="<?= $layout['rowCount'] ?>"
-                               placeholder="Rows"
-                               class="w-24 px-3 py-1.5 rounded-md bg-white border border-gray-300 h-[38px]
-                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
-                          focus:border-[var(--primary)] text-black transition">
+                               value="<?= $layout['rowCount'] ?>">
                     </div>
 
-                    <div class="flex flex-col gap-1">
-                        <label class="text-sm text-gray-700">Seats per Row</label>
-                        <input type="number"
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm text-gray-700 font-semibold">Seats per Row</label>
+                        <input type="number" min="1"
                                name="seats_per_row"
-                               min="1"
-                               value="<?= $layout['maxSeatsPerRow'] ?>"
-                               placeholder="Seats/Row"
-                               class="w-24 px-3 py-1.5 rounded-md bg-white border border-gray-300 h-[38px]
-                          focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
-                          focus:border-[var(--primary)] text-black transition">
+                               value="<?= $layout['maxSeatsPerRow'] ?>">
                     </div>
                 </div>
 
                 <p class="text-sm text-gray-600">
-                    If you change rows/seats per row, the existing seat layout will be replaced.
+                    Changing rows/seats will regenerate the entire seat layout.
                 </p>
             </div>
 
             <!-- MANUAL EDITOR -->
-            <div id="edit-manual-editor-<?= $rowId ?>" class="hidden mt-4">
-                <label class="text-sm text-gray-700">Seats (manual)</label>
+            <div id="edit-manual-editor-<?= $id ?>" class="hidden flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Seats (manual)</label>
 
-                <textarea name="seats_text"
-                          rows="4"
-                          class="w-full px-3 py-2 rounded-md bg-white border border-gray-300
-                     text-black placeholder-gray-400
-                     focus:outline-none focus:ring-2 focus:ring-[var(--primary)]
-                     focus:border-[var(--primary)] transition"><?= e($layout['manualSeats']) ?></textarea>
+                <textarea name="seats_text" rows="4"><?= e($layout['manualSeats']) ?></textarea>
             </div>
 
-
-            <div class="flex gap-4 mt-4">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit"
                         name="edit_room"
-                        class="btn-square bg-green-600">
+                        class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
                     <i class="pi pi-check"></i>
                     Save Changes
                 </button>
+
                 <button type="button"
-                        onclick="toggleEditRow(<?= $rowId ?>)"
-                        class="btn-square bg-gray-300 text-gray-700">
+                        onclick="toggleEditRow(<?= $id ?>)"
+                        class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
                     <i class="pi pi-times"></i>
                     Cancel
                 </button>
             </div>
+
         </form>
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     },
 ]);
 ?>

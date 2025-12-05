@@ -8,52 +8,79 @@ $screenings = getScreenings($db);
 // Add Form (inside table)
 $addForm = (function () use ($movies, $screeningRooms) {
     ob_start(); ?>
-    <form method="post" id="addScreeningForm" class="flex flex-col gap-4">
+    <form method="post" id="addScreeningForm" class="flex flex-col gap-6">
 
         <!-- Movie -->
-        <select name="movie_id" id="movieSelect" required
-                class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1">
-            <option value="">Select Movie</option>
-            <?php foreach ($movies as $m): ?>
-                <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>">
-                    <?= htmlspecialchars($m['title']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <!-- Room -->
-        <select name="screening_room_id" id="roomSelect" required
-                class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1">
-            <option value="">Select Room</option>
-            <?php foreach ($screeningRooms as $room): ?>
-                <option value="<?= $room['id'] ?>">
-                    <?= htmlspecialchars($room['name']) ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
-
-        <!-- Start -->
-        <input type="datetime-local" name="start_time" id="startTime" required
-               class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1">
-
-        <!-- End -->
-        <div class="flex gap-2 items-center">
-            <input type="datetime-local" name="end_time" id="endTime" required
-                   class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1">
-
-            <button type="button" id="autoSetEndTime"
-                    class="bg-gray-400 text-white px-3 py-1 rounded shadow text-sm">
-                Auto
-            </button>
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-gray-700 font-semibold">Movie</label>
+            <select name="movie_id" id="movieSelect"
+                    class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                    required>
+                <option value="">Select Movie</option>
+                <?php foreach ($movies as $m): ?>
+                    <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>">
+                        <?= htmlspecialchars($m['title']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
-        <button type="submit" name="add_screening"
-                class="btn-square bg-green-600">
-            <i class="pi pi-plus"></i>
-            Add Screening
-        </button>
+        <!-- Room -->
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-gray-700 font-semibold">Screening Room</label>
+            <select name="screening_room_id" id="roomSelect"
+                    class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                    required>
+                <option value="">Select Room</option>
+                <?php foreach ($screeningRooms as $room): ?>
+                    <option value="<?= $room['id'] ?>"><?= htmlspecialchars($room['name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
 
-        <p id="screeningError" class="text-red-500 font-semibold"></p>
+        <!-- Start Time -->
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-gray-700 font-semibold">Start Time</label>
+            <input type="datetime-local"
+                   name="start_time"
+                   id="startTime"
+                   class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                   required>
+        </div>
+
+        <!-- End Time -->
+        <div class="flex flex-col gap-2">
+            <label class="text-sm text-gray-700 font-semibold">End Time</label>
+            <div class="flex items-center gap-3">
+                <input type="datetime-local"
+                       name="end_time"
+                       id="endTime"
+                       class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black endTimeEdit"
+                       required>
+
+                <button type="button" id="autoSetEndTime"
+                        class="bg-gray-400 text-white px-4 py-2 rounded-md text-sm shadow">
+                    Auto
+                </button>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-4">
+            <button type="submit"
+                    name="add_screening"
+                    class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
+                <i class="pi pi-plus"></i>
+                Add Screening
+            </button>
+
+            <button type="button"
+                    onclick="toggleAddForm_screeningsTable()"
+                    class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
+                <i class="pi pi-times"></i>
+                Cancel
+            </button>
+        </div>
     </form>
     <?php
     return ob_get_clean();
@@ -114,54 +141,83 @@ renderTable([
     // Inline edit form
     'renderEditRow' => function ($s) use ($movies, $screeningRooms) {
         ob_start(); ?>
-        <form method="post" class="flex flex-col gap-4">
+        <form method="post" class="flex flex-col gap-6">
 
             <input type="hidden" name="screening_id" value="<?= $s['id'] ?>">
 
             <!-- Movie -->
-            <select name="movie_id" required>
-                <?php foreach ($movies as $m): ?>
-                    <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>"
-                        <?= $s['movie_id']==$m['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($m['title']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Movie</label>
+                <select name="movie_id"
+                        class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black movieSelectEdit"
+                        required>
+                    <?php foreach ($movies as $m): ?>
+                        <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>"
+                            <?= $s['movie_id'] == $m['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($m['title']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
             <!-- Room -->
-            <select name="screening_room_id" required>
-                <?php foreach ($screeningRooms as $room): ?>
-                    <option value="<?= $room['id'] ?>"
-                        <?= $s['screening_room_id']==$room['id'] ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($room['name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Screening Room</label>
+                <select name="screening_room_id"
+                        class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                        required>
+                    <?php foreach ($screeningRooms as $room): ?>
+                        <option value="<?= $room['id'] ?>"
+                            <?= $s['screening_room_id'] == $room['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($room['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
-            <!-- Start -->
-            <input type="datetime-local" name="start_time"
-                   value="<?= date('Y-m-d\TH:i', strtotime($s['start_time'])) ?>" required>
+            <!-- Start Time -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Start Time</label>
+                <input type="datetime-local"
+                       name="start_time"
+                       value="<?= date('Y-m-d\TH:i', strtotime($s['start_time'])) ?>"
+                       class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black startTimeEdit"
+                       required>
+            </div>
 
-            <!-- End -->
-            <div class="flex gap-2 items-center">
-                <input type="datetime-local" name="end_time"
-                       value="<?= date('Y-m-d\TH:i', strtotime($s['end_time'])) ?>" required>
+            <!-- End Time -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">End Time</label>
+                <div class="flex items-center gap-3">
+                    <input type="datetime-local"
+                           name="end_time"
+                           value="<?= date('Y-m-d\TH:i', strtotime($s['end_time'])) ?>"
+                           class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black endTimeEdit"
+                           required>
 
-                <button type="button" class="autoSetEndTimeEdit bg-gray-400 text-white px-3 py-1 rounded text-sm">
-                    Auto
+                    <button type="button"
+                            class="autoSetEndTimeEdit bg-gray-400 text-white px-4 py-2 rounded-md text-sm shadow">
+                        Auto
+                    </button>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex gap-4">
+                <button type="submit"
+                        name="edit_screening"
+                        class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-check"></i>
+                    Save Changes
+                </button>
+
+                <button type="button"
+                        onclick="toggleEditRow(<?= $s['id'] ?>)"
+                        class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
-
-            <div class="flex gap-3">
-                <button type="submit" name="edit_screening"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-check"></i> Save Changes</button>
-                <button type="button" onclick="toggleEditRow(<?= $s['id'] ?>)"
-                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel</button>
-            </div>
-
-            <p class="text-red-500 font-semibold errorMsgEdit"></p>
-
         </form>
         <?php
         return ob_get_clean();
