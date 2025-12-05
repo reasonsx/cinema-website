@@ -1,4 +1,14 @@
 <?php
+/**
+ * SessionManager handles user session lifecycle including:
+ * - Starting and validating sessions
+ * - Enforcing automatic session timeouts
+ * - Requiring authentication for protected pages
+ * - Safely logging users out
+ *
+ * It provides a centralized and secure way to manage authentication state
+ * across the application.
+ */
 
 class SessionManager
 {
