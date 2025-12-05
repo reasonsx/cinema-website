@@ -8,19 +8,20 @@ renderTable([
     'headers'   => ['ID', 'First Name', 'Last Name', 'Email', 'Role'],
     'rows'      => $users,
     'searchable'=> true,
+
     'renderRow' => function ($user) {
         return [
             $user['id'],
             e($user['firstname']),
             e($user['lastname']),
             e($user['email']),
-            $user['isAdmin'] ?
-                '<span class="px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 border border-green-300">Admin</span>' :
-                '<span class="px-2 py-0.5 text-xs rounded-full bg-gray-200 text-gray-700 border border-gray-300">User</span>'
+            $user['isAdmin']
+                ? '<span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-700 border border-green-300">Admin</span>'
+                : '<span class="px-2 py-1 text-xs rounded-full bg-gray-200 text-gray-700 border border-gray-300">User</span>'
         ];
     },
 
-    // Action buttons
+    // ACTIONS
     'actions' => function ($user) {
         ob_start(); ?>
         <div class="flex items-center gap-2">
@@ -42,89 +43,134 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // Inline edit row
+    // EDIT FORM
     'renderEditRow' => function ($user) {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="post" class="flex flex-col gap-6">
+
             <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">First Name</label>
-                <input type="text" name="firstname" value="<?= e($user['firstname']) ?>" class="input-edit">
+            <!-- First Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">First Name</label>
+                <input type="text"
+                       name="firstname"
+                       value="<?= e($user['firstname']) ?>"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Last Name</label>
-                <input type="text" name="lastname" value="<?= e($user['lastname']) ?>" class="input-edit">
+            <!-- Last Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Last Name</label>
+                <input type="text"
+                       name="lastname"
+                       value="<?= e($user['lastname']) ?>"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1 md:col-span-2">
-                <label class="text-sm text-gray-600">Email</label>
-                <input type="email" disabled value="<?= e($user['email']) ?>"
-                       class="input-edit bg-gray-200 cursor-not-allowed">
+            <!-- Email (locked) -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Email</label>
+                <input type="email"
+                       value="<?= e($user['email']) ?>"
+                       disabled
+                       class="px-4 py-2 rounded-md bg-gray-200 text-gray-600 cursor-not-allowed">
             </div>
 
-            <label class="flex items-center gap-2 text-gray-700 font-medium">
-                <input type="checkbox" name="isAdmin" <?= $user['isAdmin'] ? 'checked' : '' ?> class="accent-[var(--primary)]">
+            <!-- Admin checkbox -->
+            <label class="flex items-center gap-2 text-gray-700 font-semibold">
+                <input type="checkbox"
+                       name="isAdmin"
+                    <?= $user['isAdmin'] ? 'checked' : '' ?>
+                       class="accent-[var(--primary)] w-4 h-4">
                 Admin
             </label>
 
-            <div class="md:col-span-2 flex gap-4 mt-2">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit" name="edit_user"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-check"></i> Save Changes
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-check"></i>
+                    Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $user['id'] ?>)"
-                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
+
         </form>
         <?php return ob_get_clean();
     },
 
-    // Add user button + form
+    // ADD USER FORM
     'addLabel' => 'Add User',
     'addForm' => (function () {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="post" class="flex flex-col gap-6">
 
             <input type="hidden" name="add_user" value="1">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">First Name</label>
-                <input type="text" name="firstname" class="input-edit" required>
+            <!-- First Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">First Name</label>
+                <input type="text"
+                       name="firstname"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Last Name</label>
-                <input type="text" name="lastname" class="input-edit" required>
+            <!-- Last Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Last Name</label>
+                <input type="text"
+                       name="lastname"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1 md:col-span-2">
-                <label class="text-sm text-gray-600">Email</label>
-                <input type="email" name="email" class="input-edit" required>
+            <!-- Email -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Email</label>
+                <input type="email"
+                       name="email"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1 md:col-span-2">
-                <label class="text-sm text-gray-600">Password</label>
-                <input type="password" name="password" class="input-edit" required>
+            <!-- Password -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Password</label>
+                <input type="password"
+                       name="password"
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <label class="flex items-center gap-2 text-gray-700 font-medium">
-                <input type="checkbox" name="isAdmin" class="accent-[var(--primary)]">
+            <!-- Admin checkbox -->
+            <label class="flex items-center gap-2 text-gray-700 font-semibold">
+                <input type="checkbox" name="isAdmin" class="accent-[var(--primary)] w-4 h-4">
                 Admin
             </label>
 
-            <div class="md:col-span-2 flex gap-4 mt-2">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-plus"></i> Add User
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-plus"></i>
+                    Add User
                 </button>
 
-                <button type="button" onclick="toggleAddForm_usersTable()"
-                        class="btn-square bg-gray-300 text-gray-700"><i class="pi pi-times"></i>Cancel
+                <button type="button"
+                        onclick="toggleAddForm_usersTable()"
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
 
