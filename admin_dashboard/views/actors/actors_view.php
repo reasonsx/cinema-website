@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../components/table.php';
 require_once __DIR__ . '/../../../shared/helpers.php';
+
 function genderBadge(string $gender): string {
     $colors = [
         'Male'   => 'bg-blue-100 text-blue-700',
@@ -10,30 +11,23 @@ function genderBadge(string $gender): string {
 
     $class = $colors[$gender] ?? 'bg-gray-200 text-gray-700';
 
-    return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap $class\">" . e($gender) . "</span>";
+    return "<span class=\"px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap $class\">"
+        . e($gender) .
+        "</span>";
 }
 
 function formatDate($date): string {
-    if (!$date || $date === '0000-00-00') {
-        return '—';
-    }
-
-    try {
-        return date('d M Y', strtotime($date)); // Example: 11 Apr 2002
-    } catch (Exception $e) {
-        return '—';
-    }
+    if (!$date || $date === '0000-00-00') return '—';
+    return date('d M Y', strtotime($date));
 }
 
-?>
-
-<?php
 renderTable([
-    'id' => 'actorsTable',
-    'title' => 'All Actors',
-    'headers' => ['ID', 'Name', 'DOB', 'Gender', 'Description'],
-    'rows' => $actors,
-    'searchable' => true,
+    'id'        => 'actorsTable',
+    'title'     => 'All Actors',
+    'headers'   => ['ID', 'Name', 'DOB', 'Gender', 'Description'],
+    'rows'      => $actors,
+    'searchable'=> true,
+
     'renderRow' => function ($actor) {
         return [
             $actor['id'],
@@ -43,6 +37,7 @@ renderTable([
             e($actor['description']),
         ];
     },
+
     'actions' => function ($actor) {
         ob_start(); ?>
         <div class="flex items-center gap-2">
@@ -67,57 +62,70 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // CLEAN INLINE EDIT FORM
+    // EDIT FORM — CLEAN & MATCHING
     'renderEditRow' => function ($actor) {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="post" class="flex flex-col gap-6">
 
             <input type="hidden" name="actor_id" value="<?= $actor['id'] ?>">
 
             <!-- FIRST NAME -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">First Name</label>
-                <input type="text" name="first_name" value="<?= e($actor['first_name']) ?>" class="input-edit">
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">First Name</label>
+                <input type="text"
+                       name="first_name"
+                       value="<?= e($actor['first_name']) ?>"
+                       class="input-edit px-4 py-2 rounded-md">
             </div>
 
             <!-- LAST NAME -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Last Name</label>
-                <input type="text" name="last_name" value="<?= e($actor['last_name']) ?>" class="input-edit">
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Last Name</label>
+                <input type="text"
+                       name="last_name"
+                       value="<?= e($actor['last_name']) ?>"
+                       class="input-edit px-4 py-2 rounded-md">
             </div>
 
             <!-- DOB -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Date of Birth</label>
-                <input type="date" name="date_of_birth" value="<?= e($actor['date_of_birth']) ?>" class="input-edit">
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Date of Birth</label>
+                <input type="date"
+                       name="date_of_birth"
+                       value="<?= e($actor['date_of_birth']) ?>"
+                       class="input-edit px-4 py-2 rounded-md">
             </div>
 
             <!-- GENDER -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Gender</label>
-                <select name="gender" class="input-edit-select">
-                    <?php foreach (['Male', 'Female', 'Other'] as $g): ?>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Gender</label>
+                <select name="gender"
+                        class="input-edit-select px-4 py-2 rounded-md">
+                    <?php foreach (['Male','Female','Other'] as $g): ?>
                         <option <?= $actor['gender'] === $g ? 'selected' : '' ?>><?= $g ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
             <!-- DESCRIPTION -->
-            <div class="md:col-span-2 flex flex-col gap-1">
-                <label class="text-sm text-gray-600">Description</label>
-                <textarea name="description" class="input-edit-textarea"><?= e($actor['description']) ?></textarea>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Description</label>
+                <textarea name="description"
+                          rows="5"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"><?= e($actor['description']) ?></textarea>
             </div>
 
             <!-- BUTTONS -->
-            <div class="md:col-span-2 flex gap-4 mt-2">
-                <button type="submit" name="edit_actor"
-                        class="btn-square bg-green-600">
+            <div class="flex gap-4">
+                <button type="submit"
+                        name="edit_actor"
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-check"></i> Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $actor['id'] ?>)"
-                        class="btn-square bg-gray-300 text-gray-700">
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
@@ -126,50 +134,76 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // CLEAN ADD FORM
+    // ADD FORM — CLEAN & MATCHING
     'addLabel' => 'Add Actor',
+
     'addForm' => (function () {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form method="post" class="flex flex-col gap-6">
             <input type="hidden" name="add_actor" value="1">
 
-            <?php foreach ([
-                               'first_name' => 'First Name',
-                               'last_name' => 'Last Name',
-                               'date_of_birth' => 'DOB'
-                           ] as $field => $label): ?>
-                <div class="flex flex-col gap-1">
-                    <label><?= $label ?></label>
-                    <input type="<?= $field === 'date_of_birth' ? 'date' : 'text' ?>"
-                           name="<?= $field ?>" class="input-edit" required>
-                </div>
-            <?php endforeach; ?>
+            <!-- FIRST NAME -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">First Name</label>
+                <input type="text"
+                       name="first_name"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="Enter first name"
+                       required>
+            </div>
 
-            <div class="flex flex-col gap-1">
-                <label>Gender</label>
-                <select name="gender" class="input-edit-select">
+            <!-- LAST NAME -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Last Name</label>
+                <input type="text"
+                       name="last_name"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="Enter last name"
+                       required>
+            </div>
+
+            <!-- DOB -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Date of Birth</label>
+                <input type="date"
+                       name="date_of_birth"
+                       class="input-edit px-4 py-2 rounded-md">
+            </div>
+
+            <!-- GENDER -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Gender</label>
+                <select name="gender"
+                        class="input-edit-select px-4 py-2 rounded-md">
                     <?php foreach (['Male','Female','Other'] as $g): ?>
                         <option><?= $g ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <div class="md:col-span-2 flex flex-col gap-1">
-                <label>Description</label>
-                <textarea name="description" class="input-edit-textarea"></textarea>
+            <!-- DESCRIPTION -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Description</label>
+                <textarea name="description"
+                          rows="5"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
+                          placeholder="Short biography or actor details..."></textarea>
             </div>
 
-            <div class="md:col-span-2 flex gap-4 mt-2">
+            <!-- BUTTONS -->
+            <div class="flex gap-4">
                 <button type="submit"
-                        class="btn-square bg-green-600">
-                <i class="pi pi-plus"></i> Add Actor
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-plus"></i> Add Actor
                 </button>
 
-                <button type="button" onclick="toggleAddForm_actorsTable()"
-                        class="btn-square bg-gray-300 text-gray-700">
+                <button type="button"
+                        onclick="toggleAddForm_actorsTable()"
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
+
         </form>
         <?php return ob_get_clean();
     })(),
