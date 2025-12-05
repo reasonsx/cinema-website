@@ -46,7 +46,7 @@ $moviesOnPage = array_slice($movies, $offset, $perPage);
         <!-- Search Input -->
         <div class="max-w-xl mx-auto">
             <div class="relative group">
-                <input type="text" id="movieSearch" name="q" value="<?= $_GET['q'] ?? '' ?>" placeholder="Search movies...">
+                <input type="text" id="movieSearch" name="q" value="<?= $_GET['q'] ?? '' ?>" placeholder="Search movies..." class="!rounded-full">
                 <i class="pi pi-search absolute right-5 top-1/2 -translate-y-1/2 text-black/50"></i>
             </div>
         </div>
@@ -239,7 +239,7 @@ $moviesOnPage = array_slice($movies, $offset, $perPage);
     let currentPage = <?= $page ?>;
 
     applyPagination(currentPage);
-    
+
     // Live search listener
     searchInput.addEventListener('input', (e) => {
         filterMovies(e.target.value);
