@@ -1,13 +1,23 @@
 <?php
-// Start session
-session_start();
+session_start(); // start session for user state
 
 // Load dependencies
 require_once __DIR__ . '/../../backend/connection.php';
 require_once __DIR__ . '/../../admin_dashboard/views/news/news_functions.php';
 
-// Fetch all news
+// Fetch all news articles
 $newsList = getNews($db);
+
+// Pagination settings
+$perPage = 10; // total per page
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1; // current page
+
+$totalNews = count($newsList); // total articles
+$totalPages = ceil($totalNews / $perPage); // total number of pages
+
+// Slice array to get only items for this page
+$offset = ($page - 1) * $perPage;
+$newsOnPage = array_slice($newsList, $offset, $perPage);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,13 +36,15 @@ $newsList = getNews($db);
 
     <div class="container mx-auto px-6 py-14 md:py-16 lg:py-18 max-w-7xl">
         <h1 class="text-4xl md:text-6xl font-[Limelight] mb-4 md:mb-6">All News</h1>
-        <p class="text-base md:text-lg max-w-3xl mx-auto mb-6 md:mb-8 text-black/80">Browse the latest updates,
-            announcements, and important news from our cinema.</p>
 
-        <!-- Search Bar -->
+        <p class="text-base md:text-lg max-w-3xl mx-auto mb-6 md:mb-8 text-black/80">
+            Browse the latest updates, announcements, and important news from our cinema.
+        </p>
+
+        <!-- Search -->
         <div class="max-w-xl mx-auto">
             <div class="relative group">
-                <input type="text" id="newsSearch" placeholder="Search news..." class="!rounded-full"/>
+                <input type="text" id="newsSearch" placeholder="Search news..." class="!rounded-full">
                 <i class="pi pi-search absolute right-5 top-1/2 -translate-y-1/2 text-black/50"></i>
             </div>
         </div>
@@ -54,34 +66,39 @@ $newsList = getNews($db);
 
             <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl">
 
-                <!-- Header Bar -->
+                <!-- Header -->
                 <div class="flex items-center justify-between px-6 py-4 border-b border-white/10">
                     <div class="flex items-center gap-3">
                         <span class="inline-block h-2.5 w-2.5 rounded-full bg-[var(--secondary)]"></span>
-                        <p id="newsCount" class="text-sm text-white/70">Showing <?= count($newsList) ?> articles</p>
+                        <p id="newsCount" class="text-sm text-white/70">
+                            Showing <?= min($perPage, $totalNews) ?> out of <?= $totalNews ?> articles
+                        </p>
                     </div>
-                    <div class="text-xs text-white/50">Click any row for full article</div>
+                    <div class="text-xs text-white/50">Click any article for full view</div>
                 </div>
 
                 <!-- List -->
                 <ul id="newsList" class="divide-y divide-white/10">
-                    <?php foreach ($newsList as $news): ?>
 
-                        <?php
-                        // Prepare news data
+                    <?php
+                    $index = 0; // counter for page grouping
+                    foreach ($newsList as $news):
+                        $pageNumber = floor($index / $perPage) + 1; // calculate page number
+                        $index++;
+
                         $id = (int)$news['id'];
-                        $title = htmlspecialchars($news['title'] ?? 'Untitled');
-                        $dateAdded = isset($news['date_added']) ? date('M d, Y', strtotime($news['date_added'])) : '';
-                        $content = htmlspecialchars($news['content'] ?? '');
+                        $title = htmlspecialchars($news['title']);
+                        $dateAdded = date('M d, Y', strtotime($news['date_added']));
+                        $content = htmlspecialchars($news['content']);
                         $excerpt = mb_strlen($content) > 150 ? mb_substr($content, 0, 150) . '…' : $content;
                         ?>
 
-                        <li class="news-row group" data-title="<?= strtolower($title) ?>">
+                        <li class="news-row group page-item page-<?= $pageNumber ?>"
+                            data-title="<?= strtolower($title) ?>">
 
                             <a href="../news/news.php?id=<?= $id ?>"
-                               class="flex items-start gap-6 px-8 py-6 transition rounded-2xl md:rounded-none hover:bg-white/10 focus:bg-white/10">
+                               class="flex items-start gap-6 px-8 py-6 transition rounded-2xl hover:bg-white/10">
 
-                                <!-- Data Badge -->
                                 <div class="shrink-0">
                                     <div class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1 text-xs text-white/80">
                                         <i class="pi pi-calendar text-[var(--secondary)]"></i>
@@ -89,18 +106,16 @@ $newsList = getNews($db);
                                     </div>
                                 </div>
 
-                                <!-- Content -->
                                 <div class="flex-1 min-w-0">
                                     <h3 class="text-xl font-semibold text-[var(--secondary)] truncate"><?= $title ?></h3>
                                     <p class="mt-2 text-white/80 text-sm leading-relaxed"><?= $excerpt ?></p>
                                 </div>
 
-                                <!-- Read More Button -->
                                 <div class="shrink-0">
-                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
-                                        Read More
-                                         <i class="pi pi-angle-right"></i>
-                                    </span>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
+                                Read More
+                                <i class="pi pi-angle-right"></i>
+                            </span>
                                 </div>
 
                             </a>
@@ -123,20 +138,67 @@ $newsList = getNews($db);
         <?php endif; ?>
 
     </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="flex justify-center items-center gap-2 py-6 text-white">
+
+        <?php if ($page > 1): ?>
+            <a href="?page=<?= $page - 1 ?>" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center">
+                <i class="pi pi-angle-left"></i>
+            </a>
+        <?php endif; ?>
+
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>"
+               class="w-10 h-10 rounded-full border flex items-center justify-center
+               <?= $i == $page ? 'bg-[var(--secondary)] text-black' : 'border-white/20 hover:bg-white/10' ?>">
+                <?= $i ?>
+            </a>
+        <?php endfor; ?>
+
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?= $page + 1 ?>" class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center">
+                <i class="pi pi-angle-right"></i>
+            </a>
+        <?php endif; ?>
+
+    </div>
+
 </section>
 
 <?php include __DIR__ . '/../../shared/footer.php'; ?>
 
 <script>
-    // Get UI references
+    // Search + pagination system
     const searchInput = document.getElementById("newsSearch");
-    const rows = document.querySelectorAll("#newsList .news-row");
+    const rows = document.querySelectorAll(".news-row");
     const countEl = document.getElementById("newsCount");
+    const pagination = document.getElementById("pagination");
 
-    // Filter list by search text
+    let currentPage = <?= $page ?>; // current page from PHP
+
+    // Show rows for a specific page
+    function applyPagination(page) {
+        rows.forEach(row => {
+            row.style.display = row.classList.contains(`page-${page}`) ? "" : "none";
+        });
+
+        const visible = document.querySelectorAll(`.page-${page}`).length;
+        countEl.textContent = `Showing ${visible} out of ${rows.length} articles`;
+    }
+
+    // Search filter
     function filterNews(query) {
         const q = query.toLowerCase();
         let visible = 0;
+
+        if (q === "") {
+            pagination.style.display = "";
+            applyPagination(currentPage);
+            return;
+        }
+
+        pagination.style.display = "none";
 
         rows.forEach(row => {
             const match = row.dataset.title.includes(q);
@@ -144,16 +206,14 @@ $newsList = getNews($db);
             if (match) visible++;
         });
 
-        // Update counter text
-        if (countEl) {
-            countEl.textContent = `Showing ${visible} article${visible === 1 ? "" : "s"}`;
-        }
+        countEl.textContent = `Showing ${visible} out of ${rows.length} articles`;
     }
 
-    // Listen for typing
-    if (searchInput) {
-        searchInput.addEventListener("input", e => filterNews(e.target.value));
-    }
+    // Initialize pagination
+    applyPagination(currentPage);
+
+    // Listen for search typing
+    searchInput.addEventListener("input", e => filterNews(e.target.value));
 </script>
 
 </body>
