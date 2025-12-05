@@ -53,14 +53,39 @@ class SessionManager {
 
 public function logout(): void
 {
-    // Clear PHP session
+    // Make sure session is started
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // Clear session array
     $_SESSION = [];
-    session_unset();
+
+    // Delete PHP session cookie
+    if (ini_get("session.use_cookies")) {
+        $params = session_get_cookie_params();
+        setcookie(
+            session_name(),
+            '',
+            time() - 3600,
+            $params["path"],
+            $params["domain"],
+            $params["secure"],
+            $params["httponly"]
+        );
+    }
+
+    // Destroy the session
     session_destroy();
 
-    // Remove old cookie code (optional)
+    // Remove remember token cookie (if used)
     setcookie('remember_token', '', time() - 3600, '/', '', isset($_SERVER['HTTPS']), true);
+
+    // Redirect IMMEDIATELY after logout
+    header("Location: /cinema-website/auth/login.php?logged_out=1");
+    exit;
 }
+
 
 
     public function getUserId(): ?int {
