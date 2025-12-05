@@ -59,7 +59,7 @@ $email = htmlspecialchars($user['email']);
 <html lang="en">
 <?php include '../../shared/head.php'; ?>
 
-<body class="bg-black text-white font-sans">
+<body class="bg-black font-sans">
 
 <?php include '../../shared/header.php'; ?>
 
@@ -79,7 +79,7 @@ $email = htmlspecialchars($user['email']);
                 <?= strtoupper($firstname[0] . ($lastname[0] ?? '')) ?>
             </div>
 
-            <h2 class="text-2xl font-semibold"><?= "$firstname $lastname" ?></h2>
+            <h2 class="text-2xl font-semibold text-white"><?= "$firstname $lastname" ?></h2>
             <p class="text-white/60"><?= $email ?></p>
 
             <?= $updateMessage ?>
@@ -97,12 +97,27 @@ $email = htmlspecialchars($user['email']);
                     <input type="email" name="email" value="<?= $email ?>" placeholder="Email"
                            required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
 
-                    <input type="password" name="new_password" placeholder="New password (optional)"
-                           class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+                    <div class="relative">
+                        <input id="new-password" type="password" name="new_password"
+                               placeholder="New password (optional)"
+                               class="w-full p-3 rounded-xl bg-black/30 border border-white/10">
 
-                    <input type="password" name="current_password"
-                           placeholder="Current password (required)"
-                           required class="w-full p-3 rounded-xl bg-black/30 border border-white/10 text-white">
+                        <button type="button" id="toggle-new-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 ">
+                            <i class="pi pi-eye"></i>
+                        </button>
+                    </div>
+
+                    <div class="relative">
+                        <input id="current-password" type="password" name="current_password"
+                               placeholder="Current password (required)" required
+                               class="w-full p-3 rounded-xl bg-black/30 border border-white/10">
+
+                        <button type="button" id="toggle-current-password"
+                                class="absolute right-3 top-1/2 -translate-y-1/2">
+                            <i class="pi pi-eye"></i>
+                        </button>
+                    </div>
 
                     <div class="flex gap-3">
                         <button type="submit"
@@ -230,6 +245,21 @@ $email = htmlspecialchars($user['email']);
 </section>
 
 <?php include '../../shared/footer.php'; ?>
+<script>
+    function addPasswordToggle(inputId, toggleId) {
+        const input = document.getElementById(inputId);
+        const toggle = document.getElementById(toggleId);
+
+        toggle.addEventListener('click', () => {
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            toggle.innerHTML = isPassword ? '<i class="pi pi-eye-slash !text-black"></i>' : '<i class="pi pi-eye !text-black"></i>';
+        });
+    }
+
+    addPasswordToggle('new-password', 'toggle-new-password');
+    addPasswordToggle('current-password', 'toggle-current-password');
+</script>
 
 </body>
 </html>
