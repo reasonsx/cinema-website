@@ -1,6 +1,6 @@
 <?php
 require_once '../backend/connection.php';
-require_once '../auth/session.php'; // if using SessionManager
+require_once '../auth/session.php';
 
 $session = new SessionManager($db);
 $session->logout();
