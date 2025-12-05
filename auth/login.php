@@ -1,6 +1,6 @@
 <?php
-// --- Secure session setup ---
 $sessionLifetime = 3600;
+
 session_set_cookie_params([
     'lifetime' => $sessionLifetime,
     'path' => '/',
@@ -9,21 +9,23 @@ session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'Strict'
 ]);
+
 session_start();
 
 require_once '../backend/connection.php';
 
-// --- Handle session timeout (30 min inactivity) ---
 $timeoutDuration = 1800;
+
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeoutDuration) {
     session_unset();
     session_destroy();
 }
+
 $_SESSION['LAST_ACTIVITY'] = time();
 
-// --- Determine redirect after login ---
 $redirect = '/cinema-website/views/profile/profile.php';
-if (isset($_GET['redirect']) && !empty($_GET['redirect'])) {
+
+if (!empty($_GET['redirect'])) {
     $redirectPath = filter_var($_GET['redirect'], FILTER_SANITIZE_URL);
     if (str_starts_with($redirectPath, '/')) {
         $redirect = $redirectPath;
@@ -35,7 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
 
     try {
-        $stmt = $db->prepare("SELECT id, password, firstname, lastname, isAdmin FROM users WHERE email = ?");
+        $stmt = $db->prepare(
+            "SELECT id, password, firstname, lastname, isAdmin
+             FROM users WHERE email = ?"
+        );
+
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -47,18 +53,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             header("Location: $redirect");
             exit;
-        } else {
-            $_SESSION['error'] = 'Invalid email or password!';
         }
+
+        $_SESSION['error'] = 'Invalid email or password!';
     } catch (PDOException $e) {
-        $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+        $_SESSION['error'] = 'Database error.';
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <?php include '../shared/head.php'; ?>
+
 <body class="bg-black text-black font-sans">
+
 <?php include '../shared/header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[70vh] bg-black px-4 py-10">
@@ -69,26 +79,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h2>
 
         <?php if (isset($_SESSION['error'])): ?>
-            <p class="text-red-400 text-center mb-4"><?= $_SESSION['error'];
-                unset($_SESSION['error']); ?></p>
+            <p class="text-red-400 text-center mb-4">
+                <?= $_SESSION['error'] ?>
+            </p>
+            <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <form action="" method="POST" class="flex flex-col gap-5">
+        <form method="POST" class="flex flex-col gap-5">
 
-            <!-- Email -->
-            <div>
-                <input type="email" name="email"
-                       placeholder="Enter your email"
-                       required
-                >
-            </div>
+            <input type="email" name="email" placeholder="Enter your email" required>
 
-            <!-- Password -->
             <div class="relative">
                 <input id="login-password" type="password" name="password"
-                       placeholder="Enter your password"
-                       required
-                >
+                       placeholder="Enter your password" required>
 
                 <button type="button" id="toggle-login-password"
                         class="absolute right-3 top-1/2 -translate-y-1/2">
@@ -96,7 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </div>
 
-            <!-- Submit Button -->
             <button type="submit" class="btn-full w-full">
                 <i class="pi pi-sign-in"></i> Login
             </button>
@@ -116,13 +118,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script>
     const loginPassword = document.getElementById('login-password');
     const toggleLogin = document.getElementById('toggle-login-password');
+
     toggleLogin.addEventListener('click', () => {
-        const type = loginPassword.type === 'password' ? 'text' : 'password';
-        loginPassword.type = type;
-        toggleLogin.innerHTML = type === 'password'
-            ? '<i class="pi pi-eye"></i>'
-            : '<i class="pi pi-eye-slash"></i>';
+        const isPassword = loginPassword.type === 'password';
+
+        loginPassword.type = isPassword ? 'text' : 'password';
+        toggleLogin.innerHTML = isPassword
+            ? '<i class="pi pi-eye-slash"></i>'
+            : '<i class="pi pi-eye"></i>';
     });
 </script>
+
 </body>
 </html>
