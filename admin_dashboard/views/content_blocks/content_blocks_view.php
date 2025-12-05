@@ -11,14 +11,13 @@ if (!function_exists('formatBlockText')) {
 ?>
 
 <?php
-renderTable([
+renderTable(options: [
     'id'        => 'contentBlocksTable',
     'title'     => 'Content Blocks Management',
     'headers'   => ['ID', 'Tag', 'Title', 'Text'],
     'rows'      => $contentBlocks,   // <-- MUST be loaded in admin_dashboard.php
     'searchable'=> true,
 
-    // ---------- Table Row Renderer ----------
     'renderRow' => function ($block) {
         return [
             $block['id'],
@@ -28,7 +27,7 @@ renderTable([
         ];
     },
 
-    // ---------- Row Action Buttons ----------
+    // Action buttons
     'actions' => function ($block) {
         ob_start(); ?>
         <div class="flex items-center gap-2">
@@ -53,89 +52,122 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // ---------- Edit Row Renderer ----------
     'renderEditRow' => function ($block) {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 gap-4">
+
+        <form method="post" class="flex flex-col gap-6">
 
             <input type="hidden" name="block_id" value="<?= $block['id'] ?>">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Tag (unique)</label>
-                <input type="text" name="tag"
+            <!-- Tag -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Tag (unique)</label>
+                <input type="text"
+                       name="tag"
                        value="<?= e($block['tag']) ?>"
-                       class="input-edit" required>
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Title (optional)</label>
-                <input type="text" name="title"
+            <!-- Title (optional) -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">
+                    Title <span class="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input type="text"
+                       name="title"
                        value="<?= e($block['title']) ?>"
-                       class="input-edit">
+                       class="input-edit px-4 py-2 rounded-md">
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Text</label>
-                <textarea name="text" rows="5"
-                          class="input-edit-textarea"
+            <!-- Text -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Text</label>
+                <textarea name="text"
+                          rows="6"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
                           required><?= e($block['text']) ?></textarea>
             </div>
 
-            <div class="flex gap-4 mt-2">
-                <button type="submit" name="edit_block"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-check"></i> Save Changes
+            <!-- Buttons -->
+            <div class="flex gap-4">
+                <button type="submit"
+                        name="edit_block"
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-check"></i>
+                    Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $block['id'] ?>)"
-                        class="btn-square bg-gray-300 text-gray-700">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
 
         </form>
+
         <?php return ob_get_clean();
     },
 
-    // ---------- Add New Block Form ----------
+    // Add form
     'addLabel' => 'Add Content Block',
     'addForm'  => (function () {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 gap-4">
+
+        <form method="post" class="flex flex-col gap-6">
             <input type="hidden" name="add_block" value="1">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Tag (unique)</label>
-                <input type="text" name="tag" class="input-edit" required>
+            <!-- Tag -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Tag (unique)</label>
+                <input type="text"
+                       name="tag"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="Unique identifier"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Title (optional)</label>
-                <input type="text" name="title" class="input-edit">
+            <!-- Title (optional) -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">
+                    Title <span class="text-gray-400 font-normal">(optional)</span>
+                </label>
+                <input type="text"
+                       name="title"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="Optional title">
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Text</label>
-                <textarea name="text" rows="5"
-                          class="input-edit-textarea"
+            <!-- Text -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Text</label>
+                <textarea name="text"
+                          rows="6"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
+                          placeholder="Write the content block text..."
                           required></textarea>
             </div>
 
-            <div class="flex gap-4 mt-2">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-plus"></i>Add Content Block
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-plus"></i>
+                    Add Content Block
                 </button>
 
                 <button type="button"
                         onclick="toggleAddForm_contentBlocksTable()"
-                        class="btn-square bg-gray-300 text-gray-700">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
 
         </form>
+
         <?php return ob_get_clean();
     })(),
 ]);

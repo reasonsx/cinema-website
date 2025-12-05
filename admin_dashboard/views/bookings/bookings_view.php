@@ -55,9 +55,8 @@ renderTable([
     'id'        => 'bookingsTable',
     'title'     => 'All Bookings',
     'searchable'=> true,
-    'addLabel'  => 'Add Booking',
 
-    // ADD FORM (top, collapsible)
+    'addLabel'  => 'Add Booking',
     'addForm'   => (function() use ($users, $screenings) {
         ob_start(); ?>
         <form method="post" id="add-booking-form" class="flex flex-col gap-4">
@@ -165,27 +164,31 @@ renderTable([
     },
 
     // INLINE EDIT ROW
+    // EDIT FORM
     'renderEditRow' => function(array $b) use ($users, $screenings) {
         $bookingId = (int)$b['id'];
         ob_start(); ?>
-        <form method="post" class="flex flex-col gap-4" data-edit-booking="1">
-            <p class="text-2xl">
-                You're editing booking with ID: #<?= $bookingId ?>
+
+        <form method="post" class="flex flex-col gap-6" data-edit-booking="1">
+            <p class="text-xl font-semibold text-gray-800">
+                Editing Booking #<?= $bookingId ?>
             </p>
 
             <input type="hidden" name="booking_id" value="<?= $bookingId ?>">
 
             <!-- Legend -->
-            <div class="flex items-center gap-4 text-sm mb-1">
+            <div class="flex items-center gap-4 text-sm text-gray-700">
                 <span class="inline-block w-4 h-4 rounded bg-green-500"></span> Available
                 <span class="inline-block w-4 h-4 rounded bg-[var(--primary)]"></span> Selected
                 <span class="inline-block w-4 h-4 rounded bg-gray-500 opacity-50"></span> Occupied
             </div>
 
             <!-- User -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">User</label>
-                <select name="user_id" required>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">User</label>
+                <select name="user_id"
+                        class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                        required>
                     <?php foreach ($users as $u): ?>
                         <option value="<?= $u['id'] ?>" <?= $b['user_id'] == $u['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($u['firstname'].' '.$u['lastname'].' ('.$u['email'].')') ?>
@@ -195,44 +198,49 @@ renderTable([
             </div>
 
             <!-- Screening -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">Screening</label>
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Screening</label>
                 <select name="screening_id"
-                        data-booking-id="<?= $bookingId ?>">
+                        data-booking-id="<?= $bookingId ?>"
+                        class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
+                        required>
                     <?php foreach ($screenings as $s): ?>
-                        <option value="<?= $s['id'] ?>"
-                                data-room="<?= $s['screening_room_id'] ?>"
-                            <?= $b['screening_id'] == $s['id'] ? 'selected' : '' ?>>
+                        <option value="<?= $s['id'] ?>" <?= $b['screening_id'] == $s['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($s['movie_title'].' | '.$s['start_time'].' → '.$s['end_time'].' | '.$s['room_name']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <!-- Seat grid -->
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-700">Seats</label>
+            <!-- Seat Grid -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Seats</label>
                 <div id="edit-seats-container-<?= $bookingId ?>"
-                     class="flex flex-col gap-2 border border-gray-200 rounded-lg p-3 bg-gray-50 min-h-[56px]">
+                     class="border border-gray-200 rounded-lg p-3 bg-gray-50 min-h-[56px] flex flex-col gap-2">
                 </div>
+            </div>
 
             <input type="hidden" name="seat_ids" id="edit_selected_seats_<?= $bookingId ?>">
 
-            <div class="flex gap-4 mt-3">
-                <button type="submit" name="edit_booking"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-check"></i>Save Changes
+            <!-- Buttons -->
+            <div class="flex gap-4">
+                <button type="submit"
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-check"></i>
+                    Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $bookingId ?>)"
-                        class="bg-gray-300 text-gray-700 btn-square">
-                    <i class="pi pi-times"></i>Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
+
         </form>
-        <?php
-        return ob_get_clean();
+
+        <?php return ob_get_clean();
     },
 ]);
 ?>

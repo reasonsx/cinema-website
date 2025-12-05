@@ -50,40 +50,49 @@ renderTable([
     },
     'renderEditRow' => function ($news) {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 gap-4">
+
+        <form method="post" class="flex flex-col gap-6">
 
             <input type="hidden" name="news_id" value="<?= $news['id'] ?>">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Title</label>
-                <input type="text" name="title"
+            <!-- Title -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Title</label>
+                <input type="text"
+                       name="title"
                        value="<?= e($news['title']) ?>"
-                       class="input-edit" required>
+                       class="input-edit px-4 py-2 rounded-md"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Content</label>
-                <textarea name="content" rows="5"
-                          class="input-edit-textarea"
+            <!-- Content -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Content</label>
+                <textarea name="content"
+                          rows="6"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
                           required><?= e($news['content']) ?></textarea>
             </div>
 
-            <div class="flex gap-4 mt-2">
-                <button type="submit" name="edit_news"
-                        class="btn-square
-                               bg-green-600">
-                    <i class="pi pi-check"></i> Save Changes
+            <!-- Buttons -->
+            <div class="flex gap-4">
+                <button type="submit"
+                        name="edit_news"
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-check"></i>
+                    Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $news['id'] ?>)"
-                        class="btn-square
-                               bg-gray-300 text-gray-700">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
 
         </form>
+
         <?php return ob_get_clean();
     },
 
@@ -91,35 +100,47 @@ renderTable([
     'addLabel' => 'Add News',
     'addForm'  => (function () {
         ob_start(); ?>
-        <form method="post" class="grid grid-cols-1 gap-4">
+
+        <form method="post" class="flex flex-col gap-6">
             <input type="hidden" name="add_news" value="1">
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Title</label>
-                <input type="text" name="title" class="input-edit" required>
+            <!-- Title -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Title</label>
+                <input type="text"
+                       name="title"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="Enter news title"
+                       required>
             </div>
 
-            <div class="flex flex-col gap-1">
-                <label class="text-sm text-gray-600 font-medium">Content</label>
-                <textarea name="content" rows="5"
-                          class="input-edit-textarea"
+            <!-- Content -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Content</label>
+                <textarea name="content"
+                          rows="6"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
+                          placeholder="Write the news content..."
                           required></textarea>
             </div>
 
-            <div class="flex gap-4 mt-2">
+            <!-- Buttons -->
+            <div class="flex gap-4">
                 <button type="submit"
-                        class="btn-square bg-green-600">
-                    <i class="pi pi-plus"></i> Add News
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-plus"></i>
+                    Add News
                 </button>
 
                 <button type="button"
                         onclick="toggleAddForm_newsTable()"
-                        class="btn-square bg-gray-300 text-gray-700">
-                    <i class="pi pi-times"></i> Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i>
+                    Cancel
                 </button>
             </div>
-
         </form>
+
         <?php return ob_get_clean();
     })(),
 ]);
