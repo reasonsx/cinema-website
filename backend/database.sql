@@ -289,7 +289,6 @@ INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUE
 (6, 1, '2025-11-02 21:00:00', '2025-11-02 23:30:00'),
 (6, 2, '2025-11-03 17:00:00', '2025-11-03 19:30:00');
 
--- BOOKINGS
 CREATE TABLE bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -311,7 +310,6 @@ CREATE TABLE booking_seats (
     UNIQUE (seat_id, screening_id)
 );
 
--- BOOKING DATA
 INSERT INTO bookings (user_id, screening_id, total_price)
 VALUES (2, 1, 180.00);
 SET @b1 = LAST_INSERT_ID();
@@ -339,7 +337,6 @@ INSERT INTO booking_seats VALUES (@b5, 11, 5), (@b5, 12, 5);
 
 
 
--- NEWS TABLE
 CREATE TABLE news (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -347,7 +344,6 @@ CREATE TABLE news (
     date_added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- SAMPLE NEWS DATA
 INSERT INTO news (title, content, date_added) VALUES
 ('New IMAX Screen Installed!', 'We are excited to announce the installation of a brand new IMAX screen in our cinema for a truly immersive experience.', '2025-10-10 12:00:00'),
 ('Halloween Horror Night 2025', 'Join us on October 31st for a special late-night marathon of classic horror movies!', '2025-10-15 09:30:00'),
@@ -432,7 +428,6 @@ BEFORE DELETE ON screenings
 FOR EACH ROW
 BEGIN
     IF EXISTS (SELECT 1 FROM bookings WHERE screening_id = OLD.id) THEN
-        -- Raise an error
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete screening: bookings exist';
     END IF;
 END;
@@ -453,7 +448,7 @@ END;
 
  CREATE TABLE content_blocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tag VARCHAR(100) NOT NULL UNIQUE, -- e.g. 'contact_header', 'about_text_1'
+    tag VARCHAR(100) NOT NULL UNIQUE,
     title VARCHAR(255) NULL,
     text TEXT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
