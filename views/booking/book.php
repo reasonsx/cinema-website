@@ -104,6 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </span>
 
             <span class="hidden md:inline">•</span>
+            <!-- Date -->
+            <span>
+                <i class="pi pi-calendar mr-1 text-[var(--secondary)]"></i>
+                <span class="text-white font-semibold">Date:</span>
+                <?= date('D, M j', strtotime($screening['start_time'])) ?>
+            </span>
+
+            <span class="hidden md:inline">•</span>
 
             <!-- Time -->
             <span>

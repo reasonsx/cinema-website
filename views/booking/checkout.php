@@ -23,6 +23,18 @@ if (!$screeningId || empty($selectedSeats)) {
 
 // Get screening info
 $screening = getScreeningById($db, $screeningId);
+$screeningDate = date('D, M j', strtotime($screening['start_time']));
+$startTimeFormatted = date('H:i', strtotime($screening['start_time']));
+$endTimeFormatted = date('H:i', strtotime($screening['end_time']));
+
+$start = strtotime($screening['start_time']);
+$end = strtotime($screening['end_time']);
+
+$runtimeMinutes = round(($end - $start) / 60);
+$runtimeHours = floor($runtimeMinutes / 60);
+$runtimeRemaining = $runtimeMinutes % 60;
+
+$runtimeFormatted = "{$runtimeHours}h {$runtimeRemaining}m";
 
 // Get seat price for the room
 $stmt = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
@@ -57,7 +69,22 @@ $totalPrice = $seatPrice * count($selectedSeats);
 
         <div class="space-y-2 text-white/80 text-lg">
             <p><strong class="text-white">Room:</strong> <?= htmlspecialchars($screening['room_name']) ?></p>
-            <p><strong class="text-white">Time:</strong> <?= htmlspecialchars($screening['start_time']) ?> → <?= htmlspecialchars($screening['end_time']) ?></p>
+            <p>
+                <strong class="text-white">Date:</strong>
+                <?= $screeningDate ?>
+            </p>
+
+            <p>
+                <strong class="text-white">Time:</strong>
+                <?= $startTimeFormatted ?> - <?= $endTimeFormatted ?>
+
+            </p>
+            
+            <p>
+                <strong class="text-white">Runtime:</strong>
+                <?= $runtimeFormatted ?>
+                <span class="text-white/50">(<?= $runtimeMinutes ?> min)</span>
+            </p>
 
             <p>
                 <strong class="text-white">Seats:</strong>

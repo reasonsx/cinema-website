@@ -11,7 +11,6 @@ require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_funct
 require_once __DIR__ . '/../../shared/helpers.php';
 
 
-
 // Get movie ID
 $movieId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $movie = getMovieById($db, $movieId);
@@ -22,7 +21,7 @@ if (!$movie) {
 }
 
 // Convert runtime (in minutes) into 2h 22m format
-$runtimeMinutes = (int) $movie['length'];
+$runtimeMinutes = (int)$movie['length'];
 $runtimeHours = floor($runtimeMinutes / 60);
 $runtimeRemaining = $runtimeMinutes % 60;
 
@@ -65,6 +64,19 @@ foreach ($screenings as $s) {
     $date = date('Y-m-d', strtotime($s['start_time']));
     $groupedScreenings[$date][] = $s;
 }
+// Find next upcoming screening
+$nextScreening = null;
+
+if (!empty($screenings)) {
+    $nextScreening = $screenings[0];
+
+    foreach ($screenings as $s) {
+        if (strtotime($s['start_time']) < strtotime($nextScreening['start_time'])) {
+            $nextScreening = $s;
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -128,26 +140,60 @@ foreach ($screenings as $s) {
                      class="w-full rounded-2xl border border-white/10 shadow">
 
                 <div class="mt-4 grid grid-cols-2 gap-2 text-xs text-white/70">
-                    <div class="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
+                    <div class="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
                         <div class="uppercase text-[10px] opacity-60">Genre</div>
                         <div><?= htmlspecialchars($movie['genre'] ?? '—') ?></div>
                     </div>
-                    <div class="rounded-xl border border-white/10 bg-white/5 px-3 py-2">
-                        <div class="uppercase text-[10px] opacity-60">Rating</div>
-                        <div><?= htmlspecialchars($movie['rating']) ?></div>
+
+                    <div class="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                        <div class="uppercase text-[10px] opacity-60">Language</div>
+                        <div><?= htmlspecialchars($movie['language']) ?></div>
                     </div>
+                    <!--                    <div class="rounded-xl border border-white/10 bg-white/5 px-3 py-2">-->
+                    <!--                        <div class="uppercase text-[10px] opacity-60">Rating</div>-->
+                    <!--                        <div>--><?php //= htmlspecialchars($movie['rating']) ?><!--</div>-->
+                    <!--                    </div>-->
+                    <div class="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                        <div class="uppercase text-[10px] opacity-60">Release Year</div>
+                        <div><?= htmlspecialchars($movie['release_year']) ?></div>
+                    </div>
+
+
+                    <div class="rounded-xl border border-white/10 bg-black/20 px-3 py-2">
+                        <div class="uppercase text-[10px] opacity-60">Runtime</div>
+                        <span class="font-medium"><?= htmlspecialchars($runtimeFormatted) ?>
+                            <span class="opacity-50">(<?= htmlspecialchars($runtimeMinutes) ?> min)</span>
+                        </span>
+                    </div>
+
                 </div>
 
-                <!-- Call to actions buttons -->
-                <div class="mt-8 flex flex-col items-center gap-3">
+                <!-- Next Available Showing -->
+                <?php if ($nextScreening): ?>
+                    <div class="mt-4 rounded-xl p-4 text-center">
 
-                    <a href="#showtimes"
-                       class="btn-white w-full">
-                        <i class="pi pi-clock"></i>
-                        See Showtimes
-                    </a>
+                        <p class="text-sm uppercase font-bold tracking-wide mb-2">Next Showing</p>
 
-                </div>
+                        <div class="text-lg font-semibold text-secondary">
+                            <?= date('D, M j', strtotime($nextScreening['start_time'])) ?>
+                        </div>
+
+                        <div class="text-xl font-bold text-white mt-1">
+                            <?= date('H:i', strtotime($nextScreening['start_time'])) ?>
+                        </div>
+
+                        <div class="text-white/60 text-sm mt-1">
+                            Room: <?= htmlspecialchars($nextScreening['room_name']) ?>
+                        </div>
+
+                        <a href="/cinema-website/views/booking/book.php?screening_id=<?= $nextScreening['id'] ?>"
+                           class="btn-full w-full mt-4">
+                            <i class="pi pi-ticket"></i>
+                            Book Next Showing
+                        </a>
+                    </div>
+                <?php endif; ?>
+
             </aside>
 
             <!-- Info Panel -->
@@ -206,41 +252,14 @@ foreach ($screenings as $s) {
                         </dd>
                     </div>
 
-                    <!-- Genre -->
-                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i
-                                    class="pi pi-tag text-[var(--secondary)]"></i> Genre
-                        </dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['genre']) ?></dd>
-                    </div>
-
-                    <!-- Language -->
-                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i
-                                    class="pi pi-globe text-[var(--secondary)]"></i> Language
-                        </dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['language']) ?></dd>
-                    </div>
-
-                    <!-- Runtime -->
-                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold">
-                            <i class="pi pi-clock text-[var(--secondary)]"></i> Runtime
-                        </dt>
-                        <dd class="mt-1 text-white/80">
-                            <?= htmlspecialchars($runtimeFormatted) ?>
-                            <span class="opacity-50">(<?= htmlspecialchars($runtimeMinutes) ?> min)</span>
-                        </dd>
-                    </div>
-
 
                     <!-- Release Year -->
-                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold"><i
-                                    class="pi pi-calendar text-[var(--secondary)]"></i> Release Year
-                        </dt>
-                        <dd class="mt-1 text-white/80"><?= htmlspecialchars($movie['release_year']) ?></dd>
-                    </div>
+<!--                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">-->
+<!--                        <dt class="flex items-center gap-2 font-semibold"><i-->
+<!--                                    class="pi pi-calendar text-[var(--secondary)]"></i> Release Year-->
+<!--                        </dt>-->
+<!--                        <dd class="mt-1 text-white/80">--><?php //= htmlspecialchars($movie['release_year']) ?><!--</dd>-->
+<!--                    </div>-->
 
                 </dl>
 
