@@ -7,6 +7,18 @@ require_once __DIR__ . '/../../admin_dashboard/views/movies/movies_functions.php
 
 // Fetch movies
 $movies = getMovies($db);
+
+// Pagination settings
+$perPage = 10;
+$page    = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+
+$totalMovies = count($movies);
+$totalPages  = ceil($totalMovies / $perPage);
+
+// Slice movies for current page
+$offset = ($page - 1) * $perPage;
+$moviesOnPage = array_slice($movies, $offset, $perPage);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +46,7 @@ $movies = getMovies($db);
         <!-- Search Input -->
         <div class="max-w-xl mx-auto">
             <div class="relative group">
-                <input type="text" id="movieSearch" placeholder="Search movies..." class="!rounded-full" />
+                <input type="text" id="movieSearch" name="q" value="<?= $_GET['q'] ?? '' ?>" placeholder="Search movies...">
                 <i class="pi pi-search absolute right-5 top-1/2 -translate-y-1/2 text-black/50"></i>
             </div>
         </div>
@@ -62,7 +74,7 @@ $movies = getMovies($db);
                     <div class="flex items-center gap-3">
                         <span class="inline-block h-2.5 w-2.5 rounded-full bg-[var(--secondary)]"></span>
                         <p id="moviesCount" class="text-sm text-white/70">
-                            Showing <?= count($movies) ?> titles
+                            Showing <?= min($perPage, $totalMovies) ?> out of <?= $totalMovies ?> titles
                         </p>
                     </div>
                     <div class="text-xs text-white/50">Click any movie for details</div>
@@ -71,9 +83,12 @@ $movies = getMovies($db);
                 <!-- List -->
                 <ul id="moviesList" class="divide-y divide-white/10">
 
-                    <?php foreach ($movies as $movie): ?>
+                    <?php
+                    $index = 0;
+                    foreach ($movies as $movie):
+                        $pageNumber = floor($index / $perPage) + 1;
+                        $index++;
 
-                        <?php
                         $id       = htmlspecialchars($movie['id']);
                         $title    = htmlspecialchars($movie['title']);
                         $poster   = '/cinema-website/' . htmlspecialchars($movie['poster']);
@@ -82,26 +97,25 @@ $movies = getMovies($db);
                         $rating   = htmlspecialchars($movie['rating']);
                         $language = htmlspecialchars($movie['language']);
                         ?>
+                        <li class="movie-row group page-item page-<?= $pageNumber ?>"
+                            data-title="<?= strtolower($title) ?>">
 
-                        <li class="movie-row group" data-title="<?= strtolower($title) ?>">
                             <a href="../movie/movie.php?id=<?= $id ?>"
                                class="flex items-center gap-6 px-8 py-5 transition rounded-2xl md:rounded-none hover:bg-white/10">
 
-                                <!-- Poster -->
                                 <div class="shrink-0">
                                     <img src="<?= $poster ?>"
                                          alt="<?= $title ?>"
                                          class="h-24 w-16 md:h-28 md:w-20 object-cover rounded-xl border border-white/10 shadow">
                                 </div>
 
-                                <!-- Info -->
                                 <div class="flex-1 min-w-0">
                                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
                                         <h3 class="text-xl font-semibold text-secondary truncate"><?= $title ?></h3>
 
                                         <span class="inline-flex items-center rounded-full border border-white/15 px-2 py-0.5 text-[11px] uppercase tracking-wide text-white/80">
-                                            <?= $rating ?>
-                                        </span>
+                        <?= $rating ?>
+                    </span>
                                     </div>
 
                                     <div class="mt-1 text-sm text-white/80">
@@ -112,13 +126,13 @@ $movies = getMovies($db);
                                     </div>
                                 </div>
 
-                                <!-- CTA -->
                                 <div class="shrink-0">
-                                    <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
-                                        Details
-                                        <i class="pi pi-angle-right"></i>
-                                    </span>
+                <span class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)] px-5 py-2 text-sm font-semibold text-[var(--secondary)] hover:bg-[var(--secondary)] hover:text-black">
+                    Details
+                    <i class="pi pi-angle-right"></i>
+                </span>
                                 </div>
+
                             </a>
                         </li>
 
@@ -141,22 +155,75 @@ $movies = getMovies($db);
         <?php endif; ?>
 
     </div>
+    <!-- Pagination -->
+    <div id="pagination" class="flex justify-center items-center gap-2 py-6 text-white">
+
+        <!-- Previous -->
+        <?php if ($page > 1): ?>
+            <a href="?page=<?= $page - 1 ?>"
+               class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center">
+                <i class="pi pi-angle-left"></i>
+            </a>
+        <?php endif; ?>
+
+        <!-- Page numbers -->
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>"
+               class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center
+                  <?= $i == $page ? 'bg-[var(--secondary)] text-black' : 'border-white/20 hover:bg-white/10' ?>">
+                <?= $i ?>
+            </a>
+        <?php endfor; ?>
+
+        <!-- Next -->
+        <?php if ($page < $totalPages): ?>
+            <a href="?page=<?= $page + 1 ?>"
+               class="w-10 h-10 rounded-full border border-white/20 hover:bg-white/10 flex items-center justify-center">
+                <i class="pi pi-angle-right"></i>
+            </a>
+        <?php endif; ?>
+
+    </div>
+
 </section>
 
 <?php include __DIR__ . '/../../shared/footer.php'; ?>
 
 <!-- Search Script -->
 <script>
-    // Elements
     const searchInput = document.getElementById('movieSearch');
-    const rows        = document.querySelectorAll('#moviesList .movie-row');
+    const rows        = document.querySelectorAll('.movie-row');
     const countEl     = document.getElementById('moviesCount');
+    const pagination  = document.getElementById('pagination');
 
-    // Filter logic
+    function applyPagination(page) {
+        rows.forEach(row => {
+            if (row.classList.contains(`page-${page}`)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        const visible = document.querySelectorAll(`.page-${page}`).length;
+        countEl.textContent = `Showing ${visible} out of ${rows.length} titles`;
+    }
+
     function filterMovies(query) {
         const q = query.toLowerCase();
-        let visible = 0;
 
+        // If search is empty, return to pagination mode
+        if (q === '') {
+            // Back to pagination mode
+            pagination.style.display = '';
+            applyPagination(currentPage);
+            return;
+        }
+
+        // Searching → show all, hide pagination
+        pagination.style.display = 'none';
+
+        let visible = 0;
         rows.forEach(row => {
             const title = (row.dataset.title || '');
             const match = title.includes(q);
@@ -165,12 +232,19 @@ $movies = getMovies($db);
             if (match) visible++;
         });
 
-        // Update count
-        countEl.textContent = `Showing ${visible} title${visible === 1 ? '' : 's'}`;
+        // Update count text
+        countEl.textContent = `Showing ${visible} out of ${rows.length} titles`;
     }
 
-    // Attach input event
-    searchInput?.addEventListener('input', e => filterMovies(e.target.value));
+    let currentPage = <?= $page ?>;
+
+    applyPagination(currentPage);
+    
+    // Live search listener
+    searchInput.addEventListener('input', (e) => {
+        filterMovies(e.target.value);
+    });
+
 </script>
 
 </body>
