@@ -169,9 +169,9 @@ renderTable([
         $bookingId = (int)$b['id'];
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-4" data-edit-booking="1">
-            <h3 class="text-2xl">
-                Edit Booking #<?= $bookingId ?>
-            </h3>
+            <p class="text-2xl">
+                You're editing booking with ID: #<?= $bookingId ?>
+            </p>
 
             <input type="hidden" name="booking_id" value="<?= $bookingId ?>">
 
@@ -213,10 +213,8 @@ renderTable([
             <div class="flex flex-col gap-1">
                 <label class="text-sm text-gray-700">Seats</label>
                 <div id="edit-seats-container-<?= $bookingId ?>"
-                     class="seat-grid border border-gray-200 rounded-lg p-3 bg-gray-50 min-h-[56px]">
-                    <!-- JS fills this -->
+                     class="flex flex-col gap-2 border border-gray-200 rounded-lg p-3 bg-gray-50 min-h-[56px]">
                 </div>
-            </div>
 
             <input type="hidden" name="seat_ids" id="edit_selected_seats_<?= $bookingId ?>">
 
@@ -269,61 +267,74 @@ renderTable([
         const occupied = occupiedSeats[screeningId] || [];
         const selectedSet = new Set((selectedSeatIds || []).map(id => parseInt(id)));
 
+        // ------------------------
+        // GROUP seats by row
+        // ------------------------
+        const rows = {};
         seats.forEach(seat => {
-            const sid = parseInt(seat.id);
+            const row = seat.row_number;
+            if (!rows[row]) rows[row] = [];
+            rows[row].push(seat);
+        });
 
-            const span = document.createElement("span");
-            span.textContent = seat.row_number + seat.seat_number;
-            span.dataset.seatId = sid;
+        // ------------------------
+        // RENDER rows
+        // ------------------------
+        Object.keys(rows).forEach(row => {
+            const rowDiv = document.createElement("div");
+            rowDiv.className = "flex items-center gap-2";
 
-            span.className = `
-            seat
-            inline-flex items-center justify-center
-            rounded-md text-xs font-medium
-            transition-all duration-200
-            cursor-pointer
-            select-none
-            px-1.5 py-1
-        `;
+            // Row label
+            const rowLabel = document.createElement("span");
+            rowLabel.textContent = row;
+            rowLabel.className = "w-6 font-semibold text-gray-700";
+            rowDiv.appendChild(rowLabel);
 
-            const isOccupiedByOthers =
-                occupied.includes(sid) && !selectedSet.has(sid);
+            // Render seats in row
+            rows[row].forEach(seat => {
+                const sid = parseInt(seat.id);
+                const span = document.createElement("span");
 
-            // Occupied by others → gray, disabled
-            if (isOccupiedByOthers) {
-                span.classList.add("bg-gray-500", "text-white", "opacity-50", "cursor-not-allowed");
-                container.appendChild(span);
-                return;
-            }
+                span.textContent = seat.row_number + seat.seat_number;
+                span.dataset.seatId = sid;
 
-            // Pre-selected (for edit) → primary
-            if (selectedSet.has(sid)) {
-                span.classList.add("selected", "bg-[var(--primary)]", "text-white");
-            } else {
-                // Available → green
-                span.classList.add("bg-green-500", "text-black");
-            }
+                span.className =
+                    "seat inline-flex items-center justify-center rounded-md text-xs font-medium px-1.5 py-1 cursor-pointer";
 
-            span.onclick = () => {
-                // toggle selection, but do NOT allow clicking occupied seat (we already filtered them)
-                span.classList.toggle("selected");
-                const isSelected = span.classList.contains("selected");
+                const isOccupied = occupied.includes(sid) && !selectedSet.has(sid);
 
-                if (isSelected) {
-                    span.classList.remove("bg-green-500", "text-black");
-                    span.classList.add("bg-[var(--primary)]", "text-white");
+                if (isOccupied) {
+                    span.classList.add("bg-gray-500", "text-white", "opacity-50", "cursor-not-allowed");
+                } else if (selectedSet.has(sid)) {
+                    span.classList.add("selected", "bg-[var(--primary)]", "text-white");
                 } else {
                     span.classList.add("bg-green-500", "text-black");
-                    span.classList.remove("bg-[var(--primary)]", "text-white");
                 }
 
-                const selected = [...container.querySelectorAll(".seat.selected")]
-                    .map(s => s.dataset.seatId);
+                // Seat toggle logic
+                if (!isOccupied) {
+                    span.onclick = () => {
+                        span.classList.toggle("selected");
 
-                input.value = selected.join(",");
-            };
+                        if (span.classList.contains("selected")) {
+                            span.classList.remove("bg-green-500", "text-black");
+                            span.classList.add("bg-[var(--primary)]", "text-white");
+                        } else {
+                            span.classList.add("bg-green-500", "text-black");
+                            span.classList.remove("bg-[var(--primary)]", "text-white");
+                        }
 
-            container.appendChild(span);
+                        const selected = [...container.querySelectorAll(".seat.selected")]
+                            .map(s => s.dataset.seatId);
+
+                        input.value = selected.join(",");
+                    };
+                }
+
+                rowDiv.appendChild(span);
+            });
+
+            container.appendChild(rowDiv);
         });
 
         input.value = (selectedSeatIds || []).join(",");
