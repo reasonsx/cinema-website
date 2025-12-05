@@ -62,7 +62,6 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // EDIT FORM — CLEAN & MATCHING
     'renderEditRow' => function ($actor) {
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-6">
@@ -134,9 +133,7 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    // ADD FORM — CLEAN & MATCHING
     'addLabel' => 'Add Actor',
-
     'addForm' => (function () {
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-6">

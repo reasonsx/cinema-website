@@ -194,7 +194,7 @@ form {
 ---------------------------------------------- */
 
 /* Prevent global styling from affecting seat checkboxes */
-input:not(.seat input),
+input:not(.seat input):not([type="checkbox"]),
 textarea,
 select {
     font-family: var(--body-font);

@@ -151,168 +151,333 @@ renderTable([
         <?php return ob_get_clean();
     },
 
-    /*  EDIT MOVIE FORM  */
     'renderEditRow' => function ($movie) use ($db, $allActors, $allDirectors) {
 
         $selectedActors = $db->query("SELECT actor_id FROM actorAppearIn WHERE movie_id={$movie['id']}")->fetchAll(PDO::FETCH_COLUMN);
         $selectedDirectors = $db->query("SELECT director_id FROM directorDirects WHERE movie_id={$movie['id']}")->fetchAll(PDO::FETCH_COLUMN);
 
         ob_start(); ?>
-        <form method="post" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <form method="post" enctype="multipart/form-data"
+              class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
             <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
             <input type="hidden" name="edit_movie" value="1">
 
+            <!-- BASIC FIELDS (same as Add) -->
             <?php foreach ([
-                               'title' => 'Title',
-                               'release_year' => 'Release Year',
-                               'rating' => 'Rating',
-                               'genre' => 'Genre',
-                               'language' => 'Language',
-                               'length' => 'Length (min)'
-                           ] as $field => $label): ?>
-                <div class="flex flex-col">
-                    <label class="text-sm text-gray-600"><?= $label ?></label>
-                    <input type="<?= $field === 'release_year' || $field === 'length' ? 'number' : 'text' ?>"
-                           name="<?= $field ?>" value="<?= e($movie[$field]) ?>" class="input-edit">
+                               'title'        => ['Title', 'Enter movie title', 'text'],
+                               'release_year' => ['Release Year', 'e.g. 2024', 'number'],
+                               'rating'       => ['Rating', 'e.g. PG-13, R, G', 'text'],
+                               'genre'        => ['Genre', 'e.g. Action, Drama', 'text'],
+                               'language'     => ['Language', 'e.g. English', 'text'],
+                               'length'       => ['Length (min)', 'Duration in minutes', 'number'],
+                           ] as $field => [$label, $placeholder, $type]): ?>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm text-gray-700 font-semibold"><?= $label ?></label>
+                    <input type="<?= $type ?>"
+                           name="<?= $field ?>"
+                           value="<?= e($movie[$field]) ?>"
+                           class="input-edit px-4 py-2 rounded-md"
+                           placeholder="<?= $placeholder ?>"
+                           required>
                 </div>
+
             <?php endforeach; ?>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Description</label>
-                <textarea name="description" rows="3"
-                          class="input-edit-textarea"><?= e($movie['description']) ?></textarea>
+            <!-- DESCRIPTION -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Description</label>
+                <textarea name="description"
+                          rows="5"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
+                          placeholder="Write a short movie description..."><?= e($movie['description']) ?></textarea>
             </div>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Trailer URL</label>
-                <input type="text" name="trailer_url" value="<?= e($movie['trailer_url']) ?>" class="input-edit">
+            <!-- TRAILER -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Trailer URL</label>
+                <input type="text"
+                       name="trailer_url"
+                       value="<?= e($movie['trailer_url']) ?>"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="https://youtube.com/...">
             </div>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Poster Image</label>
-                <input type="file" name="poster" accept="image/*" class="w-full text-gray-700 text-sm">
+            <!-- POSTER -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Poster Image</label>
+                <input type="file"
+                       name="poster"
+                       accept="image/*"
+                       class="text-sm text-gray-700">
             </div>
 
-            <div>
-                <label class="text-sm text-gray-600 font-medium">Actors</label>
-                <div class="flex flex-col gap-1">
-                    <?php foreach ($allActors as $a): ?>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="actors[]"
-                                   value="<?= $a['id'] ?>" <?= in_array($a['id'], $selectedActors) ? 'checked' : '' ?>>
-                            <?= e($a['first_name'] . ' ' . $a['last_name']) ?>
-                        </label>
-                    <?php endforeach; ?>
+            <!-- ACTORS COLUMN -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Actors</label>
+
+                <input type="text"
+                       id="actorSearchEdit"
+                       placeholder="Search actors..."
+                       class="input-edit px-3 py-2 rounded-md text-sm">
+
+                <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3 bg-white">
+                    <div id="actorListEdit" class="flex flex-col gap-2">
+                        <?php foreach ($allActors as $a): ?>
+                            <label class="flex items-center gap-2 text-sm text-gray-800 actor-item-edit">
+                                <input type="checkbox"
+                                       name="actors[]"
+                                       value="<?= $a['id'] ?>"
+                                    <?= in_array($a['id'], $selectedActors) ? 'checked' : '' ?>
+                                       class="accent-[var(--primary)]">
+                                <?= e($a['first_name'] . ' ' . $a['last_name']) ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <p id="actorNoResultsEdit"
+                       class="text-sm text-gray-500 italic hidden">
+                        No matching actors found
+                    </p>
                 </div>
             </div>
 
-            <div>
-                <label class="text-sm text-gray-600 font-medium">Directors</label>
-                <div class="flex flex-col gap-1">
-                    <?php foreach ($allDirectors as $d): ?>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="directors[]"
-                                   value="<?= $d['id'] ?>" <?= in_array($d['id'], $selectedDirectors) ? 'checked' : '' ?>>
-                            <?= e($d['first_name'] . ' ' . $d['last_name']) ?>
-                        </label>
-                    <?php endforeach; ?>
+            <!-- DIRECTORS COLUMN -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Directors</label>
+
+                <input type="text"
+                       id="directorSearchEdit"
+                       placeholder="Search directors..."
+                       class="input-edit px-3 py-2 rounded-md text-sm">
+
+                <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3 bg-white">
+                    <div id="directorListEdit" class="flex flex-col gap-2">
+                        <?php foreach ($allDirectors as $d): ?>
+                            <label class="flex items-center gap-2 text-sm text-gray-800 director-item-edit">
+                                <input type="checkbox"
+                                       name="directors[]"
+                                       value="<?= $d['id'] ?>"
+                                    <?= in_array($d['id'], $selectedDirectors) ? 'checked' : '' ?>
+                                       class="accent-[var(--primary)]">
+                                <?= e($d['first_name'] . ' ' . $d['last_name']) ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <p id="directorNoResultsEdit"
+                       class="text-sm text-gray-500 italic hidden">
+                        No matching directors found
+                    </p>
                 </div>
             </div>
 
+            <!-- BUTTONS -->
             <div class="md:col-span-2 flex gap-4 mt-4">
-                <button class="btn-square bg-green-600">
+                <button class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-check"></i> Save Changes
                 </button>
-                <button type="button" onclick="toggleEditRow(<?= $movie['id'] ?>)"
-                        class="btn-square bg-gray-300 text-gray-700">
+
+                <button type="button"
+                        onclick="toggleEditRow(<?= $movie['id'] ?>)"
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
 
         </form>
+
+        <script>
+            function setupSearch(inputId, itemSelector, noResultsId) {
+                const input = document.getElementById(inputId);
+                const items = document.querySelectorAll(itemSelector);
+                const noResults = document.getElementById(noResultsId);
+
+                input.addEventListener('input', () => {
+                    const term = input.value.toLowerCase();
+                    let visible = 0;
+
+                    items.forEach(item => {
+                        const show = item.textContent.toLowerCase().includes(term);
+                        item.style.display = show ? "flex" : "none";
+                        if (show) visible++;
+                    });
+
+                    noResults.classList.toggle("hidden", visible !== 0);
+                });
+            }
+
+            setupSearch('actorSearchEdit', '.actor-item-edit', 'actorNoResultsEdit');
+            setupSearch('directorSearchEdit', '.director-item-edit', 'directorNoResultsEdit');
+        </script>
+
         <?php return ob_get_clean();
     },
 
-    /*  ADD MOVIE FORM   */
     'addLabel' => 'Add Movie',
     'addForm' => (function () use ($allActors, $allDirectors) {
 
         ob_start(); ?>
         <form method="post" enctype="multipart/form-data"
-              class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
             <input type="hidden" name="add_movie" value="1">
 
+            <!-- BASIC FIELDS (2-column) -->
             <?php foreach ([
-                               'title' => 'Title',
-                               'release_year' => 'Release Year',
-                               'rating' => 'Rating',
-                               'genre' => 'Genre',
-                               'language' => 'Language',
-                               'length' => 'Length (min)'
-                           ] as $field => $label): ?>
-                <div class="flex flex-col">
-                    <label class="text-sm text-gray-600"><?= $label ?></label>
-                    <input type="<?= in_array($field, ['release_year', 'length']) ? 'number' : 'text' ?>"
+                               'title'        => ['Title', 'Enter movie title', 'text'],
+                               'release_year' => ['Release Year', 'e.g. 2024', 'number'],
+                               'rating'       => ['Rating', 'e.g. PG-13, R, G', 'text'],     // FIXED
+                               'genre'        => ['Genre', 'e.g. Action, Drama', 'text'],
+                               'language'     => ['Language', 'e.g. English', 'text'],
+                               'length'       => ['Length (min)', 'Duration in minutes', 'number'],
+                           ] as $field => [$label, $placeholder, $type]): ?>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm text-gray-700 font-semibold"><?= $label ?></label>
+                    <input type="<?= $type ?>"
                            name="<?= $field ?>"
-                           class="input-edit"
+                           class="input-edit px-4 py-2 rounded-md"
+                           placeholder="<?= $placeholder ?>"
                            required>
                 </div>
+
             <?php endforeach; ?>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Description</label>
-                <textarea name="description" rows="3" class="input-edit-textarea" required></textarea>
+            <!-- DESCRIPTION -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Description</label>
+                <textarea name="description"
+                          rows="5"
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
+                          placeholder="Write a short movie description..."
+                          required></textarea>
             </div>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Trailer URL</label>
-                <input type="text" name="trailer_url" class="input-edit">
+            <!-- TRAILER -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Trailer URL</label>
+                <input type="text"
+                       name="trailer_url"
+                       class="input-edit px-4 py-2 rounded-md"
+                       placeholder="https://youtube.com/...">
             </div>
 
-            <div class="md:col-span-2 flex flex-col">
-                <label class="text-sm text-gray-600">Poster Image</label>
-                <input type="file" name="poster" accept="image/*" class="w-full text-sm text-gray-700">
+            <!-- POSTER -->
+            <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Poster Image</label>
+                <input type="file"
+                       name="poster"
+                       accept="image/*"
+                       class="text-sm text-gray-700">
             </div>
 
-            <div>
-                <label class="text-sm text-gray-600 font-medium">Actors</label>
-                <div class="flex flex-col gap-1">
-                    <?php foreach ($allActors as $a): ?>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="actors[]" value="<?= $a['id'] ?>">
-                            <?= e($a['first_name'] . ' ' . $a['last_name']) ?>
-                        </label>
-                    <?php endforeach; ?>
+            <!-- ACTORS COLUMN -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Actors</label>
+
+                <!-- Search -->
+                <input type="text"
+                       id="actorSearch"
+                       placeholder="Search actors..."
+                       class="input-edit px-3 py-2 rounded-md text-sm">
+
+                <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3 bg-white">
+                    <div id="actorList" class="flex flex-col gap-2">
+                        <?php foreach ($allActors as $a): ?>
+                            <label class="flex items-center gap-2 text-sm text-gray-800 actor-item">
+                                <input type="checkbox"
+                                       name="actors[]"
+                                       value="<?= $a['id'] ?>"
+                                       class="accent-[var(--primary)]">
+                                <?= e($a['first_name'] . ' ' . $a['last_name']) ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- No results message -->
+                    <p id="actorNoResults"
+                       class="text-sm text-gray-500 italic hidden">
+                        No matching actors found
+                    </p>
                 </div>
             </div>
 
-            <div>
-                <label class="text-sm text-gray-600 font-medium">Directors</label>
-                <div class="flex flex-col gap-1">
-                    <?php foreach ($allDirectors as $d): ?>
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="directors[]" value="<?= $d['id'] ?>">
-                            <?= e($d['first_name'] . ' ' . $d['last_name']) ?>
-                        </label>
-                    <?php endforeach; ?>
+            <!-- DIRECTORS COLUMN -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm text-gray-700 font-semibold">Directors</label>
+
+                <!-- Search -->
+                <input type="text"
+                       id="directorSearch"
+                       placeholder="Search directors..."
+                       class="input-edit px-3 py-2 rounded-md text-sm">
+
+                <div class="max-h-48 overflow-y-auto border border-gray-200 rounded-md p-3 bg-white">
+                    <div id="directorList" class="flex flex-col gap-2">
+                        <?php foreach ($allDirectors as $d): ?>
+                            <label class="flex items-center gap-2 text-sm text-gray-800 director-item">
+                                <input type="checkbox"
+                                       name="directors[]"
+                                       value="<?= $d['id'] ?>"
+                                       class="accent-[var(--primary)]">
+                                <?= e($d['first_name'] . ' ' . $d['last_name']) ?>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <!-- No results message -->
+                    <p id="directorNoResults"
+                       class="text-sm text-gray-500 italic hidden">
+                        No matching directors found
+                    </p>
                 </div>
             </div>
 
-            <div class="md:col-span-2 flex justify-end gap-4 mt-4">
-                <button  class="btn-square bg-green-600">
+            <!-- BUTTONS -->
+            <div class="md:col-span-2 flex gap-4 mt-4">
+                <button class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-plus"></i> Add Movie
                 </button>
 
-                <button type="button" onclick="toggleAddForm_moviesTable()"
-                        class="btn-square bg-gray-300 text-gray-700">
+                <button type="button"
+                        onclick="toggleAddForm_moviesTable()"
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
                     <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
 
         </form>
+
+        <!-- Search script for actors/directors -->
+        <script>
+            function setupSearch(inputId, itemSelector, noResultsId) {
+                const input = document.getElementById(inputId);
+                const items = document.querySelectorAll(itemSelector);
+                const noResults = document.getElementById(noResultsId);
+
+                input.addEventListener('input', () => {
+                    const term = input.value.toLowerCase();
+                    let visibleCount = 0;
+
+                    items.forEach(item => {
+                        const match = item.textContent.toLowerCase().includes(term);
+                        item.style.display = match ? 'flex' : 'none';
+                        if (match) visibleCount++;
+                    });
+
+                    // Show or hide "no results"
+                    noResults.classList.toggle('hidden', visibleCount !== 0);
+                });
+            }
+
+            setupSearch('actorSearch', '.actor-item', 'actorNoResults');
+            setupSearch('directorSearch', '.director-item', 'directorNoResults');
+        </script>
         <?php return ob_get_clean();
 
-    })()
+    })(),
 ]);
 ?>
