@@ -109,6 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Don't have an account?
             <a href="signup.php" class="text-[var(--secondary)]">Sign Up</a>
         </p>
+        <p class="text-center text-sm text-white/60 mt-2">
+            <a href="forgot_password.php" class="text-[var(--secondary)]">Forgot your password?</a>
+        </p>
 
     </div>
 </section>
