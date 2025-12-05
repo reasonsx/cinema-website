@@ -1,6 +1,6 @@
 <?php
 // --- Secure session setup ---
-$sessionLifetime = 3600; // session cookie valid for 1 hour
+$sessionLifetime = 3600;
 session_set_cookie_params([
     'lifetime' => $sessionLifetime,
     'path' => '/',
