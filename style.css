@@ -193,7 +193,8 @@ form {
    GLOBAL FORM INPUT STYLE — UNIVERSAL + UNIFIED
 ---------------------------------------------- */
 
-input,
+/* Prevent global styling from affecting seat checkboxes */
+input:not(.seat input),
 textarea,
 select {
     font-family: var(--body-font);
@@ -208,9 +209,9 @@ select {
 
     font-size: 0.95rem;
     outline: none;
-
     transition: border-color 0.15s ease;
 }
+
 /* FINAL TEXTAREA FIX — ENSURE INNER PADDING */
 textarea {
     padding: 0.7rem 1rem !important;
@@ -395,4 +396,11 @@ input[type="datetime-local"] {
 input[type="datetime-local"]:hover,
 input[type="datetime-local"]:focus {
     border-color: var(--black);
+}
+/* SEAT CHECKBOXES should NOT inherit global input styling */
+.seat input[type="checkbox"] {
+    all: unset;          /* removes global input styles */
+    position: absolute;  /* remains hidden */
+    opacity: 0;
+    pointer-events: none;
 }

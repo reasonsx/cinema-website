@@ -69,6 +69,15 @@ $newsList   = getNews($db);
         }, 700);
 
     }, 7000); // change every 7 seconds
+
+    document.querySelector('a[href="#now-playing"]').addEventListener("click", function(e) {
+        e.preventDefault();
+        document.getElementById("now-playing").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+    });
+
 </script>
 
 
