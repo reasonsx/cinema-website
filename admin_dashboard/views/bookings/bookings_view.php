@@ -169,7 +169,7 @@ renderTable([
         $bookingId = (int)$b['id'];
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-4" data-edit-booking="1">
-            <h3 class="text-2xl font-[Limelight] text-[var(--primary)] mb-2">
+            <h3 class="text-2xl">
                 Edit Booking #<?= $bookingId ?>
             </h3>
 
@@ -185,8 +185,7 @@ renderTable([
             <!-- User -->
             <div class="flex flex-col gap-1">
                 <label class="text-sm text-gray-700">User</label>
-                <select name="user_id" required
-                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1">
+                <select name="user_id" required>
                     <?php foreach ($users as $u): ?>
                         <option value="<?= $u['id'] ?>" <?= $b['user_id'] == $u['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($u['firstname'].' '.$u['lastname'].' ('.$u['email'].')') ?>
@@ -199,7 +198,6 @@ renderTable([
             <div class="flex flex-col gap-1">
                 <label class="text-sm text-gray-700">Screening</label>
                 <select name="screening_id"
-                        class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 edit-screening-select"
                         data-booking-id="<?= $bookingId ?>">
                     <?php foreach ($screenings as $s): ?>
                         <option value="<?= $s['id'] ?>"

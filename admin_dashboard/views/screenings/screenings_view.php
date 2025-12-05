@@ -119,7 +119,7 @@ renderTable([
             <input type="hidden" name="screening_id" value="<?= $s['id'] ?>">
 
             <!-- Movie -->
-            <select name="movie_id" class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 movieSelectEdit" required>
+            <select name="movie_id" required>
                 <?php foreach ($movies as $m): ?>
                     <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>"
                         <?= $s['movie_id']==$m['id'] ? 'selected' : '' ?>>
@@ -129,8 +129,7 @@ renderTable([
             </select>
 
             <!-- Room -->
-            <select name="screening_room_id"
-                    class="border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1 roomSelectEdit" required>
+            <select name="screening_room_id" required>
                 <?php foreach ($screeningRooms as $room): ?>
                     <option value="<?= $room['id'] ?>"
                         <?= $s['screening_room_id']==$room['id'] ? 'selected' : '' ?>>
@@ -141,13 +140,11 @@ renderTable([
 
             <!-- Start -->
             <input type="datetime-local" name="start_time"
-                   class="startTimeEdit border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1"
                    value="<?= date('Y-m-d\TH:i', strtotime($s['start_time'])) ?>" required>
 
             <!-- End -->
             <div class="flex gap-2 items-center">
                 <input type="datetime-local" name="end_time"
-                       class="endTimeEdit border-b-2 border-[var(--primary)] bg-transparent text-black px-2 py-1"
                        value="<?= date('Y-m-d\TH:i', strtotime($s['end_time'])) ?>" required>
 
                 <button type="button" class="autoSetEndTimeEdit bg-gray-400 text-white px-3 py-1 rounded text-sm">

@@ -375,3 +375,24 @@ select.input-edit-select:hover,
 select.input-edit-select:focus {
     border-color: var(--black);
 }
+/* DATETIME-LOCAL — unified styling */
+input[type="datetime-local"] {
+    font-family: var(--body-font);
+    height: 40px;
+    padding: 0 1rem;
+    font-size: 0.95rem;
+
+    background-color: var(--white);
+    border: 1px solid #d0d0d0;
+    color: var(--black);
+    border-radius: 0.5rem;
+
+    box-sizing: border-box;
+    transition: border-color 0.15s ease;
+}
+
+/* Hover + Focus */
+input[type="datetime-local"]:hover,
+input[type="datetime-local"]:focus {
+    border-color: var(--black);
+}
