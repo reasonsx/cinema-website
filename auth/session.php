@@ -8,10 +8,9 @@ class SessionManager
     public function __construct(PDO $db, int $timeout = 1800)
     {
         $this->db = $db;
-        $this->timeout = $timeout; // 30 minutes
+        $this->timeout = $timeout;
         $this->startSession();
         $this->checkTimeout();
-        $this->autoLogin(); // currently disabled
     }
 
     private function startSession(): void
@@ -32,35 +31,9 @@ class SessionManager
             exit;
         }
 
-        // Only update activity when logged in
         if (isset($_SESSION['user_id'])) {
             $_SESSION['LAST_ACTIVITY'] = time();
         }
-    }
-
-    private function autoLogin(): void
-    {
-        // ✅ Disabled for now – safe to re-enable later if needed
-        /*
-        if (!isset($_SESSION['user_id']) && isset($_COOKIE['remember_token'])) {
-            $stmt = $this->db->prepare(
-                "SELECT id, firstname, lastname, isAdmin FROM users WHERE remember_token = ?"
-            );
-
-            $stmt->execute([$_COOKIE['remember_token']]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user) {
-                $_SESSION['user_id']  = (int)$user['id'];
-                $_SESSION['firstname'] = $user['firstname'];
-                $_SESSION['lastname']  = $user['lastname'];
-                $_SESSION['isAdmin']   = (bool)$user['isAdmin'];
-                $_SESSION['LAST_ACTIVITY'] = time();
-            } else {
-                setcookie('remember_token', '', time() - 3600, '/');
-            }
-        }
-        */
     }
 
     public function requireLogin(
@@ -81,10 +54,8 @@ class SessionManager
             session_start();
         }
 
-        // Clear session data
         $_SESSION = [];
 
-        // Delete PHP session cookie
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
 
@@ -99,10 +70,8 @@ class SessionManager
             );
         }
 
-        // Destroy session
         session_destroy();
 
-        // Remove remember-me cookie (if ever used)
         setcookie(
             'remember_token',
             '',
@@ -113,7 +82,6 @@ class SessionManager
             true
         );
 
-        // Redirect after logout
         header("Location: /cinema-website/auth/login.php?logged_out=1");
         exit;
     }
