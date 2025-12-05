@@ -79,7 +79,7 @@ $totalPrice = $seatPrice * count($selectedSeats);
                 <?= $startTimeFormatted ?> - <?= $endTimeFormatted ?>
 
             </p>
-            
+
             <p>
                 <strong class="text-white">Runtime:</strong>
                 <?= $runtimeFormatted ?>

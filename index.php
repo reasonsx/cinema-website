@@ -72,9 +72,15 @@ $newsList   = getNews($db);
 
     document.querySelector('a[href="#now-playing"]').addEventListener("click", function(e) {
         e.preventDefault();
-        document.getElementById("now-playing").scrollIntoView({
-            behavior: "smooth",
-            block: "start"
+
+        const section = document.getElementById("now-playing");
+        const headerOffset = 100;
+        const elementPosition = section.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
         });
     });
 
