@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS cinema;
 CREATE DATABASE cinema;
 USE cinema;
 
--- USERS
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -12,7 +11,6 @@ CREATE TABLE users (
     isAdmin BOOLEAN DEFAULT FALSE
 );
 
--- Admin + regular users
 INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
 ('admin@admin.com', '$2y$10$WCWVWm076L247LVseNjmoOjjK0wfh89U7iOBNKggl7LPfkKhU5vnW', 'Admin', 'Admin', TRUE),
 ('john@example.com', '123', 'John', 'Doe', FALSE),
@@ -21,7 +19,6 @@ INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
 ('alice@example.com', '123', 'Alice', 'Johnson', FALSE),
 ('mike@example.com', '123', 'Mike', 'Taylor', FALSE);
 
--- MOVIES
 CREATE TABLE movies (
 id INT AUTO_INCREMENT PRIMARY KEY,
 title VARCHAR(255) NOT NULL,
@@ -73,7 +70,6 @@ VALUES ('Inception', 2010, 'PG-13', 'Sci-Fi, Thriller', 'English',
         155, 'images/dune.jpg',
         'https://www.youtube.com/watch?v=n9xhJrPXop4');
 
--- ACTORS
 CREATE TABLE actors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -97,7 +93,6 @@ INSERT INTO actors (first_name, last_name, date_of_birth, gender, description) V
 ('John', 'Travolta', '1954-02-18', 'Male', 'Starred in Pulp Fiction.'),
 ('Samuel', 'Jackson', '1948-12-21', 'Male', 'Starred in Pulp Fiction.');
 
--- ACTOR↔MOVIE
 CREATE TABLE actorAppearIn (
     actor_id INT NOT NULL,
     movie_id INT NOT NULL,
@@ -107,12 +102,12 @@ CREATE TABLE actorAppearIn (
 );
 
 INSERT INTO actorAppearIn VALUES
-(1,1),(2,1), -- Inception
-(3,2),(4,2), -- The Matrix
-(5,3),(6,3), -- Interstellar
-(7,4),(8,4), -- Dark Knight
-(9,5),(10,5), -- Avatar
-(11,6),(12,6); -- Pulp Fiction
+(1,1),(2,1), 
+(3,2),(4,2),
+(5,3),(6,3),
+(7,4),(8,4),
+(9,5),(10,5), 
+(11,6),(12,6); 
 
 -- DIRECTORS
 CREATE TABLE directors (
