@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current_password'])) 
 
 // Fetch booking history
 $bookings = getBookingsByUserId($db, $userId);
+$totalBookings = count($bookings);
 
 // Sanitize for display
 $firstname = htmlspecialchars($user['firstname']);
@@ -146,9 +147,15 @@ $email = htmlspecialchars($user['email']);
 
     <!-- BOOKING HISTORY CARD -->
     <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur p-8 shadow-2xl">
-        <h2 class="text-2xl font-semibold mb-4 text-secondary flex items-center gap-2">
+        <h2 class="text-2xl font-semibold mb-1 text-secondary flex items-center gap-2">
             <i class="pi pi-ticket"></i> Booking History
         </h2>
+
+        <p class="text-white/60 mb-4">
+            Total bookings made:
+            <span class="text-secondary font-semibold"><?= $totalBookings ?></span>
+        </p>
+
 
         <?php if (empty($bookings)): ?>
             <p class="text-white/50 italic">You haven’t made any bookings yet.</p>
@@ -156,14 +163,65 @@ $email = htmlspecialchars($user['email']);
         <?php else: ?>
             <ul class="space-y-4">
                 <?php foreach ($bookings as $b): ?>
-                    <li class="rounded-xl border border-white/10 bg-black/20 px-4 py-4 flex items-center justify-between hover:bg-black/30 transition">
-                        <div>
-                            <p class="font-semibold"><?= htmlspecialchars($b['title']) ?></p>
-                            <p class="text-white/50 text-sm">
-                                <?= date("M d, Y - H:i", strtotime($b['start_time'])) ?>
-                            </p>
+                    <li class="rounded-xl border border-white/10 bg-black/20 px-4 py-4 hover:bg-black/30 transition">
+
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                            <!-- LEFT SIDE -->
+                            <div class="flex-1">
+
+                                <!-- Movie Title -->
+                                <p class="text-xl font-semibold text-white">
+                                    <?= htmlspecialchars($b['movie_title']) ?>
+                                </p>
+
+                                <!-- Date + Time -->
+                                <p class="text-white/60 text-sm flex items-center gap-2 mt-1">
+                                    <i class="pi pi-calendar"></i>
+                                    <?= date("M d, Y", strtotime($b['start_time'])) ?>
+
+                                    <span class="opacity-40">•</span>
+
+                                    <i class="pi pi-clock"></i>
+                                    <?= date("H:i", strtotime($b['start_time'])) ?>
+                                    –<?= date("H:i", strtotime($b['end_time'])) ?>
+                                </p>
+
+                                <!-- Screening Room -->
+                                <p class="text-white/60 text-sm flex items-center gap-2 mt-1">
+                                    <i class="pi pi-building"></i>
+                                    <?= htmlspecialchars($b['room_name']) ?>
+                                </p>
+
+                                <!-- Seats + Seat Count -->
+                                <p class="text-white/60 text-sm flex items-center gap-2 mt-1">
+                                    <i class="pi pi-th-large"></i>
+                                    Seats (<?= $b['ticket_count'] ?> total):
+                                    <span class="text-secondary font-semibold">
+                                        <?= implode(', ', array_map(fn($s) => $s['row_number'] . $s['seat_number'], $b['seats'])) ?>
+                                    </span>
+                                </p>
+
+                            </div>
+
+                            <!-- RIGHT SIDE -->
+                            <div class="text-right min-w-[130px]">
+
+                                <!-- Tickets -->
+                                <p class="text-white/60 text-sm flex items-center justify-end gap-2">
+                                    <i class="pi pi-users"></i>
+                                    <?= $b['ticket_count'] ?> Seats
+                                </p>
+
+                                <!-- Total Price -->
+                                <p class="text-secondary font-bold text-2xl mt-2">
+                                    $<?= number_format($b['total_price'], 2) ?>
+                                </p>
+
+                            </div>
+
                         </div>
-                        <p class="text-secondary font-semibold">$<?= number_format($b['total_price'], 2) ?></p>
+
                     </li>
                 <?php endforeach; ?>
             </ul>

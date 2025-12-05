@@ -1,10 +1,13 @@
 <?php
 
-// This file contains database handlers for retrieving, adding, editing, and deleting booking records.
+// Booking data handlers:
+// Provides functions to retrieve, create, update, and delete bookings,
+// including seat assignments and related screening/movie/room details.
 
-// Retrieve all bookings with related user, screening, movie, room, and seat details.
-// Retrieve all bookings with related user, screening, movie, room, and seat details using the view
-function getBookings($db) {
+
+// Retrieve all bookings with full details (admin dashboard use)
+function getBookings($db)
+{
     // Fetch main booking info from the view
     $stmt = $db->prepare("SELECT * FROM view_full_bookings ORDER BY booking_id DESC");
     $stmt->execute();
@@ -27,8 +30,9 @@ function getBookings($db) {
 }
 
 
-// Add a new booking with selected seats.
-function addBooking(PDO $db, $data) {
+// Add a new booking with selected seats (handles seats + transaction safety)
+function addBooking(PDO $db, $data)
+{
     try {
         $db->beginTransaction(); // START TRANSACTION
 
@@ -68,12 +72,13 @@ function addBooking(PDO $db, $data) {
         return ['Booking added successfully!', ''];
     } catch (Exception $e) {
         $db->rollBack(); // ROLLBACK if anything fails
-        return ['', 'Error adding booking: '.$e->getMessage()];
+        return ['', 'Error adding booking: ' . $e->getMessage()];
     }
 }
 
-// Edit an existing booking and replace its seats.
-function editBooking(PDO $db, $data) {
+// Edit an existing booking and replace its seats
+function editBooking(PDO $db, $data)
+{
     try {
         $db->beginTransaction();
 
@@ -121,7 +126,8 @@ function editBooking(PDO $db, $data) {
 
 
 // Delete a booking and its associated seats.
-function deleteBooking(PDO $db, $bookingId) {
+function deleteBooking(PDO $db, $bookingId)
+{
     try {
         $db->beginTransaction();
 
@@ -135,16 +141,54 @@ function deleteBooking(PDO $db, $bookingId) {
         return ['Booking deleted successfully!', ''];
     } catch (Exception $e) {
         $db->rollBack();
-        return ['', 'Error deleting booking: '.$e->getMessage()];
+        return ['', 'Error deleting booking: ' . $e->getMessage()];
     }
 }
 
 
 // Retrieve bookings for a specific user.
-function getBookingsByUserId(PDO $db, int $userId): array {
-    $stmt = $db->prepare("\n        SELECT b.id, b.total_price, s.start_time, m.title\n        FROM bookings b\n        JOIN screenings s ON b.screening_id = s.id\n        JOIN movies m ON s.movie_id = m.id\n        WHERE b.user_id = ?\n        ORDER BY s.start_time DESC\n    ");
+function getBookingsByUserId(PDO $db, int $userId): array
+{
+
+    // Fetch all main booking info
+    $stmt = $db->prepare("
+        SELECT 
+            b.id AS booking_id,
+            b.total_price,
+            s.start_time,
+            s.end_time,
+            m.title AS movie_title,
+            r.name AS room_name
+        FROM bookings b
+        JOIN screenings s ON b.screening_id = s.id
+        JOIN movies m ON s.movie_id = m.id
+        JOIN screening_rooms r ON r.id = s.screening_room_id
+        WHERE b.user_id = ?
+        ORDER BY s.start_time DESC
+    ");
     $stmt->execute([$userId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch seats for each booking
+    foreach ($bookings as &$booking) {
+
+        $stmtSeats = $db->prepare("
+            SELECT 
+                s.row_number,
+                s.seat_number
+            FROM booking_seats bs
+            JOIN seats s ON bs.seat_id = s.id
+            WHERE bs.booking_id = ?
+            ORDER BY s.row_number, s.seat_number
+        ");
+        $stmtSeats->execute([$booking['booking_id']]);
+        $booking['seats'] = $stmtSeats->fetchAll(PDO::FETCH_ASSOC);
+
+        // Add ticket count convenience
+        $booking['ticket_count'] = count($booking['seats']);
+    }
+
+    return $bookings;
 }
 
 $bookings = getBookings($db);
