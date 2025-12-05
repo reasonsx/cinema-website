@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS cinema;
 CREATE DATABASE cinema;
 USE cinema;
 
--- USERS
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
@@ -12,7 +11,6 @@ CREATE TABLE users (
     isAdmin BOOLEAN DEFAULT FALSE
 );
 
--- Admin + regular users
 INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
 ('admin@admin.com', '$2y$10$WCWVWm076L247LVseNjmoOjjK0wfh89U7iOBNKggl7LPfkKhU5vnW', 'Admin', 'Admin', TRUE),
 ('john@example.com', '123', 'John', 'Doe', FALSE),
@@ -21,7 +19,6 @@ INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
 ('alice@example.com', '123', 'Alice', 'Johnson', FALSE),
 ('mike@example.com', '123', 'Mike', 'Taylor', FALSE);
 
--- MOVIES
 CREATE TABLE movies (
 id INT AUTO_INCREMENT PRIMARY KEY,
 title VARCHAR(255) NOT NULL,
@@ -73,7 +70,6 @@ VALUES ('Inception', 2010, 'PG-13', 'Sci-Fi, Thriller', 'English',
         155, 'images/dune.jpg',
         'https://www.youtube.com/watch?v=n9xhJrPXop4');
 
--- ACTORS
 CREATE TABLE actors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -97,7 +93,6 @@ INSERT INTO actors (first_name, last_name, date_of_birth, gender, description) V
 ('John', 'Travolta', '1954-02-18', 'Male', 'Starred in Pulp Fiction.'),
 ('Samuel', 'Jackson', '1948-12-21', 'Male', 'Starred in Pulp Fiction.');
 
--- ACTOR↔MOVIE
 CREATE TABLE actorAppearIn (
     actor_id INT NOT NULL,
     movie_id INT NOT NULL,
@@ -107,14 +102,13 @@ CREATE TABLE actorAppearIn (
 );
 
 INSERT INTO actorAppearIn VALUES
-(1,1),(2,1), -- Inception
-(3,2),(4,2), -- The Matrix
-(5,3),(6,3), -- Interstellar
-(7,4),(8,4), -- Dark Knight
-(9,5),(10,5), -- Avatar
-(11,6),(12,6); -- Pulp Fiction
+(1,1),(2,1), 
+(3,2),(4,2),
+(5,3),(6,3),
+(7,4),(8,4),
+(9,5),(10,5), 
+(11,6),(12,6); 
 
--- DIRECTORS
 CREATE TABLE directors (
     id INT AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
@@ -140,12 +134,11 @@ CREATE TABLE directorDirects (
 );
 
 INSERT INTO directorDirects VALUES
-(1,1),(1,3),(1,4), -- Nolan
-(2,2),(3,2),       -- Wachowskis
-(4,5),             -- Cameron
-(5,6);             -- Tarantino
+(1,1),(1,3),(1,4),
+(2,2),(3,2),       
+(4,5),             
+(5,6);             
 
--- SCREENING ROOMS
 CREATE TABLE screening_rooms (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -159,7 +152,6 @@ INSERT INTO screening_rooms (name, seat_price) VALUES
 ('IMAX', 150.00),
 ('Classic Room', 80.00);
 
--- SEATS
 CREATE TABLE IF NOT EXISTS seats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     screening_room_id INT NOT NULL,
@@ -168,7 +160,6 @@ CREATE TABLE IF NOT EXISTS seats (
     FOREIGN KEY (screening_room_id) REFERENCES screening_rooms(id) ON DELETE CASCADE
 );
 
--- Seats for Main Hall (50 seats, A–E × 10)
 INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (1,'A',1),(1,'A',2),(1,'A',3),(1,'A',4),(1,'A',5),(1,'A',6),(1,'A',7),(1,'A',8),(1,'A',9),(1,'A',10),
 (1,'B',1),(1,'B',2),(1,'B',3),(1,'B',4),(1,'B',5),(1,'B',6),(1,'B',7),(1,'B',8),(1,'B',9),(1,'B',10),
@@ -176,20 +167,17 @@ INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (1,'D',1),(1,'D',2),(1,'D',3),(1,'D',4),(1,'D',5),(1,'D',6),(1,'D',7),(1,'D',8),(1,'D',9),(1,'D',10),
 (1,'E',1),(1,'E',2),(1,'E',3),(1,'E',4),(1,'E',5),(1,'E',6),(1,'E',7),(1,'E',8),(1,'E',9),(1,'E',10);
 
--- Seats for VIP Room (20 seats, A–D × 5)
 INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (2,'A',1),(2,'A',2),(2,'A',3),(2,'A',4),(2,'A',5),
 (2,'B',1),(2,'B',2),(2,'B',3),(2,'B',4),(2,'B',5),
 (2,'C',1),(2,'C',2),(2,'C',3),(2,'C',4),(2,'C',5),
 (2,'D',1),(2,'D',2),(2,'D',3),(2,'D',4),(2,'D',5);
 
--- Seats for Kids Room (30 seats, A–C × 10)
 INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (3,'A',1),(3,'A',2),(3,'A',3),(3,'A',4),(3,'A',5),(3,'A',6),(3,'A',7),(3,'A',8),(3,'A',9),(3,'A',10),
 (3,'B',1),(3,'B',2),(3,'B',3),(3,'B',4),(3,'B',5),(3,'B',6),(3,'B',7),(3,'B',8),(3,'B',9),(3,'B',10),
 (3,'C',1),(3,'C',2),(3,'C',3),(3,'C',4),(3,'C',5),(3,'C',6),(3,'C',7),(3,'C',8),(3,'C',9),(3,'C',10);
 
--- Seats for IMAX (60 seats, A–F × 10)
 INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (4,'A',1),(4,'A',2),(4,'A',3),(4,'A',4),(4,'A',5),(4,'A',6),(4,'A',7),(4,'A',8),(4,'A',9),(4,'A',10),
 (4,'B',1),(4,'B',2),(4,'B',3),(4,'B',4),(4,'B',5),(4,'B',6),(4,'B',7),(4,'B',8),(4,'B',9),(4,'B',10),
@@ -198,14 +186,12 @@ INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (4,'E',1),(4,'E',2),(4,'E',3),(4,'E',4),(4,'E',5),(4,'E',6),(4,'E',7),(4,'E',8),(4,'E',9),(4,'E',10),
 (4,'F',1),(4,'F',2),(4,'F',3),(4,'F',4),(4,'F',5),(4,'F',6),(4,'F',7),(4,'F',8),(4,'F',9),(4,'F',10);
 
--- Seats for Classic Room (40 seats, A–D × 10)
 INSERT INTO seats (screening_room_id, `row_number`, seat_number) VALUES
 (5,'A',1),(5,'A',2),(5,'A',3),(5,'A',4),(5,'A',5),(5,'A',6),(5,'A',7),(5,'A',8),(5,'A',9),(5,'A',10),
 (5,'B',1),(5,'B',2),(5,'B',3),(5,'B',4),(5,'B',5),(5,'B',6),(5,'B',7),(5,'B',8),(5,'B',9),(5,'B',10),
 (5,'C',1),(5,'C',2),(5,'C',3),(5,'C',4),(5,'C',5),(5,'C',6),(5,'C',7),(5,'C',8),(5,'C',9),(5,'C',10),
 (5,'D',1),(5,'D',2),(5,'D',3),(5,'D',4),(5,'D',5),(5,'D',6),(5,'D',7),(5,'D',8),(5,'D',9),(5,'D',10);
 
--- SCREENINGS
 CREATE TABLE screenings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     movie_id INT NOT NULL,
@@ -216,59 +202,44 @@ CREATE TABLE screenings (
     FOREIGN KEY (screening_room_id) REFERENCES screening_rooms(id) ON DELETE CASCADE
 );
 INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUES
--- Core initial screenings
 (1, 1, '2025-10-21 18:00:00', '2025-10-21 20:30:00'),
 (2, 2, '2025-10-22 19:00:00', '2025-10-22 21:20:00'),
 (3, 3, '2025-10-23 14:00:00', '2025-10-23 16:50:00'),
 (4, 4, '2025-10-23 20:00:00', '2025-10-23 22:30:00'),
 (5, 1, '2025-10-24 16:00:00', '2025-10-24 18:45:00'),
 (6, 5, '2025-10-25 20:30:00', '2025-10-25 23:00:00'),
-
--- Inception (Main Hall, IMAX)
 (1, 1, '2025-10-26 14:00:00', '2025-10-26 16:30:00'),
 (1, 4, '2025-10-26 18:30:00', '2025-10-26 21:00:00'),
 (1, 1, '2025-10-27 12:00:00', '2025-10-27 14:30:00'),
 (1, 1, '2025-10-27 18:00:00', '2025-10-27 20:30:00'),
 (1, 4, '2025-10-28 20:00:00', '2025-10-28 22:30:00'),
 (1, 4, '2025-10-29 21:00:00', '2025-10-29 23:30:00'),
-
--- The Matrix (Classic Room, IMAX, VIP)
 (2, 2, '2025-10-26 17:00:00', '2025-10-26 19:20:00'),
 (2, 4, '2025-10-26 21:30:00', '2025-10-26 23:50:00'),
 (2, 5, '2025-10-27 15:00:00', '2025-10-27 17:20:00'),
 (2, 2, '2025-10-27 19:30:00', '2025-10-27 21:50:00'),
 (2, 5, '2025-10-28 20:00:00', '2025-10-28 22:20:00'),
 (2, 4, '2025-10-29 22:30:00', '2025-10-30 00:50:00'),
-
--- Interstellar (Main Hall, IMAX)
 (3, 1, '2025-10-26 13:30:00', '2025-10-26 16:15:00'),
 (3, 4, '2025-10-26 19:00:00', '2025-10-26 22:00:00'),
 (3, 1, '2025-10-27 14:30:00', '2025-10-27 17:15:00'),
 (3, 4, '2025-10-27 20:30:00', '2025-10-27 23:20:00'),
 (3, 1, '2025-10-28 12:00:00', '2025-10-28 14:45:00'),
-
--- The Dark Knight (IMAX, Main Hall, VIP)
 (4, 4, '2025-10-26 21:00:00', '2025-10-26 23:30:00'),
 (4, 1, '2025-10-27 17:30:00', '2025-10-27 20:00:00'),
 (4, 2, '2025-10-28 22:30:00', '2025-10-29 00:50:00'),
 (4, 1, '2025-10-29 17:00:00', '2025-10-29 19:30:00'),
 (4, 4, '2025-10-30 20:30:00', '2025-10-30 23:00:00'),
-
--- Avatar (IMAX, Main Hall, Kids Room)
 (5, 4, '2025-10-26 10:30:00', '2025-10-26 13:15:00'),
 (5, 1, '2025-10-26 17:00:00', '2025-10-26 19:45:00'),
 (5, 3, '2025-10-26 20:00:00', '2025-10-26 22:45:00'),
 (5, 4, '2025-10-27 19:00:00', '2025-10-27 21:45:00'),
 (5, 1, '2025-10-28 14:00:00', '2025-10-28 16:45:00'),
-
--- Pulp Fiction (Classic Room, Main Hall, VIP)
 (6, 5, '2025-10-26 15:00:00', '2025-10-26 17:30:00'),
 (6, 1, '2025-10-26 19:30:00', '2025-10-26 22:00:00'),
 (6, 2, '2025-10-27 22:30:00', '2025-10-28 01:00:00'),
 (6, 5, '2025-10-28 19:00:00', '2025-10-28 21:30:00'),
 (6, 1, '2025-10-29 22:00:00', '2025-10-30 00:30:00'),
-
--- Continuous schedule into November (for realism)
 (1, 1, '2025-11-01 14:00:00', '2025-11-01 16:30:00'),
 (2, 2, '2025-11-01 17:00:00', '2025-11-01 19:20:00'),
 (3, 4, '2025-11-01 20:00:00', '2025-11-01 22:50:00'),
@@ -281,48 +252,36 @@ INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUE
 (4, 1, '2025-11-05 18:30:00', '2025-11-05 21:00:00'),
 (5, 4, '2025-11-06 21:00:00', '2025-11-06 23:45:00'),
 (6, 5, '2025-11-06 22:30:00', '2025-11-07 01:00:00'),
-
--- Inception (Main Hall + IMAX, multiple times per day)
 (1, 1, '2025-10-30 14:00:00', '2025-10-30 16:30:00'),
 (1, 4, '2025-10-30 18:00:00', '2025-10-30 20:30:00'),
 (1, 1, '2025-10-31 12:00:00', '2025-10-31 14:30:00'),
 (1, 4, '2025-10-31 16:00:00', '2025-10-31 18:30:00'),
 (1, 1, '2025-11-01 14:30:00', '2025-11-01 17:00:00'),
 (1, 4, '2025-11-01 19:00:00', '2025-11-01 21:30:00'),
-
--- The Matrix (Classic + VIP + IMAX)
 (2, 5, '2025-10-30 15:00:00', '2025-10-30 17:20:00'),
 (2, 2, '2025-10-30 18:00:00', '2025-10-30 20:20:00'),
 (2, 4, '2025-10-31 20:00:00', '2025-10-31 22:20:00'),
 (2, 5, '2025-11-01 13:00:00', '2025-11-01 15:20:00'),
 (2, 2, '2025-11-01 16:00:00', '2025-11-01 18:20:00'),
 (2, 4, '2025-11-02 19:00:00', '2025-11-02 21:20:00'),
-
--- Interstellar (Main Hall + IMAX)
 (3, 1, '2025-10-30 13:30:00', '2025-10-30 16:15:00'),
 (3, 4, '2025-10-30 17:30:00', '2025-10-30 20:15:00'),
 (3, 1, '2025-10-31 14:00:00', '2025-10-31 16:45:00'),
 (3, 4, '2025-10-31 18:00:00', '2025-10-31 20:45:00'),
 (3, 1, '2025-11-01 12:00:00', '2025-11-01 14:45:00'),
 (3, 4, '2025-11-01 15:30:00', '2025-11-01 18:15:00'),
-
--- The Dark Knight (IMAX, Main Hall, VIP)
 (4, 4, '2025-10-31 21:00:00', '2025-10-31 23:30:00'),
 (4, 1, '2025-11-01 17:30:00', '2025-11-01 20:00:00'),
 (4, 2, '2025-11-01 21:30:00', '2025-11-02 00:00:00'),
 (4, 4, '2025-11-02 20:00:00', '2025-11-02 22:30:00'),
 (4, 1, '2025-11-03 16:00:00', '2025-11-03 18:30:00'),
 (4, 2, '2025-11-03 19:00:00', '2025-11-03 21:30:00'),
-
--- Avatar (IMAX + Main Hall + Kids Room)
 (5, 4, '2025-10-31 10:00:00', '2025-10-31 12:45:00'),
 (5, 1, '2025-10-31 14:00:00', '2025-10-31 16:45:00'),
 (5, 3, '2025-10-31 17:00:00', '2025-10-31 19:45:00'),
 (5, 4, '2025-11-01 16:00:00', '2025-11-01 18:45:00'),
 (5, 1, '2025-11-01 19:00:00', '2025-11-01 21:45:00'),
 (5, 3, '2025-11-02 12:00:00', '2025-11-02 14:45:00'),
-
--- Pulp Fiction (Classic + Main Hall + VIP)
 (6, 5, '2025-10-31 15:30:00', '2025-10-31 18:00:00'),
 (6, 1, '2025-10-31 19:00:00', '2025-10-31 21:30:00'),
 (6, 2, '2025-11-01 20:00:00', '2025-11-01 22:30:00'),
@@ -330,7 +289,6 @@ INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUE
 (6, 1, '2025-11-02 21:00:00', '2025-11-02 23:30:00'),
 (6, 2, '2025-11-03 17:00:00', '2025-11-03 19:30:00');
 
--- BOOKINGS
 CREATE TABLE bookings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -352,7 +310,6 @@ CREATE TABLE booking_seats (
     UNIQUE (seat_id, screening_id)
 );
 
--- BOOKING DATA
 INSERT INTO bookings (user_id, screening_id, total_price)
 VALUES (2, 1, 180.00);
 SET @b1 = LAST_INSERT_ID();
@@ -380,7 +337,6 @@ INSERT INTO booking_seats VALUES (@b5, 11, 5), (@b5, 12, 5);
 
 
 
--- NEWS TABLE
 CREATE TABLE news (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -388,7 +344,6 @@ CREATE TABLE news (
     date_added DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- SAMPLE NEWS DATA
 INSERT INTO news (title, content, date_added) VALUES
 ('New IMAX Screen Installed!', 'We are excited to announce the installation of a brand new IMAX screen in our cinema for a truly immersive experience.', '2025-10-10 12:00:00'),
 ('Halloween Horror Night 2025', 'Join us on October 31st for a special late-night marathon of classic horror movies!', '2025-10-15 09:30:00'),
@@ -473,7 +428,6 @@ BEFORE DELETE ON screenings
 FOR EACH ROW
 BEGIN
     IF EXISTS (SELECT 1 FROM bookings WHERE screening_id = OLD.id) THEN
-        -- Raise an error
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete screening: bookings exist';
     END IF;
 END;
@@ -494,7 +448,7 @@ END;
 
  CREATE TABLE content_blocks (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    tag VARCHAR(100) NOT NULL UNIQUE, -- e.g. 'contact_header', 'about_text_1'
+    tag VARCHAR(100) NOT NULL UNIQUE,
     title VARCHAR(255) NULL,
     text TEXT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
