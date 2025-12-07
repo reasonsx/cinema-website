@@ -1,6 +1,6 @@
 <?php
 require_once '../../backend/connection.php';
-require_once '../../auth/session.php';
+require_once '../auth/session.php';
 require_once '../../admin_dashboard/views/users/users_functions.php';
 require_once '../../admin_dashboard/views/bookings/bookings_functions.php';
 
@@ -15,7 +15,7 @@ $isAdmin = $session->isAdmin();
 $user = getUserById($db, $userId);
 if (!$user) {
     $session->logout();
-    header("Location: /cinema-website/auth/login.php");
+    header("Location: /cinema-website/views/auth/login.php");
     exit;
 }
 
@@ -150,7 +150,7 @@ $email = htmlspecialchars($user['email']);
                         </a>
                     <?php endif; ?>
 
-                    <a href="../../auth/logout.php"
+                    <a href="../auth/logout.php"
                        class="btn-white">
                         <i class="pi pi-sign-out"></i>
                         Logout

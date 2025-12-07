@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../backend/connection.php';
+require_once '../../../backend/connection.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -48,11 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include '../shared/head.php'; ?>
+<?php include '../../../shared/head.php'; ?>
 
 <body class="bg-black text-white font-sans">
 
-<?php include '../shared/header.php'; ?>
+<?php include '../../../shared/header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[70vh] bg-black px-4 py-10">
     <div class="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-8">
@@ -62,12 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h2>
 
         <?php if ($success): ?>
-            <p class="text-green-400 text-center mb-4">
-                Password updated! You can now <a href="login.php" class="text-[var(--secondary)] hover:text-white">log in</a>.
+            <p class="text-[var(--secondary)] text-center mb-4">
+                Password updated! You can now 
+                <a href="../login.php" class="underline hover:text-white">log in</a>.
             </p>
         <?php elseif ($error): ?>
-            <p class="text-red-400 text-center mb-4"><?= $error ?></p>
+            <p class="text-white/80 text-center mb-4"><?= $error ?></p>
         <?php endif; ?>
+
 
         <?php if (!$success): ?>
         <form method="POST" class="flex flex-col gap-5">
@@ -92,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
 </section>
 
-<?php include '../shared/footer.php'; ?>
+<?php include '../../../shared/footer.php'; ?>
 
 </body>
 </html>

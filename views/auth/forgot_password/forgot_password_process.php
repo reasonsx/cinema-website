@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-require_once '../backend/connection.php';
-require_once '../backend/email_config.php';
+require_once '../../../backend/connection.php';
+require_once '../../../backend/email_config.php';
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -31,7 +31,7 @@ if ($user) {
     ");
     $stmt->execute([$token, $expires, $email]);
 
-    $resetLink = "http://localhost/cinema-website/auth/reset_password.php?token=$token";
+    $resetLink = "http://localhost/cinema-website/views/auth/forgot_password/reset_password.php?token=$token";
 
     sendMail(
         $email,
