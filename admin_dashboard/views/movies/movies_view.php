@@ -11,9 +11,6 @@ function formatDate($date)
     return (!$date || $date === '0000-00-00') ? '—' : date('d M Y', strtotime($date));
 }
 
-/* ---------------------------------------------------------
-   BADGES
---------------------------------------------------------- */
 
 function badge($text, $color)
 {
@@ -55,9 +52,6 @@ function moviePeopleBadges(PDO $db, int $movieId, string $type)
     return "<div class='flex flex-wrap gap-1'>$out</div>";
 }
 
-/* ---------------------------------------------------------
-   RENDER TABLE
---------------------------------------------------------- */
 
 renderTable([
     'id' => 'moviesTable',
@@ -67,9 +61,6 @@ renderTable([
     'rows' => $movies,
     'renderRow' => function ($movie) use ($db) {
 
-        /* ---------------------------------------------------------
-           FIX POSTER PATHS — MAGIC AUTO-CORRECTION
-        --------------------------------------------------------- */
 
         $poster = $movie['poster'];
 
@@ -97,15 +88,9 @@ renderTable([
         $posterHtml = $poster ? "<img src='" . e($poster) . "' width='60' class='rounded shadow-sm'>" : "<span class='text-xs text-gray-400 italic'>No poster</span>";
 
 
-        /* ---------------------------------------------------------
-           TRAILER
-        --------------------------------------------------------- */
 
         $trailer = $movie['trailer_url'] ? "<a href='" . e($movie['trailer_url']) . "' target='_blank' class='text-blue-600 hover:underline text-xs'>Open</a>" : "<span class='text-xs text-gray-400 italic'>None</span>";
 
-        /* ---------------------------------------------------------
-           DESCRIPTION SHORTENING
-        --------------------------------------------------------- */
 
         $desc = e($movie['description']);
         if (strlen($desc) > 120) $desc = substr($desc, 0, 120) . "…";
@@ -126,9 +111,6 @@ renderTable([
         ];
     },
 
-    /* ---------------------------------------------------------
-       ACTION BUTTONS
-    --------------------------------------------------------- */
     'actions' => function ($movie) {
         ob_start(); ?>
 

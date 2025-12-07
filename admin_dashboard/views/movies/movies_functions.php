@@ -14,14 +14,14 @@ function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHei
     $ratio = $width / $height;
     if ($maxWidth / $maxHeight > $ratio) {
         $newHeight = $maxHeight;
-        $newWidth  = $maxHeight * $ratio;
+        $newWidth = $maxHeight * $ratio;
     } else {
-        $newWidth  = $maxWidth;
+        $newWidth = $maxWidth;
         $newHeight = $maxWidth / $ratio;
     }
 
-    $newWidth = (int) round($newWidth);
-    $newHeight = (int) round($newHeight);
+    $newWidth = (int)round($newWidth);
+    $newHeight = (int)round($newHeight);
 
     // Load source image
     if ($fileType === 'image/jpeg' || $fileType === 'image/pjpeg') {

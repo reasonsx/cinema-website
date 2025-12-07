@@ -1,9 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../../../backend/connection.php';
-require_once __DIR__ . '/../actors/actors_functions.php';      // needed for getActorsList()
-require_once __DIR__ . '/../directors/directors_functions.php'; // needed for getDirectorsList()
-require_once __DIR__ . '/movies_functions.php';                // movie logic
+require_once __DIR__ . '/../actors/actors_functions.php';
+require_once __DIR__ . '/../directors/directors_functions.php';
+require_once __DIR__ . '/movies_functions.php';
 
 // Load data required by the view
 $movies = getMovies($db);
