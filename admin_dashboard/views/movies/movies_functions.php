@@ -1,6 +1,6 @@
 <?php
 
-// HELPER FUNCTION: RESIZE IMAGE
+// Resize image helper (JPEG, PNG, GIF, preserves transparency)
 function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHeight = 1800)
 {
     list($width, $height) = getimagesize($tmpFile);
@@ -12,16 +12,17 @@ function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHei
 
     // Maintain aspect ratio
     $ratio = $width / $height;
+
     if ($maxWidth / $maxHeight > $ratio) {
         $newHeight = $maxHeight;
-        $newWidth = $maxHeight * $ratio;
+        $newWidth  = $maxHeight * $ratio;
     } else {
-        $newWidth = $maxWidth;
+        $newWidth  = $maxWidth;
         $newHeight = $maxWidth / $ratio;
     }
 
-    $newWidth = (int)round($newWidth);
-    $newHeight = (int)round($newHeight);
+    $newWidth  = (int) round($newWidth);
+    $newHeight = (int) round($newHeight);
 
     // Load source image
     if ($fileType === 'image/jpeg' || $fileType === 'image/pjpeg') {
@@ -45,10 +46,15 @@ function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHei
     }
 
     // Resample
-    imagecopyresampled($dstImage, $srcImage, 0, 0, 0, 0,
-        $newWidth, $newHeight, $width, $height);
+    imagecopyresampled(
+        $dstImage,
+        $srcImage,
+        0, 0, 0, 0,
+        $newWidth, $newHeight,
+        $width, $height
+    );
 
-    // Save output
+    // Save according to format
     if ($fileType === 'image/jpeg' || $fileType === 'image/pjpeg') {
         imagejpeg($dstImage, $targetFile, 85);
     } elseif ($fileType === 'image/png') {
@@ -64,48 +70,50 @@ function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHei
 }
 
 
-// ADD MOVIE
+// Add new movie (create and validate)
 function addMovieHandler($db, $data, $files): array
 {
-    $title = trim($data['title']);
+    $title        = trim($data['title']);
     $release_year = trim($data['release_year']);
-    $rating = trim($data['rating']);
-    $genre = trim($data['genre']);
-    $language = trim($data['language']);
-    $length = trim($data['length']);
-    $description = trim($data['description']);
-    $trailer_url = trim($data['trailer_url']);
-    $posterPath = '';
+    $rating       = trim($data['rating']);
+    $genre        = trim($data['genre']);
+    $language     = trim($data['language']);
+    $length       = trim($data['length']);
+    $description  = trim($data['description']);
+    $trailer_url  = trim($data['trailer_url']);
+    $posterPath   = '';
 
-    // Handle poster upload
+    // Poster upload validation
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = $files['poster']['type'];
-        $fileSize = $files['poster']['size'];
+        $fileType     = $files['poster']['type'];
+        $fileSize     = $files['poster']['size'];
 
         if (!in_array($fileType, $allowedTypes) || $fileSize > 10 * 1024 * 1024) {
             return ["", "Invalid file type or size. Only JPG, PNG, GIF under 10MB allowed."];
         }
-        // Validate image BEFORE resizing
+
+        // PHP Validate dimensions + aspect ratio BEFORE resizing
         list($w, $h) = getimagesize($files['poster']['tmp_name']);
 
-        $maxWidth = 1200;
+        $maxWidth  = 1200;
         $maxHeight = 1800;
 
-        // Aspect ratio check: portrait only (e.g. 2:3 = 0.66)
         $ratio = $w / $h;
+
         if ($ratio < 0.4 || $ratio > 0.8) {
-            return ["", "Invalid poster shape. The poster must be a tall, portrait-style image (recommended ratio ~2:3)."];
+            return ["", "Invalid poster shape. Must be portrait-style (approx 2:3)."];
         }
 
-        // Resolution check
         if ($w > $maxWidth || $h > $maxHeight) {
-            return ["", "Poster resolution too large. Max allowed size is {$maxWidth}×{$maxHeight}px."];
+            return ["", "Poster resolution too large. Max allowed: {$maxWidth}×{$maxHeight}px."];
         }
 
-        $targetDir = __DIR__ . '/../../../images/';
+        $targetDir  = __DIR__ . '/../../../images/';
         $publicPath = '/cinema-website/images/';
-        $fileName = time() . '_' . basename($files['poster']['name']);
+        $fileName   = time() . '_' . basename($files['poster']['name']);
+
         $targetFile = $targetDir . $fileName;
 
         if (!resizeImage($files['poster']['tmp_name'], $targetFile, $fileType)) {
@@ -116,14 +124,18 @@ function addMovieHandler($db, $data, $files): array
     }
 
     try {
+        // Insert movie
         $stmt = $db->prepare("
             INSERT INTO movies (title, release_year, rating, genre, language, length, description, poster, trailer_url)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
-        $stmt->execute([$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url]);
+        $stmt->execute([
+            $title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url
+        ]);
 
         $movie_id = $db->lastInsertId();
 
+        // Link actors
         if (!empty($data['actors'])) {
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($data['actors'] as $actor_id) {
@@ -131,6 +143,7 @@ function addMovieHandler($db, $data, $files): array
             }
         }
 
+        // Link directors
         if (!empty($data['directors'])) {
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($data['directors'] as $director_id) {
@@ -145,47 +158,49 @@ function addMovieHandler($db, $data, $files): array
     }
 }
 
-// EDIT MOVIE
+
+// Edit movie (update + optional new poster)
 function editMovieHandler($db, $data, $files): array
 {
-    $movie_id = intval($data['movie_id']);
-    $title = trim($data['title']);
+    $movie_id     = (int) $data['movie_id'];
+    $title        = trim($data['title']);
     $release_year = trim($data['release_year']);
-    $rating = trim($data['rating']);
-    $genre = trim($data['genre']);
-    $language = trim($data['language']);
-    $length = trim($data['length']);
-    $description = trim($data['description']);
-    $trailer_url = trim($data['trailer_url']);
-    $posterPath = null;
+    $rating       = trim($data['rating']);
+    $genre        = trim($data['genre']);
+    $language     = trim($data['language']);
+    $length       = trim($data['length']);
+    $description  = trim($data['description']);
+    $trailer_url  = trim($data['trailer_url']);
+    $posterPath   = null;
 
+    // Optional new poster
     if (isset($files['poster']) && $files['poster']['error'] === 0) {
+
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $fileType = $files['poster']['type'];
+        $fileType     = $files['poster']['type'];
 
         if (!in_array($fileType, $allowedTypes)) {
             return ["", "Invalid poster file type."];
         }
-        // Validate image BEFORE resizing
+
         list($w, $h) = getimagesize($files['poster']['tmp_name']);
 
-        $maxWidth = 1200;
+        $maxWidth  = 1200;
         $maxHeight = 1800;
+        $ratio     = $w / $h;
 
-        // Aspect ratio check: portrait only (e.g. 2:3 = 0.66)
-        $ratio = $w / $h;
         if ($ratio < 0.4 || $ratio > 0.8) {
-            return ["", "Invalid poster shape. The poster must be a tall, portrait-style image (recommended ratio ~2:3)."];
+            return ["", "Invalid poster shape. Should be portrait-style (approx 2:3)."];
         }
 
-        // Resolution check
         if ($w > $maxWidth || $h > $maxHeight) {
-            return ["", "Poster resolution too large. Max allowed size is {$maxWidth}×{$maxHeight}px."];
+            return ["", "Poster resolution too large. Max {$maxWidth}×{$maxHeight}px."];
         }
 
-        $targetDir = __DIR__ . '/../../../images/';
+        $targetDir  = __DIR__ . '/../../../images/';
         $publicPath = '/cinema-website/images/';
-        $fileName = time() . '_' . basename($files['poster']['name']);
+        $fileName   = time() . '_' . basename($files['poster']['name']);
+
         $targetFile = $targetDir . $fileName;
 
         if (!resizeImage($files['poster']['tmp_name'], $targetFile, $fileType)) {
@@ -196,25 +211,36 @@ function editMovieHandler($db, $data, $files): array
     }
 
     try {
+        // Build correct query depending on poster update
         if ($posterPath) {
             $stmt = $db->prepare("
-                UPDATE movies 
+                UPDATE movies
                 SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, poster=?, trailer_url=?
                 WHERE id=?
             ");
-            $params = [$title, $release_year, $rating, $genre, $language, $length, $description, $posterPath, $trailer_url, $movie_id];
+
+            $params = [
+                $title, $release_year, $rating, $genre, $language, $length, $description,
+                $posterPath, $trailer_url, $movie_id
+            ];
         } else {
             $stmt = $db->prepare("
-                UPDATE movies 
+                UPDATE movies
                 SET title=?, release_year=?, rating=?, genre=?, language=?, length=?, description=?, trailer_url=?
                 WHERE id=?
             ");
-            $params = [$title, $release_year, $rating, $genre, $language, $length, $description, $trailer_url, $movie_id];
+
+            $params = [
+                $title, $release_year, $rating, $genre, $language, $length, $description,
+                $trailer_url, $movie_id
+            ];
         }
 
         $stmt->execute($params);
 
+        // Update actor links
         $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?")->execute([$movie_id]);
+
         if (!empty($data['actors'])) {
             $stmt = $db->prepare("INSERT INTO actorAppearIn (actor_id, movie_id) VALUES (?, ?)");
             foreach ($data['actors'] as $actor_id) {
@@ -222,7 +248,9 @@ function editMovieHandler($db, $data, $files): array
             }
         }
 
+        // Update director links
         $db->prepare("DELETE FROM directorDirects WHERE movie_id=?")->execute([$movie_id]);
+
         if (!empty($data['directors'])) {
             $stmt = $db->prepare("INSERT INTO directorDirects (director_id, movie_id) VALUES (?, ?)");
             foreach ($data['directors'] as $director_id) {
@@ -237,14 +265,16 @@ function editMovieHandler($db, $data, $files): array
     }
 }
 
-// GET ALL MOVIES
+
+// Retrieve all movies
 function getMovies($db)
 {
     $stmt = $db->query("SELECT * FROM movies ORDER BY id DESC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// DELETE MOVIE
+
+// Delete movie + all relations
 function deleteMovie($db, $movieId): array
 {
     try {
@@ -258,7 +288,8 @@ function deleteMovie($db, $movieId): array
     }
 }
 
-// GET MOVIE BY ID
+
+// Get single movie by ID
 function getMovieById($db, $movieId)
 {
     $stmt = $db->prepare("SELECT * FROM movies WHERE id=?");
