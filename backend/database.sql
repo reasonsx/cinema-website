@@ -463,5 +463,20 @@ INSERT INTO content_blocks (tag, title, text) VALUES
 ('contact_phone', 'Phone', '+45 12 34 56 78'),
 ('contact_email', 'Email', 'contact@cinema-eclipse.com'),
 ('contact_hours', 'Opening Hours', 'Monday – Thursday: 10:00 – 22:00<br>Friday – Saturday: 10:00 – 00:00<br>Sunday: 12:00 – 20:00'),
-('about_us_text', 'About Us', 'Our cinema was founded with one simple goal: to bring unforgettable film experiences to our community. From timeless classics to the newest blockbusters, we’ve built a space where movie lovers can escape into storytelling, immerse themselves in breathtaking sound, and enjoy the magic of the big screen.<br><br>We believe that a cinema should be more than just a place to watch movies — it should be a gathering spot for friends, families, and film enthusiasts. That’s why we focus on comfort, modern technology, and friendly service. Whether you\'re here for a premiere night, a cozy late show, or a special event, we strive to make every visit feel special.');
+('about_us_text', 'About Us', 'Our cinema was founded with one simple goal: to bring unforgettable film experiences to our community. From timeless classics to the newest blockbusters, we’ve built a space where movie lovers can escape into storytelling, immerse themselves in breathtaking sound, and enjoy the magic of the big screen.<br><br>We believe that a cinema should be more than just a place to watch movies — it should be a gathering spot for friends, families, and film enthusiasts. That’s why we focus on comfort, modern technology, and friendly service. Whether youre here for a premiere night, a cozy late show, or a special event, we strive to make every visit feel special.');
+
+
+-- Upcoming screenings in late January 2026
+INSERT INTO screenings (movie_id, screening_room_id, start_time, end_time) VALUES
+(1, 1, '2026-01-25 18:00:00', '2026-01-25 20:30:00'), -- Inception
+(2, 2, '2026-01-25 19:00:00', '2026-01-25 21:20:00'), -- The Matrix
+(3, 3, '2026-01-26 14:00:00', '2026-01-26 16:50:00'), -- Interstellar
+(4, 4, '2026-01-26 20:00:00', '2026-01-26 22:30:00'), -- The Dark Knight
+(5, 1, '2026-01-27 16:00:00', '2026-01-27 18:45:00'), -- Avatar
+(6, 5, '2026-01-27 20:30:00', '2026-01-27 23:00:00'), -- Pulp Fiction
+(7, 2, '2026-01-28 17:00:00', '2026-01-28 19:20:00'), -- The Shawshank Redemption
+(8, 4, '2026-01-28 19:00:00', '2026-01-28 21:35:00'), -- Gladiator
+(9, 3, '2026-01-29 15:00:00', '2026-01-29 17:55:00'), -- The Godfather
+(10, 1, '2026-01-29 18:00:00', '2026-01-29 20:28:00'), -- Spider-Man: No Way Home
+(11, 5, '2026-01-30 16:00:00', '2026-01-30 18:35:00'); -- Dune: Part One
 
