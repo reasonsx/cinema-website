@@ -3,14 +3,10 @@
 require_once __DIR__ . '/../../../backend/connection.php';
 require_once __DIR__ . '/news_functions.php';
 
-// -----------------------------------
 // Load required data
-// -----------------------------------
 $newsList = getNews($db);
 
-// -----------------------------------
 // Handle form submissions
-// -----------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['add_news'])) {
