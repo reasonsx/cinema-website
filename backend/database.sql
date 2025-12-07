@@ -386,6 +386,10 @@ VALUES
      'When I try to book seats for The Dark Knight, I get a payment error. Please help.',
      '203.0.113.17', 'Mozilla/5.0 (Windows NT 11.0; Win64; x64)', 'new', '2025-10-28 13:42:00');
 
+ALTER TABLE users
+ADD reset_token VARCHAR(255),
+ADD reset_expires DATETIME;
+
 
 CREATE OR REPLACE VIEW view_full_bookings AS
 SELECT 
@@ -460,3 +464,4 @@ INSERT INTO content_blocks (tag, title, text) VALUES
 ('contact_email', 'Email', 'contact@cinema-eclipse.com'),
 ('contact_hours', 'Opening Hours', 'Monday – Thursday: 10:00 – 22:00<br>Friday – Saturday: 10:00 – 00:00<br>Sunday: 12:00 – 20:00'),
 ('about_us_text', 'About Us', 'Our cinema was founded with one simple goal: to bring unforgettable film experiences to our community. From timeless classics to the newest blockbusters, we’ve built a space where movie lovers can escape into storytelling, immerse themselves in breathtaking sound, and enjoy the magic of the big screen.<br><br>We believe that a cinema should be more than just a place to watch movies — it should be a gathering spot for friends, families, and film enthusiasts. That’s why we focus on comfort, modern technology, and friendly service. Whether you\'re here for a premiere night, a cozy late show, or a special event, we strive to make every visit feel special.');
+
