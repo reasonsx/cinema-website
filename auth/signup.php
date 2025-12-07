@@ -2,39 +2,83 @@
 session_start();
 require_once '../backend/connection.php';
 
+// SIGNUP HANDLER
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Sanitize and read form inputs
     $firstname = trim($_POST['firstname']);
-    $lastname  = trim($_POST['lastname']);
-    $email     = trim($_POST['email']);
-    $password  = $_POST['password'];
-    $confirm   = $_POST['confirm_password'];
+    $lastname = trim($_POST['lastname']);
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $password = $_POST['password'];
+    $confirm = $_POST['confirm_password'];
 
+    // Validate first and last name
+    if ($firstname === '' || $lastname === '') {
+        $_SESSION['error'] = 'First and last name are required.';
+        header("Location: signup.php");
+        exit;
+    }
+
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = 'Invalid email format.';
+        header("Location: signup.php");
+        exit;
+    }
+
+    // Validate email length
+    if (strlen($email) > 255) {
+        $_SESSION['error'] = 'Email is too long.';
+        header("Location: signup.php");
+        exit;
+    }
+
+    // Check password confirmation
     if ($password !== $confirm) {
-        $_SESSION['error'] = 'Passwords do not match!';
-    } else {
-        try {
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$email]);
+        $_SESSION['error'] = 'Passwords do not match.';
+        header("Location: signup.php");
+        exit;
+    }
 
-            if ($stmt->rowCount() > 0) {
-                $_SESSION['error'] = 'Email already registered!';
-            } else {
-                $hash = password_hash($password, PASSWORD_DEFAULT);
+    // Check password strength
+    if (strlen($password) < 8) {
+        $_SESSION['error'] = 'Password must be at least 8 characters long.';
+        header("Location: signup.php");
+        exit;
+    }
 
-                $stmt = $db->prepare(
-                    "INSERT INTO users (email, password, firstname, lastname, isAdmin)
-                     VALUES (?, ?, ?, ?, 0)"
-                );
+    try {
+        // Check if the email is already in use
+        $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
 
-                $stmt->execute([$email, $hash, $firstname, $lastname]);
-
-                $_SESSION['success'] = 'Account created successfully! Please log in.';
-                header('Location: login.php');
-                exit;
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error'] = 'Database error.';
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['error'] = 'Email already registered.';
+            header("Location: signup.php");
+            exit;
         }
+
+        // Hash password
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        // Insert new user
+        $stmt = $db->prepare("
+            INSERT INTO users (email, password, firstname, lastname, isAdmin)
+            VALUES (?, ?, ?, ?, 0)
+        ");
+
+        $stmt->execute([$email, $hash, $firstname, $lastname]);
+
+        // Success message
+        $_SESSION['success'] = 'Account created successfully! Please log in.';
+        header('Location: login.php');
+        exit;
+
+    } catch (PDOException $e) {
+        // Generic database error
+        $_SESSION['error'] = 'Database error.';
+        header("Location: signup.php");
+        exit;
     }
 }
 ?>
@@ -82,10 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="relative">
                 <input id="signup-confirm-password" type="password" name="confirm_password"
                        placeholder="Confirm Password" required>
-
                 <button type="button" id="toggle-signup-confirm-password"
                         class="absolute right-3 top-1/2 -translate-y-1/2">
-                    <i class="pi pi-eye text-black"></i>
+                    <i class="pi pi-eye"></i>
                 </button>
             </div>
 
@@ -105,39 +148,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <script>
-    function setupPasswordToggle(inputId, toggleId) {
+    // Password visibility toggle setup
+    function setupToggle(inputId, btnId) {
         const input = document.getElementById(inputId);
-        const toggle = document.getElementById(toggleId);
+        const btn = document.getElementById(btnId);
 
-        toggle.addEventListener('click', () => {
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-            toggle.innerHTML = isPassword
-                ? '<i class="pi pi-eye-slash"></i>'
-                : '<i class="pi pi-eye"></i>';
+        btn.addEventListener('click', () => {
+            const isPass = input.type === 'password';
+            input.type = isPass ? 'text' : 'password';
+            btn.innerHTML = isPass ? '<i class="pi pi-eye-slash"></i>' : '<i class="pi pi-eye"></i>';
         });
     }
 
-    setupPasswordToggle('signup-password', 'toggle-signup-password');
-    setupPasswordToggle('signup-confirm-password', 'toggle-signup-confirm-password');
+    setupToggle('signup-password', 'toggle-signup-password');
+    setupToggle('signup-confirm-password', 'toggle-signup-confirm-password');
 
+    // Enable button only when all inputs are filled
     const signupButton = document.getElementById('signup-button');
-    const signupInputs = [
-        'firstname',
-        'lastname',
-        'email',
-        'signup-password',
-        'signup-confirm-password'
+    const fields = [
+        'firstname', 'lastname', 'email',
+        'signup-password', 'signup-confirm-password'
     ].map(id => document.getElementById(id));
 
-    function checkInputs() {
-        const allFilled = signupInputs.every(input => input.value.trim() !== '');
-        signupButton.disabled = !allFilled;
-        signupButton.classList.toggle('opacity-50', !allFilled);
-        signupButton.classList.toggle('cursor-not-allowed', !allFilled);
+    function validate() {
+        const filled = fields.every(f => f.value.trim() !== '');
+        signupButton.disabled = !filled;
+        signupButton.classList.toggle('opacity-50', !filled);
+        signupButton.classList.toggle('cursor-not-allowed', !filled);
     }
 
-    signupInputs.forEach(input => input.addEventListener('input', checkInputs));
+    fields.forEach(f => f.addEventListener('input', validate));
 </script>
 
 <?php include '../shared/footer.php'; ?>
