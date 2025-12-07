@@ -31,7 +31,7 @@ if ($user) {
     ");
     $stmt->execute([$token, $expires, $email]);
 
-    $resetLink = "http://localhost/cinema-website/auth/reset_password.php?token=$token";
+    $resetLink = "http://localhost/cinema-website/views/auth/forgot_password/reset_password.php?token=$token";
 
     sendMail(
         $email,
