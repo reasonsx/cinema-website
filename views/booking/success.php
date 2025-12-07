@@ -3,7 +3,6 @@ session_start();
 require_once __DIR__ . '/../../backend/connection.php';
 require_once __DIR__ . '/../../backend/stripe_config.php';
 
-// Get session ID from Stripe redirect
 $session_id = $_GET['session_id'] ?? null;
 
 if (!$session_id) {
@@ -11,7 +10,6 @@ if (!$session_id) {
     exit;
 }
 
-// Retrieve Stripe objects
 $session = \Stripe\Checkout\Session::retrieve($session_id);
 $paymentIntent = \Stripe\PaymentIntent::retrieve($session->payment_intent);
 
@@ -20,18 +18,15 @@ $screeningId = $session->metadata->screening_id;
 $selectedSeats = explode(',', $session->metadata->seats);
 $totalPrice = $paymentIntent->amount_received / 100;
 
-// Insert booking
 $stmtBooking = $db->prepare("INSERT INTO bookings (user_id, screening_id, total_price) VALUES (?, ?, ?)");
 $stmtBooking->execute([$userId, $screeningId, $totalPrice]);
 $bookingId = $db->lastInsertId();
 
-// Insert seats
 $stmtSeats = $db->prepare("INSERT INTO booking_seats (booking_id, seat_id, screening_id) VALUES (?, ?, ?)");
 foreach ($selectedSeats as $seatId) {
     $stmtSeats->execute([$bookingId, $seatId, $screeningId]);
 }
 
-// Fetch screening (movie, time, screening room)
 $stmt = $db->prepare("
     SELECT 
         m.title AS movie_title,
@@ -46,13 +41,11 @@ $stmt = $db->prepare("
 $stmt->execute([$screeningId]);
 $details = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Format data
 $movieTitle = $details['movie_title'];
 $startTime = date('D, d M Y • H:i', strtotime($details['start_time']));
 $endTime = date('H:i', strtotime($details['end_time']));
 $roomName = $details['room_name'];
 
-// Clear seat/session data
 unset($_SESSION['selected_screening'], $_SESSION['selected_seats']);
 ?>
 
