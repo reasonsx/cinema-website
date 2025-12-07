@@ -88,7 +88,6 @@ renderTable([
         $posterHtml = $poster ? "<img src='" . e($poster) . "' width='60' class='rounded shadow-sm'>" : "<span class='text-xs text-gray-400 italic'>No poster</span>";
 
 
-
         $trailer = $movie['trailer_url'] ? "<a href='" . e($movie['trailer_url']) . "' target='_blank' class='text-blue-600 hover:underline text-xs'>Open</a>" : "<span class='text-xs text-gray-400 italic'>None</span>";
 
 
@@ -148,12 +147,12 @@ renderTable([
 
             <!-- BASIC FIELDS (same as Add) -->
             <?php foreach ([
-                               'title'        => ['Title', 'Enter movie title', 'text'],
+                               'title' => ['Title', 'Enter movie title', 'text'],
                                'release_year' => ['Release Year', 'e.g. 2024', 'number'],
-                               'rating'       => ['Rating', 'e.g. PG-13, R, G', 'text'],
-                               'genre'        => ['Genre', 'e.g. Action, Drama', 'text'],
-                               'language'     => ['Language', 'e.g. English', 'text'],
-                               'length'       => ['Length (min)', 'Duration in minutes', 'number'],
+                               'rating' => ['Rating', 'e.g. PG-13, R, G', 'text'],
+                               'genre' => ['Genre', 'e.g. Action, Drama', 'text'],
+                               'language' => ['Language', 'e.g. English', 'text'],
+                               'length' => ['Length (min)', 'Duration in minutes', 'number'],
                            ] as $field => [$label, $placeholder, $type]): ?>
 
                 <div class="flex flex-col gap-2">
@@ -309,12 +308,12 @@ renderTable([
 
             <!-- BASIC FIELDS (2-column) -->
             <?php foreach ([
-                               'title'        => ['Title', 'Enter movie title', 'text'],
+                               'title' => ['Title', 'Enter movie title', 'text'],
                                'release_year' => ['Release Year', 'e.g. 2024', 'number'],
-                               'rating'       => ['Rating', 'e.g. PG-13, R, G', 'text'],     // FIXED
-                               'genre'        => ['Genre', 'e.g. Action, Drama', 'text'],
-                               'language'     => ['Language', 'e.g. English', 'text'],
-                               'length'       => ['Length (min)', 'Duration in minutes', 'number'],
+                               'rating' => ['Rating', 'e.g. PG-13, R, G', 'text'],     // FIXED
+                               'genre' => ['Genre', 'e.g. Action, Drama', 'text'],
+                               'language' => ['Language', 'e.g. English', 'text'],
+                               'length' => ['Length (min)', 'Duration in minutes', 'number'],
                            ] as $field => [$label, $placeholder, $type]): ?>
 
                 <div class="flex flex-col gap-2">
