@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/admin_includes.php';
 
+// Validate session and ensure admin access
 $session = new SessionManager($db);
 $session->requireLogin();
 
@@ -12,6 +13,7 @@ if (!$session->isAdmin()) {
 
 $userId = $session->getUserId();
 
+// Define allowed admin views and resolve current view
 $allowedViews = [
     'movies', 'actors', 'directors', 'users',
     'screening_rooms', 'screenings', 'bookings',
@@ -21,9 +23,11 @@ $allowedViews = [
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
 
+// Initialize feedback variables
 $error = '';
 $success = '';
 
+// Handle form submissions for active view
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($view) {
         case 'actors':
@@ -64,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Fetch all necessary data for admin modules
 $actors          = getActors($db);
 $directors       = getDirectors($db);
 $movies          = getMovies($db);
@@ -76,17 +81,24 @@ $bookings        = getBookings($db);
 $newsList        = getNews($db);
 $contentBlocks   = getContentBlocks($db);
 
+// Load common layout
 include __DIR__ . '/../shared/head.php';
 include __DIR__ . '/../shared/header.php';
 ?>
 
 <body class="bg-gray-100">
+
+<!-- ADMIN PANEL WRAPPER -->
 <section class="flex min-h-[80vh] px-4 py-6">
 
+    <!-- ADMIN SIDEBAR -->
     <aside class="w-64 bg-white p-6 rounded-2xl shadow-md flex flex-col">
         <div class="mb-8 flex flex-col items-center">
+
+            <!-- DASHBOARD TITLE -->
             <h2 class="text-xl font-black text-primary mb-3 tracking-wide">ADMIN DASHBOARD</h2>
 
+            <!-- PROFILE BADGE -->
             <div class="p-1 rounded-full bg-primary/20">
                 <img src="../assets/images/admin_dashboard/admin_profile_picture.svg"
                      alt="Admin"
@@ -98,6 +110,7 @@ include __DIR__ . '/../shared/header.php';
             </span>
         </div>
 
+        <!-- NAVIGATION LINKS -->
         <nav class="flex-1">
             <ul class="space-y-3">
                 <li>
@@ -165,6 +178,7 @@ include __DIR__ . '/../shared/header.php';
             </ul>
         </nav>
 
+        <!-- LOGOUT BUTTON -->
         <div class="mt-6">
             <a href="../views/auth/logout.php"
                class="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition">
@@ -173,8 +187,10 @@ include __DIR__ . '/../shared/header.php';
         </div>
     </aside>
 
+    <!-- MAIN CONTENT AREA -->
     <main class="flex-1 ml-6 p-6 bg-white rounded-2xl shadow-md overflow-auto">
 
+        <!-- TOAST MESSAGES -->
         <?php
         if (isset($_GET['message'])) {
             $type = $_GET['type'] ?? 'success';
@@ -199,6 +215,7 @@ include __DIR__ . '/../shared/header.php';
         }
         ?>
 
+        <!-- DYNAMIC VIEW LOADER -->
         <?php
         $viewFile = __DIR__ . "/views/{$view}/{$view}_view.php";
         if (file_exists($viewFile)) {
