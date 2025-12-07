@@ -150,18 +150,7 @@ textarea::placeholder {
     color: #999;
 }
 
-/* Actor / Director Tags    */
-.actor-btn,
-.director-btn {
-    transition: background 0.15s ease, color 0.15s ease;
-}
 
-.actor-btn.selected,
-.director-btn.selected {
-    background-color: var(--primary);
-    color: var(--white);
-    border-color: var(--primary);
-}
 
 /* Contact Form Overrides   */
 #contact-us input,
