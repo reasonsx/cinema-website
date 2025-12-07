@@ -17,7 +17,7 @@ if (!isset($_POST['csrf']) || $_POST['csrf'] !== ($_SESSION['csrf'] ?? '')) {
     exit;
 }
 
-// 3. Validate
+// 3. Validate user input
 $name    = trim($_POST['name'] ?? '');
 $email   = trim($_POST['email'] ?? '');
 $subject = trim($_POST['subject'] ?? '');
@@ -39,14 +39,9 @@ if (strlen($message) < 10 || strlen($message) > 1000) {
     exit;
 }
 
-// 4. Save message to DB
-$stmt = $db->prepare("
-    INSERT INTO contact_messages (name, email, subject, message, created_at)
-    VALUES (?, ?, ?, ?, NOW())
-");
-$stmt->execute([$name, $email, $subject, $message]);
+// 4. (Removed) Saving to database is disabled
 
-// 5. Send email
+// 5. Send email to cinema staff
 $body = "
 <h2 style='margin:10px;'>New Contact Message</h2>
 <p style='margin:10px;'><strong>Name:</strong> " . htmlspecialchars($name) . "</p>
@@ -63,12 +58,11 @@ $sent = sendMail(
     "contact@cinema-eclipse.com",
     "New Message: $subject",
     $body,
-    $email,   // user email
-    $name     // user name
+    $email,
+    $name
 );
 
-
-// Store flash message
+// 6. Store status message for frontend display
 if ($sent === true) {
     $_SESSION['contact_status'] = [
         'type' => 'success',
@@ -81,6 +75,6 @@ if ($sent === true) {
     ];
 }
 
-// Redirect back to contact section
+// Redirect back to contact section anchor
 header("Location: /cinema-website/#contact-us");
 exit;

@@ -14,9 +14,7 @@ $userId = $session->getUserId();
 
 
 // ------------------- Determine view -------------------
-$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'content_blocks',
-//    'contact_messages'
-];
+$allowedViews = ['movies', 'actors', 'directors', 'users', 'screening_rooms', 'screenings', 'bookings', 'news', 'content_blocks'];
 
 $view = $_GET['view'] ?? 'movies';
 $view = in_array($view, $allowedViews) ? $view : 'movies';
@@ -30,10 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'actors':
             require __DIR__ . "/views/actors/actors_controller.php";
             break;
-
-//        case 'contact_messages':
-//            require __DIR__ . "/views/contact_messages/contact_messages_controller.php";
-//            break;
 
         case 'directors':
             require __DIR__ . "/views/directors/directors_controller.php";
