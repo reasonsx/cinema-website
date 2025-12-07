@@ -222,6 +222,3 @@ include __DIR__ . '/../shared/header.php';
 </section>
 
 <?php include __DIR__ . '/../shared/footer.php'; ?>
-
-
-<script src="assets/js/admin.js"></script>
