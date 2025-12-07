@@ -95,9 +95,18 @@ include __DIR__ . '/../shared/header.php';
     <!-- Sidebar -->
     <aside class="w-64 bg-white p-6 rounded-2xl shadow-md flex flex-col">
         <div class="mb-8 flex flex-col items-center">
-            <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
-            <img src="../assets/images/admin_dashboard/admin_profile_picture.svg" alt="Admin" class="w-16 h-16">
-            <span class="text-black mt-2 font-bold">Administrator</span>
+
+            <h2 class="text-xl font-black text-primary mb-3 tracking-wide">ADMIN DASHBOARD</h2>
+
+            <div class="p-1 rounded-full bg-primary/20">
+                <img src="../assets/images/admin_dashboard/admin_profile_picture.svg"
+                     alt="Admin"
+                     class="w-16 h-16">
+            </div>
+
+            <span class="mt-1 px-3 py-1 bg-primary text-white rounded-full text-sm font-medium tracking-wide">
+            Administrator
+        </span>
         </div>
 
         <nav class="flex-1">
