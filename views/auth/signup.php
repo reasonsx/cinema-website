@@ -1,46 +1,39 @@
 <?php
 session_start();
-require_once '../backend/connection.php';
+require_once '../../backend/connection.php';
 
-// SIGNUP HANDLER
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Sanitize and read form inputs
     $firstname = trim($_POST['firstname']);
     $lastname = trim($_POST['lastname']);
     $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
     $confirm = $_POST['confirm_password'];
 
-    // Validate first and last name
     if ($firstname === '' || $lastname === '') {
         $_SESSION['error'] = 'First and last name are required.';
         header("Location: signup.php");
         exit;
     }
 
-    // Validate email format
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = 'Invalid email format.';
         header("Location: signup.php");
         exit;
     }
 
-    // Validate email length
     if (strlen($email) > 255) {
         $_SESSION['error'] = 'Email is too long.';
         header("Location: signup.php");
         exit;
     }
 
-    // Check password confirmation
     if ($password !== $confirm) {
         $_SESSION['error'] = 'Passwords do not match.';
         header("Location: signup.php");
         exit;
     }
 
-    // Check password strength
     if (strlen($password) < 8) {
         $_SESSION['error'] = 'Password must be at least 8 characters long.';
         header("Location: signup.php");
@@ -48,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Check if the email is already in use
         $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
 
@@ -58,10 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Hash password
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        // Insert new user
         $stmt = $db->prepare("
             INSERT INTO users (email, password, firstname, lastname, isAdmin)
             VALUES (?, ?, ?, ?, 0)
@@ -69,13 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->execute([$email, $hash, $firstname, $lastname]);
 
-        // Success message
         $_SESSION['success'] = 'Account created successfully! Please log in.';
         header('Location: login.php');
         exit;
 
     } catch (PDOException $e) {
-        // Generic database error
         $_SESSION['error'] = 'Database error.';
         header("Location: signup.php");
         exit;
@@ -86,11 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include '../shared/head.php'; ?>
+<?php include '../../shared/head.php'; ?>
 
 <body class="bg-black text-black font-sans">
 
-<?php include '../shared/header.php'; ?>
+<?php include '../../shared/header.php'; ?>
 
 <section class="flex justify-center items-center min-h-[70vh] bg-black px-4 py-10">
     <div class="w-full max-w-md rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm shadow-2xl p-8">
@@ -148,7 +136,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <script>
-    // Password visibility toggle setup
     function setupToggle(inputId, btnId) {
         const input = document.getElementById(inputId);
         const btn = document.getElementById(btnId);
@@ -163,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     setupToggle('signup-password', 'toggle-signup-password');
     setupToggle('signup-confirm-password', 'toggle-signup-confirm-password');
 
-    // Enable button only when all inputs are filled
     const signupButton = document.getElementById('signup-button');
     const fields = [
         'firstname', 'lastname', 'email',
@@ -180,7 +166,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     fields.forEach(f => f.addEventListener('input', validate));
 </script>
 
-<?php include '../shared/footer.php'; ?>
+<?php include '../../shared/footer.php'; ?>
 
 </body>
 </html>
