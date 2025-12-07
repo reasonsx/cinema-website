@@ -2,11 +2,10 @@
 session_start();
 
 require_once __DIR__ . '/../../backend/connection.php';
-require_once __DIR__ . '/../../backend/stripe_config.php'; // Loads Stripe API key from .env
+require_once __DIR__ . '/../../backend/stripe_config.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
-// Require login
 if (!isset($_SESSION['user_id'])) {
     header("Location: ../profile/login.php");
     exit;
@@ -16,24 +15,19 @@ $userId = $_SESSION['user_id'];
 $screeningId = $_SESSION['selected_screening'] ?? null;
 $selectedSeats = $_SESSION['selected_seats'] ?? [];
 
-// Validate session data
 if (!$screeningId || empty($selectedSeats)) {
     header("Location: ../../home/index.php");
     exit;
 }
 
-// Get screening
 $screening = getScreeningById($db, $screeningId);
 
-// Get seat price
 $stmt = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
 $stmt->execute([$screening['screening_room_id']]);
 $seatPrice = $stmt->fetchColumn();
 
-// Total
 $totalPrice = $seatPrice * count($selectedSeats);
 
-// Stripe Checkout handler
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $checkout_session = \Stripe\Checkout\Session::create([
@@ -44,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'product_data' => [
                         'name' => $screening['movie_title'] . " - Seats: " . implode(', ', $selectedSeats),
                     ],
-                    'unit_amount' => $totalPrice * 100, // cents
+                    'unit_amount' => $totalPrice * 100,
                 ],
                 'quantity' => 1,
             ]],
