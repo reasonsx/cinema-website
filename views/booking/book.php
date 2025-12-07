@@ -151,6 +151,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="h-2 w-72 md:w-96 bg-gradient-to-r from-white/10 via-white/40 to-white/10 rounded-full"></div>
         </div>
 
+        <!-- Legend -->
+        <div class="flex items-center justify-center gap-6 text-sm text-white/80 mb-4">
+
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-4 h-4 rounded bg-green-600"></span>
+                <span>Available</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-4 h-4 rounded bg-orange-400"></span>
+                <span>Selected</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-4 h-4 rounded bg-red-600/70 opacity-60"></span>
+                <span>Occupied</span>
+            </div>
+
+        </div>
         <!-- Seat selection form -->
         <form method="POST" id="seatForm" class="space-y-10">
 
