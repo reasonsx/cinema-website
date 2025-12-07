@@ -96,24 +96,12 @@ include __DIR__ . '/../shared/header.php';
     <aside class="w-64 bg-white p-6 rounded-2xl shadow-md flex flex-col">
         <div class="mb-8 flex flex-col items-center">
             <h2 class="text-2xl font-bold text-primary mb-2">Admin Panel</h2>
-            <img src="../images/adminProfilePic.jpg" alt="Admin" class="w-16 h-16 rounded-full border-2 border-primary">
-            <span class="text-gray-600 mt-2">Administrator</span>
+            <img src="../assets/images/admin_dashboard/admin_profile_picture.svg" alt="Admin" class="w-16 h-16">
+            <span class="text-black mt-2 font-bold">Administrator</span>
         </div>
 
         <nav class="flex-1">
             <ul class="space-y-3">
-<!--                <li>-->
-<!--                    <a href="?view=contact_messages"-->
-<!--                       class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors --><?php //= $view === 'contact_messages' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?><!--">-->
-<!--                        <i class="pi pi-inbox"></i> Messages-->
-<!---->
-<!--                        --><?php //if (!empty($newContactMessagesCount)): ?>
-<!--                            <span class="ml-auto inline-flex items-center justify-center rounded-full bg-amber-500 text-white text-xs px-2 py-0.5">-->
-<!--        --><?php //= (int)$newContactMessagesCount ?>
-<!--      </span>-->
-<!--                        --><?php //endif; ?>
-<!--                    </a>-->
-<!--                </li>-->
                 <li>
                     <a href="?view=movies"
                        class="flex items-center gap-2 px-3 py-2 rounded-lg transition-colors <?= $view === 'movies' ? 'bg-primary text-white' : 'text-gray-700 hover:bg-gray-200' ?>">
@@ -220,5 +208,6 @@ include __DIR__ . '/../shared/header.php';
         ?>
     </main>
 </section>
+
 
 <?php include __DIR__ . '/../shared/footer.php'; ?>
