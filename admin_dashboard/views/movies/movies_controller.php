@@ -25,7 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$success, $error] = deleteMovie($db, $_POST['delete_movie']);
     }
 
-    // Redirect back with message
-    header("Location: /cinema-website/admin_dashboard/admin_dashboard.php?view=movies&message=" . urlencode($success ?: $error));
+    // Redirect back with message + type
+    if (!empty($success)) {
+        header("Location: /cinema-website/admin_dashboard/admin_dashboard.php?view=movies&type=success&message=" . urlencode($success));
+    } else {
+        header("Location: /cinema-website/admin_dashboard/admin_dashboard.php?view=movies&type=error&message=" . urlencode($error));
+    }
     exit;
 }

@@ -1,58 +1,59 @@
 <?php
 
-// ---------------------------------------------------------
 // HELPER FUNCTION: RESIZE IMAGE
-// ---------------------------------------------------------
-function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHeight = 1200) {
+function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHeight = 1800)
+{
     list($width, $height) = getimagesize($tmpFile);
 
-    // Only resize if larger than max dimensions
+    // Only resize if larger than limits
     if ($width <= $maxWidth && $height <= $maxHeight) {
         return move_uploaded_file($tmpFile, $targetFile);
     }
 
-    // Calculate new dimensions maintaining aspect ratio
+    // Maintain aspect ratio
     $ratio = $width / $height;
     if ($maxWidth / $maxHeight > $ratio) {
         $newHeight = $maxHeight;
-        $newWidth = $maxHeight * $ratio;
+        $newWidth  = $maxHeight * $ratio;
     } else {
-        $newWidth = $maxWidth;
+        $newWidth  = $maxWidth;
         $newHeight = $maxWidth / $ratio;
     }
 
-    // CAST TO INT to avoid PHP deprecation
     $newWidth = (int) round($newWidth);
     $newHeight = (int) round($newHeight);
 
-    $srcImage = null;
-    if ($fileType == 'image/jpeg' || $fileType == 'image/pjpeg') {
+    // Load source image
+    if ($fileType === 'image/jpeg' || $fileType === 'image/pjpeg') {
         $srcImage = imagecreatefromjpeg($tmpFile);
-    } elseif ($fileType == 'image/png') {
+    } elseif ($fileType === 'image/png') {
         $srcImage = imagecreatefrompng($tmpFile);
-    } elseif ($fileType == 'image/gif') {
+    } elseif ($fileType === 'image/gif') {
         $srcImage = imagecreatefromgif($tmpFile);
     } else {
-        return false; // Unsupported type
+        return false;
     }
 
+    // Create destination image
     $dstImage = imagecreatetruecolor($newWidth, $newHeight);
 
-    // Preserve transparency for PNG/GIF
-    if ($fileType == 'image/png' || $fileType == 'image/gif') {
+    // Preserve transparency
+    if ($fileType === 'image/png' || $fileType === 'image/gif') {
         imagecolortransparent($dstImage, imagecolorallocatealpha($dstImage, 0, 0, 0, 127));
         imagealphablending($dstImage, false);
         imagesavealpha($dstImage, true);
     }
 
-    imagecopyresampled($dstImage, $srcImage, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+    // Resample
+    imagecopyresampled($dstImage, $srcImage, 0, 0, 0, 0,
+        $newWidth, $newHeight, $width, $height);
 
-    // Save resized image
-    if ($fileType == 'image/jpeg' || $fileType == 'image/pjpeg') {
-        imagejpeg($dstImage, $targetFile, 85); // 85% quality
-    } elseif ($fileType == 'image/png') {
-        imagepng($dstImage, $targetFile, 6); // Compression 0-9
-    } elseif ($fileType == 'image/gif') {
+    // Save output
+    if ($fileType === 'image/jpeg' || $fileType === 'image/pjpeg') {
+        imagejpeg($dstImage, $targetFile, 85);
+    } elseif ($fileType === 'image/png') {
+        imagepng($dstImage, $targetFile, 6);
+    } elseif ($fileType === 'image/gif') {
         imagegif($dstImage, $targetFile);
     }
 
@@ -63,10 +64,9 @@ function resizeImage($tmpFile, $targetFile, $fileType, $maxWidth = 1200, $maxHei
 }
 
 
-// ---------------------------------------------------------
 // ADD MOVIE
-// ---------------------------------------------------------
-function addMovieHandler($db, $data, $files): array {
+function addMovieHandler($db, $data, $files): array
+{
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
     $rating = trim($data['rating']);
@@ -86,10 +86,26 @@ function addMovieHandler($db, $data, $files): array {
         if (!in_array($fileType, $allowedTypes) || $fileSize > 10 * 1024 * 1024) {
             return ["", "Invalid file type or size. Only JPG, PNG, GIF under 10MB allowed."];
         }
+        // Validate image BEFORE resizing
+        list($w, $h) = getimagesize($files['poster']['tmp_name']);
 
-        $targetDir  = __DIR__ . '/../../../images/';
+        $maxWidth = 1200;
+        $maxHeight = 1800;
+
+        // Aspect ratio check: portrait only (e.g. 2:3 = 0.66)
+        $ratio = $w / $h;
+        if ($ratio < 0.4 || $ratio > 0.8) {
+            return ["", "Invalid poster shape. The poster must be a tall, portrait-style image (recommended ratio ~2:3)."];
+        }
+
+        // Resolution check
+        if ($w > $maxWidth || $h > $maxHeight) {
+            return ["", "Poster resolution too large. Max allowed size is {$maxWidth}×{$maxHeight}px."];
+        }
+
+        $targetDir = __DIR__ . '/../../../images/';
         $publicPath = '/cinema-website/images/';
-        $fileName   = time() . '_' . basename($files['poster']['name']);
+        $fileName = time() . '_' . basename($files['poster']['name']);
         $targetFile = $targetDir . $fileName;
 
         if (!resizeImage($files['poster']['tmp_name'], $targetFile, $fileType)) {
@@ -129,10 +145,9 @@ function addMovieHandler($db, $data, $files): array {
     }
 }
 
-// ---------------------------------------------------------
 // EDIT MOVIE
-// ---------------------------------------------------------
-function editMovieHandler($db, $data, $files): array {
+function editMovieHandler($db, $data, $files): array
+{
     $movie_id = intval($data['movie_id']);
     $title = trim($data['title']);
     $release_year = trim($data['release_year']);
@@ -151,10 +166,26 @@ function editMovieHandler($db, $data, $files): array {
         if (!in_array($fileType, $allowedTypes)) {
             return ["", "Invalid poster file type."];
         }
+        // Validate image BEFORE resizing
+        list($w, $h) = getimagesize($files['poster']['tmp_name']);
 
-        $targetDir  = __DIR__ . '/../../../images/';
+        $maxWidth = 1200;
+        $maxHeight = 1800;
+
+        // Aspect ratio check: portrait only (e.g. 2:3 = 0.66)
+        $ratio = $w / $h;
+        if ($ratio < 0.4 || $ratio > 0.8) {
+            return ["", "Invalid poster shape. The poster must be a tall, portrait-style image (recommended ratio ~2:3)."];
+        }
+
+        // Resolution check
+        if ($w > $maxWidth || $h > $maxHeight) {
+            return ["", "Poster resolution too large. Max allowed size is {$maxWidth}×{$maxHeight}px."];
+        }
+
+        $targetDir = __DIR__ . '/../../../images/';
         $publicPath = '/cinema-website/images/';
-        $fileName   = time() . '_' . basename($files['poster']['name']);
+        $fileName = time() . '_' . basename($files['poster']['name']);
         $targetFile = $targetDir . $fileName;
 
         if (!resizeImage($files['poster']['tmp_name'], $targetFile, $fileType)) {
@@ -206,18 +237,16 @@ function editMovieHandler($db, $data, $files): array {
     }
 }
 
-// ---------------------------------------------------------
 // GET ALL MOVIES
-// ---------------------------------------------------------
-function getMovies($db) {
+function getMovies($db)
+{
     $stmt = $db->query("SELECT * FROM movies ORDER BY id DESC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// ---------------------------------------------------------
 // DELETE MOVIE
-// ---------------------------------------------------------
-function deleteMovie($db, $movieId): array {
+function deleteMovie($db, $movieId): array
+{
     try {
         $db->prepare("DELETE FROM actorAppearIn WHERE movie_id=?")->execute([$movieId]);
         $db->prepare("DELETE FROM directorDirects WHERE movie_id=?")->execute([$movieId]);
@@ -229,10 +258,9 @@ function deleteMovie($db, $movieId): array {
     }
 }
 
-// ---------------------------------------------------------
 // GET MOVIE BY ID
-// ---------------------------------------------------------
-function getMovieById($db, $movieId) {
+function getMovieById($db, $movieId)
+{
     $stmt = $db->prepare("SELECT * FROM movies WHERE id=?");
     $stmt->execute([$movieId]);
     return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -185,13 +185,26 @@ include __DIR__ . '/../shared/header.php';
     <main class="flex-1 ml-6 p-6 bg-white rounded-2xl shadow-md overflow-auto">
         <!-- Toast Messages -->
         <?php
-        // Show success/error messages, either from POST handlers or from GET after redirect
         if (isset($_GET['message'])) {
-            echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($_GET['message']) . '</div>';
+            $type = $_GET['type'] ?? 'success';
+
+            if ($type === 'error') {
+                echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">'
+                    . htmlspecialchars($_GET['message']) .
+                    '</div>';
+            } else {
+                echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">'
+                    . htmlspecialchars($_GET['message']) .
+                    '</div>';
+            }
         } elseif (!empty($error)) {
-            echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($error) . '</div>';
+            echo '<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">'
+                . htmlspecialchars($error) .
+                '</div>';
         } elseif (!empty($success)) {
-            echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">' . htmlspecialchars($success) . '</div>';
+            echo '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">'
+                . htmlspecialchars($success) .
+                '</div>';
         }
         ?>
 
