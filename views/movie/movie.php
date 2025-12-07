@@ -27,7 +27,7 @@ $runtimeFormatted = ($runtimeHours > 0) ? "{$runtimeHours}h {$runtimeRemaining}m
 
 // Fetch linked actors
 $stmt = $db->prepare("
-    SELECT a.first_name, a.last_name, a.description
+   SELECT a.first_name, a.last_name, a.description, a.gender, a.date_of_birth
     FROM actors a
     JOIN actorAppearIn aa ON aa.actor_id = a.id
     WHERE aa.movie_id = ?
@@ -37,7 +37,7 @@ $actors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch linked directors
 $stmt = $db->prepare("
-    SELECT d.first_name, d.last_name, d.description
+   SELECT d.first_name, d.last_name, d.description, d.gender, d.date_of_birth
     FROM directors d
     JOIN directorDirects dd ON dd.director_id = d.id
     WHERE dd.movie_id = ?
@@ -66,6 +66,27 @@ foreach ($screenings as $s) {
 
 // Next upcoming screening
 $nextScreening = $screenings[0] ?? null;
+
+function genderBadge(string $gender): string
+{
+    $colors = [
+        'Male' => 'bg-blue-100 text-blue-700 border-blue-200',
+        'Female' => 'bg-pink-100 text-pink-700 border-pink-200',
+        'Other' => 'bg-gray-200 text-gray-700 border-gray-300',
+    ];
+
+    $class = $colors[$gender] ?? 'bg-gray-200 text-gray-700 border-gray-300';
+
+    return "<span class='inline-flex items-center px-2 py-0.5 rounded-full text-xs border $class'>"
+        . htmlspecialchars($gender) .
+        "</span>";
+}
+
+function shortDate($date)
+{
+    return $date ? date('d M Y', strtotime($date)) : '—';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -188,7 +209,15 @@ $nextScreening = $screenings[0] ?? null;
                              rounded-lg bg-black/90 text-white text-xs p-3 leading-relaxed opacity-0
                              group-hover:opacity-100 pointer-events-none transition
                              border border-white/10 shadow-lg z-50">
-                                            <?= nl2br(htmlspecialchars($d['description'] ?: 'No description available.')) ?>
+                                            <div class="flex items-center justify-between mb-2">
+    <?= genderBadge($d['gender']) ?>
+    <span class="text-white/60 text-xs">
+        Born: <?= shortDate($d['date_of_birth']) ?>
+    </span>
+</div>
+
+<?= nl2br(htmlspecialchars($d['description'] ?: 'No description available.')) ?>
+
                                         </span>
                                     </span>
                                 <?php endforeach; ?>
@@ -214,7 +243,16 @@ $nextScreening = $screenings[0] ?? null;
                              rounded-lg bg-black/90 text-white text-xs p-3 leading-relaxed opacity-0
                              group-hover:opacity-100 pointer-events-none transition
                              border border-white/10 shadow-lg z-50">
-                                            <?= nl2br(htmlspecialchars($a['description'] ?: 'No description available.')) ?>
+<div class="flex items-center justify-between mb-2">
+    <?= genderBadge($a['gender']) ?>
+    <span class="text-white/60 text-xs">
+        Born: <?= shortDate($a['date_of_birth']) ?>
+    </span>
+</div>
+
+<?= nl2br(htmlspecialchars($a['description'] ?: 'No description available.')) ?>
+
+
                                         </span>
                                     </span>
                                 <?php endforeach; ?>
@@ -315,29 +353,29 @@ $nextScreening = $screenings[0] ?? null;
 <?php include '../../shared/footer.php'; ?>
 
 <?php if ($groupedScreenings): ?>
-<script>
-    const dates = <?= json_encode(array_map(function ($d) use ($groupedScreenings) {
-        return [
-            'label' => strtoupper(date('D j M', strtotime($d))),
-            'screenings' => array_map(fn($t) => [
-                'id' => $t['id'],
-                'time' => date('H:i', strtotime($t['start_time'])),
-                'room' => $t['room_name']
-            ], $groupedScreenings[$d])
-        ];
-    }, array_keys($groupedScreenings))) ?>;
+    <script>
+        const dates = <?= json_encode(array_map(function ($d) use ($groupedScreenings) {
+            return [
+                'label' => strtoupper(date('D j M', strtotime($d))),
+                'screenings' => array_map(fn($t) => [
+                    'id' => $t['id'],
+                    'time' => date('H:i', strtotime($t['start_time'])),
+                    'room' => $t['room_name']
+                ], $groupedScreenings[$d])
+            ];
+        }, array_keys($groupedScreenings))) ?>;
 
-    const showtimeContainer = document.getElementById('showtime-container');
-    const showtimeDate = document.getElementById('showtimeDate');
-    const showtimeButtons = document.getElementById('showtimeButtons');
-    const prevBtn = document.getElementById('prevDateBtn');
-    const nextBtn = document.getElementById('nextDateBtn');
+        const showtimeContainer = document.getElementById('showtime-container');
+        const showtimeDate = document.getElementById('showtimeDate');
+        const showtimeButtons = document.getElementById('showtimeButtons');
+        const prevBtn = document.getElementById('prevDateBtn');
+        const nextBtn = document.getElementById('nextDateBtn');
 
-    function updateShowtimes(index) {
-        const d = dates[index];
-        showtimeDate.textContent = d.label;
+        function updateShowtimes(index) {
+            const d = dates[index];
+            showtimeDate.textContent = d.label;
 
-        showtimeButtons.innerHTML = d.screenings.map(s => `
+            showtimeButtons.innerHTML = d.screenings.map(s => `
             <a href="/cinema-website/views/booking/book.php?screening_id=${s.id}"
                class="inline-flex items-center gap-2 rounded-full border border-[var(--secondary)]/50
                       bg-black px-5 py-2.5 text-sm font-semibold text-[var(--secondary)]
@@ -348,23 +386,23 @@ $nextScreening = $screenings[0] ?? null;
             </a>
         `).join('');
 
-        showtimeContainer.dataset.index = index;
-        prevBtn.disabled = index === 0;
-        nextBtn.disabled = index === dates.length - 1;
-    }
+            showtimeContainer.dataset.index = index;
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === dates.length - 1;
+        }
 
-    prevBtn.addEventListener('click', () => {
-        let i = parseInt(showtimeContainer.dataset.index, 10);
-        if (i > 0) updateShowtimes(i - 1);
-    });
+        prevBtn.addEventListener('click', () => {
+            let i = parseInt(showtimeContainer.dataset.index, 10);
+            if (i > 0) updateShowtimes(i - 1);
+        });
 
-    nextBtn.addEventListener('click', () => {
-        let i = parseInt(showtimeContainer.dataset.index, 10);
-        if (i < dates.length - 1) updateShowtimes(i + 1);
-    });
+        nextBtn.addEventListener('click', () => {
+            let i = parseInt(showtimeContainer.dataset.index, 10);
+            if (i < dates.length - 1) updateShowtimes(i + 1);
+        });
 
-    updateShowtimes(0);
-</script>
+        updateShowtimes(0);
+    </script>
 <?php endif; ?>
 
 </body>
