@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </p>
 
         <p class="text-center text-sm text-white/60 mt-2">
-            <a href="forgot_password.php" class="text-[var(--secondary)]">Forgot your password?</a>
+            <a href="forgot_password/forgot_password.php" class="text-[var(--secondary)]">Forgot your password?</a>
         </p>
 
     </div>
