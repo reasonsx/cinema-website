@@ -61,7 +61,7 @@ require_once '../../backend/connection.php';
     });
 </script>
 
-<?php include '../shared/footer.php'; ?>
+<?php include '../../shared/footer.php'; ?>
 
 </body>
 </html>
