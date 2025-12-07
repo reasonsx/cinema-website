@@ -201,6 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <script>
+    // GROUP SEATS BY ROW
     function groupSeats() {
         const rows = {};
         document.querySelectorAll('.seat').forEach(label => {
@@ -208,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const row = seatText[0];
             const seatNumber = parseInt(seatText.substring(1));
             const checkbox = label.querySelector('input');
+
             if (!rows[row]) rows[row] = [];
             rows[row].push({
                 number: seatNumber,
@@ -217,55 +219,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 label
             });
         });
+
+        // Sort seats by seat number
         for (const row in rows) {
             rows[row].sort((a, b) => a.number - b.number);
         }
+
         return rows;
     }
 
+    // GAP DETECTION ALGORITHM
     function causesGap(rows) {
         for (const row in rows) {
             const seats = rows[row];
+
             for (let i = 0; i < seats.length - 2; i++) {
                 const a = seats[i];
                 const b = seats[i + 1];
                 const c = seats[i + 2];
+
+                // Selected - empty - selected
                 if (a.selected && !b.selected && !b.disabled && c.selected) return true;
+
+                // Disabled - empty - selected
                 if (a.disabled && !b.selected && !b.disabled && c.selected) return true;
+
+                // Selected - empty - disabled
                 if (a.selected && !b.selected && !b.disabled && c.disabled) return true;
             }
         }
         return false;
     }
 
+    // MAXIMUM SEAT LIMIT
+    const MAX_SEATS = 6;
+
+    function selectedSeatCount() {
+        return document.querySelectorAll('.seat input[type="checkbox"]:checked').length;
+    }
+
+    function showWarning(message) {
+        const msg = document.getElementById("gap-warning");
+        msg.classList.remove("hidden");
+        msg.textContent = message;
+    }
+
+    function hideWarning() {
+        document.getElementById("gap-warning").classList.add("hidden");
+    }
+
+    // SEAT CLICK HANDLING
     document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)').forEach(checkbox => {
         const label = checkbox.closest('.seat');
 
         label.addEventListener('click', event => {
             event.preventDefault();
 
-            checkbox.checked = !checkbox.checked;
+            const newState = !checkbox.checked;
 
+            // LIMIT CHECK (only when selecting new seats)
+            if (newState === true && selectedSeatCount() >= MAX_SEATS) {
+                showWarning("You can book a maximum of 6 seats per booking. For larger groups, please contact us by email.");
+                return;
+            }
+
+            checkbox.checked = newState;
+
+            // Update seat color
             label.classList.toggle('bg-orange-400', checkbox.checked);
             label.classList.toggle('text-black', checkbox.checked);
             label.classList.toggle('bg-green-600', !checkbox.checked);
             label.classList.toggle('text-white', !checkbox.checked);
 
+            // GAP CHECK
             const rows = groupSeats();
             if (causesGap(rows)) {
-                checkbox.checked = !checkbox.checked;
+
+                // Undo change
+                checkbox.checked = !newState;
                 label.classList.toggle('bg-orange-400', checkbox.checked);
                 label.classList.toggle('text-black', checkbox.checked);
                 label.classList.toggle('bg-green-600', !checkbox.checked);
                 label.classList.toggle('text-white', !checkbox.checked);
 
-                const msg = document.getElementById("gap-warning");
-                msg.classList.remove("hidden");
-                msg.textContent = "You cannot leave a single empty seat gap!";
+                showWarning("You cannot leave a single empty seat gap!");
                 return;
             }
 
-            document.getElementById("gap-warning").classList.add("hidden");
+            hideWarning();
         });
     });
 </script>
