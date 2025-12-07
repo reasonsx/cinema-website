@@ -8,7 +8,9 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL,
-    isAdmin BOOLEAN DEFAULT FALSE
+    isAdmin BOOLEAN DEFAULT FALSE,
+    reset_token VARCHAR(255),
+    reset_expires DATETIME
 );
 
 INSERT INTO users (email, password, firstname, lastname, isAdmin) VALUES
@@ -386,9 +388,6 @@ VALUES
      'When I try to book seats for The Dark Knight, I get a payment error. Please help.',
      '203.0.113.17', 'Mozilla/5.0 (Windows NT 11.0; Win64; x64)', 'new', '2025-10-28 13:42:00');
 
-ALTER TABLE users
-ADD reset_token VARCHAR(255),
-ADD reset_expires DATETIME;
 
 
 CREATE OR REPLACE VIEW view_full_bookings AS
