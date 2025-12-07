@@ -23,7 +23,8 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 if ($user) {
 
     $token = bin2hex(random_bytes(32));
-    $expires = date("Y-m-d H:i:s", strtotime("+1 hour"));
+   $expires = date("Y-m-d H:i:s", time() + 3600); // 3600 seconds = 1 hour
+
 
     $stmt = $db->prepare("
         UPDATE users 
