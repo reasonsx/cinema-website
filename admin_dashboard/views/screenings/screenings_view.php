@@ -94,20 +94,15 @@ renderTable([
     'addLabel'  => 'Add Screening',
     'addForm'   => $addForm,
 
-    // Table headers
     'headers' => ['ID', 'Movie', 'Room', 'Start', 'End'],
-
-    // Table rows
     'rows' => $screenings,
-
-    // How each row is displayed
     'renderRow' => function ($s) {
         return [
             $s['id'],
             e($s['movie_title']),
             e($s['room_name']),
-            e($s['start_time']),
-            e($s['end_time']),
+            e(date('Y-m-d H:i', strtotime($s['start_time']))), // formatted
+            e(date('Y-m-d H:i', strtotime($s['end_time']))),   // formatted
         ];
     },
 
@@ -225,14 +220,29 @@ renderTable([
 ]);
 ?>
 
-<!-- JS identical to your original logic -->
 <script>
-    // auto end time helper
+    // Converts Date → YYYY-MM-DDTHH:MM (no seconds)
     function formatLocalDate(d) {
         const offset = d.getTimezoneOffset();
         const local = new Date(d.getTime() - offset * 60000);
-        return local.toISOString().slice(0, 16);
+        return local.toISOString().slice(0, 16); // trims seconds
     }
+
+    // Clean any datetime-local input to remove seconds
+    function cleanDateInput(input) {
+        if (!input.value) return;
+        const d = new Date(input.value);
+        input.value = formatLocalDate(d);
+    }
+
+    // Clean initial values in edit rows
+    document.querySelectorAll('.startTimeEdit, .endTimeEdit').forEach(input => {
+        cleanDateInput(input);
+    });
+
+    // Clean add-form values on load
+    cleanDateInput(document.getElementById('startTime'));
+    cleanDateInput(document.getElementById('endTime'));
 
     // Add form auto-end
     document.getElementById('autoSetEndTime').addEventListener('click', () => {
@@ -244,14 +254,17 @@ renderTable([
         document.getElementById('endTime').value = formatLocalDate(end);
     });
 
-    // Edit forms
+    // Edit forms auto-end
     document.querySelectorAll('.autoSetEndTimeEdit').forEach(btn => {
         btn.addEventListener('click', () => {
             const form = btn.closest('form');
-            const start = new Date(form.querySelector('.startTimeEdit').value);
+            const startInput = form.querySelector('.startTimeEdit');
             const movie = form.querySelector('.movieSelectEdit').selectedOptions[0];
             const len = parseInt(movie.dataset.length || 0);
+
+            const start = new Date(startInput.value);
             const end = new Date(start.getTime() + len * 60000);
+
             form.querySelector('.endTimeEdit').value = formatLocalDate(end);
         });
     });

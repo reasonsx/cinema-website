@@ -127,14 +127,8 @@ renderTable([
         <?php
         return ob_get_clean();
     })(),
-
-    // TABLE HEADERS
     'headers' => ['ID', 'User', 'Movie', 'Room', 'Screening', 'Seats', 'Total Price'],
-
-    // DATA ROWS
     'rows'    => $bookings,
-
-    // MAIN ROW RENDERER
     'renderRow' => function(array $b) {
         $seatHtml = '';
         if (!empty($b['seats'])) {
@@ -143,12 +137,26 @@ renderTable([
             }
         }
 
+        // --- Duration calculation ---
+        $start = strtotime($b['start_time']);
+        $end   = strtotime($b['end_time']);
+        $minutes = ($end - $start) / 60;
+        $duration = sprintf('%dh %02dmin', floor($minutes / 60), $minutes % 60);
+
         return [
             (int)$b['id'],
             e($b['firstname'].' '.$b['lastname'].' ('.$b['email'].')'),
             e($b['movie_title']),
             e($b['room_name']),
-            e($b['start_time'].' → '.$b['end_time']),
+
+            // Show start → end + duration
+            e(
+                date('Y-m-d H:i', $start) .
+                ' => ' .
+                date('Y-m-d H:i', $end) .
+                " ({$duration})"
+            ),
+
             $seatHtml ?: '<span class="text-xs text-gray-500 italic">No seats</span>',
             number_format((float)$b['total_price'], 2) . ' DKK',
         ];
