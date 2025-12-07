@@ -4,24 +4,20 @@ require_once __DIR__ . '/../../backend/connection.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
-// Require login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit;
 }
 
-// Fetch session data
 $userId = $_SESSION['user_id'];
 $screeningId = $_SESSION['selected_screening'] ?? null;
 $selectedSeats = $_SESSION['selected_seats'] ?? [];
 
-// Validate access
 if (!$screeningId || empty($selectedSeats)) {
     header("Location: index.php");
     exit;
 }
 
-// Get screening info
 $screening = getScreeningById($db, $screeningId);
 $screeningDate = date('D, M j', strtotime($screening['start_time']));
 $startTimeFormatted = date('H:i', strtotime($screening['start_time']));
@@ -36,12 +32,10 @@ $runtimeRemaining = $runtimeMinutes % 60;
 
 $runtimeFormatted = "{$runtimeHours}h {$runtimeRemaining}m";
 
-// Get seat price for the room
 $stmt = $db->prepare("SELECT seat_price FROM screening_rooms WHERE id = ?");
 $stmt->execute([$screening['screening_room_id']]);
 $seatPrice = $stmt->fetchColumn();
 
-// Calculate total cost
 $totalPrice = $seatPrice * count($selectedSeats);
 ?>
 <!DOCTYPE html>
