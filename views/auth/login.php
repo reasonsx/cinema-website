@@ -1,5 +1,4 @@
 <?php
-// Session lifetime configuration
 $sessionLifetime = 3600;
 
 session_set_cookie_params([
@@ -11,27 +10,21 @@ session_set_cookie_params([
     'samesite' => 'Strict'
 ]);
 
-// Start session
 session_start();
 
-require_once '../backend/connection.php';
+require_once '../../backend/connection.php';
 
-// Inactivity timeout
 $timeoutDuration = 1800;
 
-// Destroy session if inactive
 if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeoutDuration) {
     session_unset();
     session_destroy();
 }
 
-// Update last activity timestamp
 $_SESSION['LAST_ACTIVITY'] = time();
 
-// Default redirect after login
 $redirect = '/cinema-website/views/profile/profile.php';
 
-// Check redirect parameter
 if (!empty($_GET['redirect'])) {
     $redirectPath = filter_var($_GET['redirect'], FILTER_SANITIZE_URL);
     if (str_starts_with($redirectPath, '/')) {
@@ -39,21 +32,17 @@ if (!empty($_GET['redirect'])) {
     }
 }
 
-// Process login form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Read inputs
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    // Email format validation
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = 'Invalid email format.';
         header("Location: login.php");
         exit;
     }
 
-    // Email length validation
     if (strlen($email) > 255) {
         $_SESSION['error'] = 'Email too long.';
         header("Location: login.php");
@@ -61,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Look up user
         $stmt = $db->prepare("
             SELECT id, password, firstname, lastname, isAdmin
             FROM users
@@ -71,25 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Validate credentials
         if ($user && password_verify($password, $user['password'])) {
 
-            // Store session data
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['firstname'] = $user['firstname'];
             $_SESSION['lastname'] = $user['lastname'];
             $_SESSION['isAdmin'] = $user['isAdmin'];
 
-            // Success: redirect
             header("Location: $redirect");
             exit;
         }
 
-        // Wrong login
         $_SESSION['error'] = 'Invalid email or password.';
 
     } catch (PDOException $e) {
-        // DB error
         $_SESSION['error'] = 'Database error.';
     }
 }
@@ -159,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 </script>
 
-<?php include '../shared/footer.php'; ?>
+<?php include '../../shared/footer.php'; ?>
 
 </body>
 </html>
