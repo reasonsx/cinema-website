@@ -214,9 +214,17 @@ function shortDate($date)
 
                     <!-- Directors -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold">
+                        <dt class="flex items-center gap-2 font-semibold group relative cursor-default">
                             <i class="pi pi-id-card text-[var(--secondary)]"></i> Director
+
+                            <?php if ($directors): ?>
+                                <span class="pi pi-info-circle text-white/40 text-xs group-hover:text-white transition"></span>
+                                <span class="absolute left-0 top-full mt-1 px-3 py-1.5 text-xs rounded-lg bg-black/90 text-white/80 opacity-0 group-hover:opacity-100 pointer-events-none transition border border-white/10 z-20">
+                                Hover over a director's badge to view details
+                                </span>
+                            <?php endif; ?>
                         </dt>
+
 
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if ($directors): ?>
@@ -252,9 +260,19 @@ function shortDate($date)
 
                     <!-- Cast -->
                     <div class="rounded-xl border border-white/10 bg-black/20 p-4">
-                        <dt class="flex items-center gap-2 font-semibold">
+                        <dt class="flex items-center gap-2 font-semibold group relative cursor-default">
                             <i class="pi pi-users text-[var(--secondary)]"></i> Cast
+
+                            <?php if ($actors): ?>
+                                <span class="pi pi-info-circle text-white/40 text-xs group-hover:text-white transition"></span>
+
+                                <!-- Hover tooltip -->
+                                <span class="absolute left-0 top-full mt-1 px-3 py-1.5 text-xs rounded-lg bg-black/90 text-white/80 opacity-0 group-hover:opacity-100 pointer-events-none transition border border-white/10 z-20">
+                                Hover over a cast member to view details
+                                </span>
+                            <?php endif; ?>
                         </dt>
+
 
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if ($actors): ?>
