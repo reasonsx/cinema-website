@@ -89,7 +89,8 @@ renderTable([
                 <select name="screening_id" id="add_screening_id"
                         class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black"
                         required>
-                    <option value="">Select Screening</option>
+
+                <option value="">Select Screening</option>
                     <?php foreach ($screenings as $s): ?>
                         <option value="<?= $s['id'] ?>" data-room="<?= $s['screening_room_id'] ?>">
                             <?= htmlspecialchars($s['movie_title'].' | '.$s['start_time'].' → '.$s['end_time'].' | '.$s['room_name']) ?>
@@ -191,7 +192,7 @@ renderTable([
         ob_start(); ?>
 
         <form method="post" class="flex flex-col gap-6" data-edit-booking="1">
-
+            <input type="hidden" name="edit_booking" value="1">
             <p class="text-xl font-semibold text-gray-800">
                 Editing Booking #<?= $bookingId ?>
             </p>
