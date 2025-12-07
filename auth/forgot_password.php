@@ -24,13 +24,11 @@ require_once '../backend/connection.php';
 
         <form action="forgot_password_process.php" method="POST" class="flex flex-col gap-5">
 
-            <!-- Email -->
             <input type="email"
                    name="email"
                    placeholder="Enter your email"
                    required>
 
-            <!-- Submit Button -->
             <button id="forgot-button"
                     type="submit"
                     class="btn-full w-full opacity-50 cursor-not-allowed"
@@ -52,7 +50,6 @@ require_once '../backend/connection.php';
     const emailInput = document.querySelector('input[name="email"]');
     const forgotButton = document.getElementById('forgot-button');
 
-    // Enable button only when email is not empty
     emailInput.addEventListener('input', () => {
         if (emailInput.value.trim() !== "") {
             forgotButton.disabled = false;
