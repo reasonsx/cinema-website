@@ -37,7 +37,7 @@ class SessionManager
             (time() - $_SESSION['LAST_ACTIVITY']) > $this->timeout
         ) {
             $this->logout();
-            header("Location: /cinema-website/auth/login.php?timeout=1");
+            header("Location: /cinema-website/views/auth/login.php?timeout=1");
             exit;
         }
 
@@ -51,7 +51,7 @@ class SessionManager
     ): void {
         if (!isset($_SESSION['user_id'])) {
             header(
-                "Location: /cinema-website/auth/login.php?redirect=" .
+                "Location: /cinema-website/views/auth/login.php?redirect=" .
                 urlencode($redirectUrl)
             );
             exit;
@@ -92,7 +92,7 @@ class SessionManager
             true
         );
 
-        header("Location: /cinema-website/auth/login.php?logged_out=1");
+        header("Location: /cinema-website/views/auth/login.php?logged_out=1");
         exit;
     }
 
