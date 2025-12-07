@@ -2,9 +2,10 @@
 require_once __DIR__ . '/../../components/table.php';
 require_once __DIR__ . '/../../../shared/helpers.php';
 
-// Format date
+// Format date as readable string
 if (!function_exists('formatNewsDate')) {
-    function formatNewsDate(string $dt): string {
+    function formatNewsDate(string $dt): string
+    {
         return date('d M Y, H:i', strtotime($dt)); // Example: 27 Jan 2025, 18:11
     }
 }
@@ -12,11 +13,12 @@ if (!function_exists('formatNewsDate')) {
 
 <?php
 renderTable([
-    'id'        => 'newsTable',
-    'title'     => 'News Management',
-    'headers'   => ['ID', 'Title', 'Date Added', 'Content'],
-    'rows'      => $newsList,
-    'searchable'=> true,
+    'id' => 'newsTable',
+    'title' => 'News Management',
+    'headers' => ['ID', 'Title', 'Date Added', 'Content'],
+    'rows' => $newsList,
+    'searchable' => true,
+
     'renderRow' => function ($news) {
         return [
             $news['id'],
@@ -25,10 +27,11 @@ renderTable([
             e(mb_strimwidth($news['content'], 0, 100, '…'))
         ];
     },
+
     'actions' => function ($news) {
         ob_start(); ?>
-        <div class="flex items-center gap-2">
 
+        <div class="flex items-center gap-2">
             <button onclick="toggleEditRow(<?= $news['id'] ?>)"
                     class="btn-square bg-blue-600">
                 <i class="pi pi-pencil"></i> Edit
@@ -38,21 +41,20 @@ renderTable([
                   onsubmit="return confirm('Delete this news item?')"
                   class="flex items-center p-0 m-0 leading-none">
                 <input type="hidden" name="delete_news_id" value="<?= $news['id'] ?>">
-
                 <button type="submit" name="delete_news"
                         class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
-
         </div>
+
         <?php return ob_get_clean();
     },
+
     'renderEditRow' => function ($news) {
         ob_start(); ?>
 
         <form method="post" class="flex flex-col gap-6">
-
             <input type="hidden" name="news_id" value="<?= $news['id'] ?>">
 
             <!-- Title -->
@@ -90,15 +92,14 @@ renderTable([
                     Cancel
                 </button>
             </div>
-
         </form>
 
         <?php return ob_get_clean();
     },
 
-    // Add form
     'addLabel' => 'Add News',
-    'addForm'  => (function () {
+
+    'addForm' => (function () {
         ob_start(); ?>
 
         <form method="post" class="flex flex-col gap-6">
@@ -109,8 +110,8 @@ renderTable([
                 <label class="text-sm text-gray-700 font-semibold">Title</label>
                 <input type="text"
                        name="title"
-                       class="input-edit px-4 py-2 rounded-md"
                        placeholder="Enter news title"
+                       class="input-edit px-4 py-2 rounded-md"
                        required>
             </div>
 
@@ -119,8 +120,8 @@ renderTable([
                 <label class="text-sm text-gray-700 font-semibold">Content</label>
                 <textarea name="content"
                           rows="6"
-                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
                           placeholder="Write the news content..."
+                          class="input-edit-textarea px-4 py-3 rounded-md leading-relaxed"
                           required></textarea>
             </div>
 
