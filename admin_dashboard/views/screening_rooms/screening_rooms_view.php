@@ -2,8 +2,9 @@
 require_once __DIR__ . '/../../components/table.php';
 require_once __DIR__ . '/../../../shared/helpers.php';
 
-// Helper: group seats by row and build data for edit/manual mode
-function buildSeatLayout(PDO $db, int $roomId): array {
+// Helper: Build seat layout groups + counts + manual string
+function buildSeatLayout(PDO $db, int $roomId): array
+{
     $stmt = $db->prepare("
         SELECT id, `row_number`, seat_number
         FROM seats
@@ -18,41 +19,38 @@ function buildSeatLayout(PDO $db, int $roomId): array {
         $grouped[$seat['row_number']][] = $seat['seat_number'];
     }
 
-    $rowCount      = count($grouped);
+    $rowCount = count($grouped);
     $maxSeatsPerRow = $rowCount > 0 ? max(array_map('count', $grouped)) : 0;
-
-    // Manual seats string: "A1 A2 B1 B2 ..."
     $manualSeats = '';
+
     foreach ($grouped as $row => $nums) {
         foreach ($nums as $num) {
             $manualSeats .= $row . $num . ' ';
         }
     }
-    $manualSeats = trim($manualSeats);
 
     return [
-        'seats'          => $seats,
-        'grouped'        => $grouped,
-        'rowCount'       => $rowCount,
+        'seats' => $seats,
+        'grouped' => $grouped,
+        'rowCount' => $rowCount,
         'maxSeatsPerRow' => $maxSeatsPerRow,
-        'manualSeats'    => $manualSeats,
+        'manualSeats' => trim($manualSeats),
     ];
 }
 
-// Seat badge (Style C)
-function seatBadge(string $label): string {
+function seatBadge(string $label): string
+{
     return "<span class=\"inline-block bg-[var(--secondary)] text-white px-2 py-1 rounded-md text-xs shadow-sm mr-1 mb-1\">"
         . e($label) .
         "</span>";
 }
 
 renderTable([
-    'id'        => 'roomsTable',
-    'title'     => 'All Screening Rooms',
-    'searchable'=> true,
-    'addLabel'  => 'Add Screening Room',
+    'id' => 'roomsTable',
+    'title' => 'All Screening Rooms',
+    'searchable' => true,
+    'addLabel' => 'Add Screening Room',
 
-    // ADD FORM
     'addForm' => (function () {
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-6">
@@ -61,42 +59,35 @@ renderTable([
             <!-- Room name -->
             <div class="flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Room Name</label>
-                <input type="text"
-                       name="name"
-                       placeholder="Room Name"
-                       required>
+                <input type="text" name="name" placeholder="Room Name" required>
             </div>
 
             <!-- Mode switch -->
             <div class="flex gap-4">
                 <button type="button"
                         onclick="switchAddSeatEditMode('grid')"
-                        class="btn-square bg-purple-600 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-table"></i>
-                    Grid Mode
+                        class="btn-square bg-purple-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-table"></i> Grid Mode
                 </button>
 
                 <button type="button"
                         onclick="switchAddSeatEditMode('manual')"
-                        class="btn-square bg-gray-500 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-pencil"></i>
-                    Manual Mode
+                        class="btn-square bg-gray-500 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-pencil"></i> Manual Mode
                 </button>
             </div>
 
-            <!-- GRID EDITOR -->
+            <!-- Grid editor -->
             <div id="add-grid-editor" class="flex flex-col gap-4">
                 <div class="flex gap-6">
                     <div class="flex flex-col gap-2">
                         <label class="text-sm text-gray-700 font-semibold">Rows</label>
-                        <input type="number" min="1" name="rows"
-                               placeholder="Rows">
+                        <input type="number" min="1" name="rows" placeholder="Rows">
                     </div>
 
                     <div class="flex flex-col gap-2">
                         <label class="text-sm text-gray-700 font-semibold">Seats per Row</label>
-                        <input type="number" min="1" name="seats_per_row"
-                               placeholder="Seats">
+                        <input type="number" min="1" name="seats_per_row" placeholder="Seats">
                     </div>
                 </div>
 
@@ -105,47 +96,37 @@ renderTable([
                 </p>
             </div>
 
-            <!-- MANUAL EDITOR -->
+            <!-- Manual editor -->
             <div id="add-manual-editor" class="hidden flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Seats (manual)</label>
-
-                <textarea name="seats_text" rows="4"
-                          placeholder="Example: A1 A2 A3 B1 B2 ..."></textarea>
+                <textarea name="seats_text" rows="4" placeholder="Example: A1 A2 A3 B1 B2 ..."></textarea>
             </div>
 
             <!-- Buttons -->
             <div class="flex gap-4">
                 <button type="submit"
                         name="add_room"
-                        class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-plus"></i>
-                    Add Screening Room
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-plus"></i> Add Screening Room
                 </button>
 
                 <button type="button"
                         onclick="toggleAddForm_roomsTable()"
-                        class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-times"></i>
-                    Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
-
         </form>
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     })(),
 
-    // TABLE HEADERS
     'headers' => ['ID', 'Name', 'Capacity', 'Seats'],
 
-    // TABLE ROWS
     'rows' => $screeningRooms,
 
-    // HOW TO DISPLAY EACH ROW
     'renderRow' => function ($room) use ($db) {
         $layout = buildSeatLayout($db, (int)$room['id']);
 
-        // Seat grid with Style C badges
         $seatHtml = '<div class="flex flex-col gap-1">';
         foreach ($layout['grouped'] as $row => $nums) {
             $seatHtml .= '<div class="flex flex-wrap gap-1">';
@@ -182,11 +163,10 @@ renderTable([
             </form>
 
         </div>
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     },
 
-    // INLINE EDIT FORM
+    // Edit row
     'renderEditRow' => function ($room) use ($db) {
         $layout = buildSeatLayout($db, (int)$room['id']);
         $id = (int)$room['id'];
@@ -196,68 +176,54 @@ renderTable([
             <input type="hidden" name="room_id" value="<?= $id ?>">
             <input type="hidden" id="edit_seat_edit_mode_<?= $id ?>" name="seat_edit_mode" value="grid">
 
-            <!-- Room Name -->
+            <!-- Room name -->
             <div class="flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Room Name</label>
-                <input type="text"
-                       name="name"
-                       value="<?= e($room['name']) ?>"
-                       required>
+                <input type="text" name="name" value="<?= e($room['name']) ?>" required>
             </div>
 
             <!-- Capacity (readonly) -->
             <div class="flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Capacity</label>
-                <input type="number"
-                       value="<?= (int)$room['capacity'] ?>"
-                       readonly
-                       class="cursor-not-allowed">
+                <input type="number" value="<?= (int)$room['capacity'] ?>" readonly
+                       class="cursor-not-allowed bg-gray-100">
             </div>
 
             <!-- Mode toggle -->
             <div class="flex gap-4">
                 <button type="button"
                         onclick="switchEditSeatMode(<?= $id ?>, 'grid')"
-                        class="btn-square bg-purple-600 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-table"></i>
-                    Grid Mode
+                        class="btn-square bg-purple-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-table"></i> Grid Mode
                 </button>
 
                 <button type="button"
                         onclick="switchEditSeatMode(<?= $id ?>, 'manual')"
-                        class="btn-square bg-gray-500 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-pencil"></i>
-                    Manual Mode
+                        class="btn-square bg-gray-500 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-pencil"></i> Manual Mode
                 </button>
             </div>
 
-            <!-- GRID EDITOR -->
+            <!-- Grid editor -->
             <div id="edit-grid-editor-<?= $id ?>" class="flex flex-col gap-4">
                 <div class="flex gap-6">
                     <div class="flex flex-col gap-2">
                         <label class="text-sm text-gray-700 font-semibold">Rows</label>
-                        <input type="number" min="1"
-                               name="rows"
-                               value="<?= $layout['rowCount'] ?>">
+                        <input type="number" min="1" name="rows" value="<?= $layout['rowCount'] ?>">
                     </div>
 
                     <div class="flex flex-col gap-2">
                         <label class="text-sm text-gray-700 font-semibold">Seats per Row</label>
-                        <input type="number" min="1"
-                               name="seats_per_row"
-                               value="<?= $layout['maxSeatsPerRow'] ?>">
+                        <input type="number" min="1" name="seats_per_row" value="<?= $layout['maxSeatsPerRow'] ?>">
                     </div>
                 </div>
 
-                <p class="text-sm text-gray-600">
-                    Changing rows/seats will regenerate the entire seat layout.
-                </p>
+                <p class="text-sm text-gray-600">Changing rows/seats will regenerate the entire seat layout.</p>
             </div>
 
-            <!-- MANUAL EDITOR -->
+            <!-- Manual editor -->
             <div id="edit-manual-editor-<?= $id ?>" class="hidden flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Seats (manual)</label>
-
                 <textarea name="seats_text" rows="4"><?= e($layout['manualSeats']) ?></textarea>
             </div>
 
@@ -265,19 +231,16 @@ renderTable([
             <div class="flex gap-4">
                 <button type="submit"
                         name="edit_room"
-                        class="btn-square bg-green-600 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-check"></i>
-                    Save Changes
+                        class="btn-square bg-green-600 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-check"></i> Save Changes
                 </button>
 
                 <button type="button"
                         onclick="toggleEditRow(<?= $id ?>)"
-                        class="btn-square bg-gray-300 text-gray-700 flex gap-2 items-center px-4 py-2">
-                    <i class="pi pi-times"></i>
-                    Cancel
+                        class="btn-square bg-gray-300 text-gray-700 flex items-center gap-2 px-4 py-2">
+                    <i class="pi pi-times"></i> Cancel
                 </button>
             </div>
-
         </form>
         <?php return ob_get_clean();
     },
@@ -285,26 +248,22 @@ renderTable([
 ?>
 
 <script>
-    // Add Room: switch between grid/manual
+    // Switch add form mode
     function switchAddSeatEditMode(mode) {
-        const grid  = document.getElementById('add-grid-editor');
+        const grid = document.getElementById('add-grid-editor');
         const manual = document.getElementById('add-manual-editor');
         const input = document.getElementById('add_seat_edit_mode');
-
-        if (!grid || !manual || !input) return;
 
         grid.classList.toggle('hidden', mode !== 'grid');
         manual.classList.toggle('hidden', mode !== 'manual');
         input.value = mode;
     }
 
-    // Edit Room: switch between grid/manual per room
-    function switchEditSeatMode(roomId, mode) {
-        const grid   = document.getElementById('edit-grid-editor-' + roomId);
-        const manual = document.getElementById('edit-manual-editor-' + roomId);
-        const input  = document.getElementById('edit_seat_edit_mode_' + roomId);
-
-        if (!grid || !manual || !input) return;
+    // Switch edit form mode
+    function switchEditSeatMode(id, mode) {
+        const grid = document.getElementById('edit-grid-editor-' + id);
+        const manual = document.getElementById('edit-manual-editor-' + id);
+        const input = document.getElementById('edit_seat_edit_mode_' + id);
 
         grid.classList.toggle('hidden', mode !== 'grid');
         manual.classList.toggle('hidden', mode !== 'manual');

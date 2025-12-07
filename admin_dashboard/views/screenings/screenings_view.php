@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../../shared/helpers.php';
 // Fetch screenings
 $screenings = getScreenings($db);
 
-// Add Form (inside table)
+// Add form (inside table)
 $addForm = (function () use ($movies, $screeningRooms) {
     ob_start(); ?>
     <form method="post" id="addScreeningForm" class="flex flex-col gap-6">
@@ -33,12 +33,14 @@ $addForm = (function () use ($movies, $screeningRooms) {
                     required>
                 <option value="">Select Room</option>
                 <?php foreach ($screeningRooms as $room): ?>
-                    <option value="<?= $room['id'] ?>"><?= htmlspecialchars($room['name']) ?></option>
+                    <option value="<?= $room['id'] ?>">
+                        <?= htmlspecialchars($room['name']) ?>
+                    </option>
                 <?php endforeach; ?>
             </select>
         </div>
 
-        <!-- Start Time -->
+        <!-- Start time -->
         <div class="flex flex-col gap-2">
             <label class="text-sm text-gray-700 font-semibold">Start Time</label>
             <input type="datetime-local"
@@ -48,7 +50,7 @@ $addForm = (function () use ($movies, $screeningRooms) {
                    required>
         </div>
 
-        <!-- End Time -->
+        <!-- End time -->
         <div class="flex flex-col gap-2">
             <label class="text-sm text-gray-700 font-semibold">End Time</label>
             <div class="flex items-center gap-3">
@@ -58,7 +60,8 @@ $addForm = (function () use ($movies, $screeningRooms) {
                        class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black endTimeEdit"
                        required>
 
-                <button type="button" id="autoSetEndTime"
+                <button type="button"
+                        id="autoSetEndTime"
                         class="bg-gray-400 text-white px-4 py-2 rounded-md text-sm shadow">
                     Auto
                 </button>
@@ -82,11 +85,10 @@ $addForm = (function () use ($movies, $screeningRooms) {
             </button>
         </div>
     </form>
-    <?php
-    return ob_get_clean();
+    <?php return ob_get_clean();
 })();
 
-// RENDER TABLE
+// Render table
 renderTable([
     'id'        => 'screeningsTable',
     'title'     => 'All Screenings',
@@ -96,20 +98,19 @@ renderTable([
 
     'headers' => ['ID', 'Movie', 'Room', 'Start', 'End'],
     'rows' => $screenings,
+
     'renderRow' => function ($s) {
         return [
             $s['id'],
             e($s['movie_title']),
             e($s['room_name']),
-            e(date('Y-m-d H:i', strtotime($s['start_time']))), // formatted
-            e(date('Y-m-d H:i', strtotime($s['end_time']))),   // formatted
+            e(date('Y-m-d H:i', strtotime($s['start_time']))),
+            e(date('Y-m-d H:i', strtotime($s['end_time']))),
         ];
     },
 
-    // Edit / Delete buttons
     'actions' => function ($s) {
         ob_start(); ?>
-
         <div class="flex items-center gap-2">
 
             <button onclick="toggleEditRow(<?= $s['id'] ?>)"
@@ -120,20 +121,20 @@ renderTable([
             <form method="post"
                   onsubmit="return confirm('Delete this screening?')"
                   class="flex items-center justify-center p-0 m-0 leading-none">
+
                 <input type="hidden" name="screening_id" value="<?= $s['id'] ?>">
 
-                <button type="submit" name="delete_screening"
+                <button type="submit"
+                        name="delete_screening"
                         class="btn-square bg-red-500">
                     <i class="pi pi-trash"></i> Delete
                 </button>
             </form>
 
         </div>
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     },
 
-    // Inline edit form
     'renderEditRow' => function ($s) use ($movies, $screeningRooms) {
         ob_start(); ?>
         <form method="post" class="flex flex-col gap-6">
@@ -147,7 +148,8 @@ renderTable([
                         class="px-4 py-2 rounded-md border border-gray-300 bg-white text-black movieSelectEdit"
                         required>
                     <?php foreach ($movies as $m): ?>
-                        <option value="<?= $m['id'] ?>" data-length="<?= $m['length'] ?>"
+                        <option value="<?= $m['id'] ?>"
+                                data-length="<?= $m['length'] ?>"
                             <?= $s['movie_id'] == $m['id'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($m['title']) ?>
                         </option>
@@ -170,7 +172,7 @@ renderTable([
                 </select>
             </div>
 
-            <!-- Start Time -->
+            <!-- Start time -->
             <div class="flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">Start Time</label>
                 <input type="datetime-local"
@@ -180,10 +182,11 @@ renderTable([
                        required>
             </div>
 
-            <!-- End Time -->
+            <!-- End time -->
             <div class="flex flex-col gap-2">
                 <label class="text-sm text-gray-700 font-semibold">End Time</label>
                 <div class="flex items-center gap-3">
+
                     <input type="datetime-local"
                            name="end_time"
                            value="<?= date('Y-m-d\TH:i', strtotime($s['end_time'])) ?>"
@@ -194,6 +197,7 @@ renderTable([
                             class="autoSetEndTimeEdit bg-gray-400 text-white px-4 py-2 rounded-md text-sm shadow">
                         Auto
                     </button>
+
                 </div>
             </div>
 
@@ -213,48 +217,39 @@ renderTable([
                     Cancel
                 </button>
             </div>
+
         </form>
-        <?php
-        return ob_get_clean();
+        <?php return ob_get_clean();
     },
 ]);
 ?>
 
 <script>
-    // Converts Date → YYYY-MM-DDTHH:MM (no seconds)
     function formatLocalDate(d) {
         const offset = d.getTimezoneOffset();
         const local = new Date(d.getTime() - offset * 60000);
-        return local.toISOString().slice(0, 16); // trims seconds
+        return local.toISOString().slice(0, 16);
     }
 
-    // Clean any datetime-local input to remove seconds
     function cleanDateInput(input) {
         if (!input.value) return;
-        const d = new Date(input.value);
-        input.value = formatLocalDate(d);
+        input.value = formatLocalDate(new Date(input.value));
     }
 
-    // Clean initial values in edit rows
-    document.querySelectorAll('.startTimeEdit, .endTimeEdit').forEach(input => {
-        cleanDateInput(input);
-    });
-
-    // Clean add-form values on load
+    document.querySelectorAll('.startTimeEdit, .endTimeEdit').forEach(cleanDateInput);
     cleanDateInput(document.getElementById('startTime'));
     cleanDateInput(document.getElementById('endTime'));
 
-    // Add form auto-end
     document.getElementById('autoSetEndTime').addEventListener('click', () => {
         const start = new Date(document.getElementById('startTime').value);
         const movie = document.getElementById('movieSelect').selectedOptions[0];
         if (!movie) return;
+
         const len = parseInt(movie.dataset.length || 0);
         const end = new Date(start.getTime() + len * 60000);
         document.getElementById('endTime').value = formatLocalDate(end);
     });
 
-    // Edit forms auto-end
     document.querySelectorAll('.autoSetEndTimeEdit').forEach(btn => {
         btn.addEventListener('click', () => {
             const form = btn.closest('form');
