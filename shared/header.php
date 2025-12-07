@@ -99,11 +99,11 @@ foreach ($blocks as $block) {
                             <i class="pi pi-user"></i> <?= $userName ?>
                         </a>
                     <?php else: ?>
-                        <a href="/cinema-website/auth/login.php"
+                        <a href="/cinema-website/views/auth/login.php"
                            class="btn-white">
                             Login
                         </a>
-                        <a href="/cinema-website/auth/signup.php"
+                        <a href="/cinema-website/views/auth/signup.php"
                            class="btn-full">
                             Sign Up
                         </a>
