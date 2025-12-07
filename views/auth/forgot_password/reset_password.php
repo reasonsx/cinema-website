@@ -62,12 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </h2>
 
         <?php if ($success): ?>
-            <p class="text-green-400 text-center mb-4">
-                Password updated! You can now <a href="login.php" class="text-[var(--secondary)] hover:text-white">log in</a>.
+            <p class="text-[var(--secondary)] text-center mb-4">
+                Password updated! You can now 
+                <a href="../login.php" class="underline hover:text-white">log in</a>.
             </p>
         <?php elseif ($error): ?>
-            <p class="text-red-400 text-center mb-4"><?= $error ?></p>
+            <p class="text-white/80 text-center mb-4"><?= $error ?></p>
         <?php endif; ?>
+
 
         <?php if (!$success): ?>
         <form method="POST" class="flex flex-col gap-5">
