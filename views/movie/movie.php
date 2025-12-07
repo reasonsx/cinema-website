@@ -30,7 +30,7 @@ $runtimeFormatted = ($runtimeHours > 0) ? "{$runtimeHours}h {$runtimeRemaining}m
 
 // Fetch linked actors
 $stmt = $db->prepare("
-    SELECT a.first_name, a.last_name
+    SELECT a.first_name, a.last_name, a.description
     FROM actors a
     JOIN actorAppearIn aa ON aa.actor_id = a.id
     WHERE aa.movie_id = ?
@@ -40,7 +40,7 @@ $actors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Fetch linked directors
 $stmt = $db->prepare("
-    SELECT d.first_name, d.last_name
+    SELECT d.first_name, d.last_name, d.description
     FROM directors d
     JOIN directorDirects dd ON dd.director_id = d.id
     WHERE dd.movie_id = ?
@@ -220,11 +220,21 @@ if (!empty($screenings)) {
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if ($directors): ?>
                                 <?php foreach ($directors as $d): ?>
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10
-                                                border border-white/15 text-white/80 text-xs px-3 py-1">
-                                        <i class="pi pi-user-edit opacity-70"></i>
-                                        <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
-                                    </span>
+                                    <span class="relative group inline-flex items-center gap-1.5 rounded-full bg-white/10
+                        border border-white/15 text-white/80 text-xs px-3 py-1 cursor-default">
+
+                <i class="pi pi-user-edit opacity-70"></i>
+                <?= htmlspecialchars($d['first_name'] . ' ' . $d['last_name']) ?>
+
+                <!-- Tooltip -->
+                <span class="absolute left-1/2 top-full mt-2 w-56 -translate-x-1/2
+                             rounded-lg bg-black/90 text-white text-xs p-3 leading-relaxed opacity-0
+                             group-hover:opacity-100 pointer-events-none transition
+                             border border-white/10 shadow-lg z-50">
+                    <?= nl2br(htmlspecialchars($d['description'] ?: 'No description available.')) ?>
+                </span>
+
+            </span>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <span class="text-white/50 italic">No director listed.</span>
@@ -240,11 +250,21 @@ if (!empty($screenings)) {
                         <dd class="mt-2 flex flex-wrap gap-2">
                             <?php if ($actors): ?>
                                 <?php foreach ($actors as $a): ?>
-                                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/10
-                                                border border-white/15 text-white/80 text-xs px-3 py-1">
-                                        <i class="pi pi-user opacity-70"></i>
-                                        <?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?>
-                                    </span>
+                                    <span class="relative group inline-flex items-center gap-1.5 rounded-full bg-white/10
+                        border border-white/15 text-white/80 text-xs px-3 py-1 cursor-default">
+
+                <i class="pi pi-user opacity-70"></i>
+                <?= htmlspecialchars($a['first_name'] . ' ' . $a['last_name']) ?>
+
+                <span class="absolute left-1/2 top-full mt-2 w-56 -translate-x-1/2
+                             rounded-lg bg-black/90 text-white text-xs p-3 leading-relaxed opacity-0
+                             group-hover:opacity-100 pointer-events-none transition
+                             border border-white/10 shadow-lg z-50">
+
+                    <?= nl2br(htmlspecialchars($a['description'] ?: 'No description available.')) ?>
+                </span>
+
+            </span>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <span class="text-white/50 italic">No cast listed.</span>
@@ -254,12 +274,13 @@ if (!empty($screenings)) {
 
 
                     <!-- Release Year -->
-<!--                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">-->
-<!--                        <dt class="flex items-center gap-2 font-semibold"><i-->
-<!--                                    class="pi pi-calendar text-[var(--secondary)]"></i> Release Year-->
-<!--                        </dt>-->
-<!--                        <dd class="mt-1 text-white/80">--><?php //= htmlspecialchars($movie['release_year']) ?><!--</dd>-->
-<!--                    </div>-->
+                    <!--                    <div class="rounded-xl border border-white/10 bg-black/20 p-4">-->
+                    <!--                        <dt class="flex items-center gap-2 font-semibold"><i-->
+                    <!--                                    class="pi pi-calendar text-[var(--secondary)]"></i> Release Year-->
+                    <!--                        </dt>-->
+                    <!--                        <dd class="mt-1 text-white/80">-->
+                    <?php //= htmlspecialchars($movie['release_year']) ?><!--</dd>-->
+                    <!--                    </div>-->
 
                 </dl>
 
