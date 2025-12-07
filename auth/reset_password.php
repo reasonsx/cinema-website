@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <?php if ($success): ?>
             <p class="text-green-400 text-center mb-4">
-                ✅ Password updated! You can now <a href="login.php" class="text-[var(--secondary)] hover:text-white">log in</a>.
+                Password updated! You can now <a href="login.php" class="text-[var(--secondary)] hover:text-white">log in</a>.
             </p>
         <?php elseif ($error): ?>
             <p class="text-red-400 text-center mb-4"><?= $error ?></p>

@@ -14,16 +14,14 @@ if (!isset($_POST['email'])) {
 
 $email = trim($_POST['email']);
 
-// ✅ Find user
 $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
 $stmt->execute([$email]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// ✅ Security: do NOT reveal if user exists
 if ($user) {
 
     $token = bin2hex(random_bytes(32));
-   $expires = date("Y-m-d H:i:s", time() + 6000); // 3600 seconds = 1 hour
+   $expires = date("Y-m-d H:i:s", time() + 6000);
 
 
     $stmt = $db->prepare("
@@ -42,7 +40,6 @@ if ($user) {
     );
 }
 
-// ✅ ALWAYS show success (anti-account enumeration)
 $_SESSION['success'] = "If that email exists, a reset link was sent.";
 header("Location: forgot_password.php");
 exit;
