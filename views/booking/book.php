@@ -1,55 +1,45 @@
 <?php
 require_once __DIR__ . '/../../backend/connection.php';
-require_once __DIR__ . '/../../views/auth/session.php'; // SessionManager class
+require_once __DIR__ . '/../../views/auth/session.php'; 
 require_once __DIR__ . '/../../admin_dashboard/views/screenings/screenings_functions.php';
 require_once __DIR__ . '/../../admin_dashboard/views/screening_rooms/screening_rooms_functions.php';
 
-// Initialize session manager
 $session = new SessionManager($db);
-
-// Require login, redirect back to current page if not logged in
-$currentUrl = $_SERVER['REQUEST_URI']; // includes query string
+$currentUrl = $_SERVER['REQUEST_URI']; 
 $session->requireLogin($currentUrl);
 
 
-// Get logged-in user ID
 $userId = $session->getUserId();
 
-// Fetch screening ID from GET
 $screeningId = $_GET['screening_id'] ?? null;
 if (!$screeningId) {
     echo "<p class='text-center text-red-500 mt-10'>No screening selected.</p>";
     exit;
 }
 
-// Fetch screening
 $screening = getScreeningById($db, $screeningId);
 if (!$screening) {
     echo "<p class='text-center text-red-500 mt-10'>Invalid screening selected.</p>";
     exit;
 }
-// Runtime calculationn from start/end time
+
 $start = strtotime($screening['start_time']);
 $end = strtotime($screening['end_time']);
 
 $runtimeMinutes = round(($end - $start) / 60);
 
-// Formatted version
 $runtimeFormatted = sprintf(
     "%dh %02dm",
     floor($runtimeMinutes / 60),
     $runtimeMinutes % 60
 );
 
-// Get seats for room
 $seats = getSeatsByRoom($db, $screening['screening_room_id']);
 
-// Get already booked seats
 $stmt = $db->prepare("SELECT seat_id FROM booking_seats WHERE screening_id = ?");
 $stmt->execute([$screeningId]);
 $bookedSeats = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Booking logic
 $errors = [];
 $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -220,7 +210,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </section>
 
 <script>
-    // GROUP SEATS BY ROW
     function groupSeats() {
         const rows = {};
         document.querySelectorAll('.seat').forEach(label => {
@@ -239,7 +228,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         });
 
-        // Sort seats by seat number
         for (const row in rows) {
             rows[row].sort((a, b) => a.number - b.number);
         }
@@ -247,7 +235,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         return rows;
     }
 
-    // GAP DETECTION ALGORITHM
     function causesGap(rows) {
         for (const row in rows) {
             const seats = rows[row];
@@ -257,20 +244,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 const b = seats[i + 1];
                 const c = seats[i + 2];
 
-                // Selected - empty - selected
                 if (a.selected && !b.selected && !b.disabled && c.selected) return true;
 
-                // Disabled - empty - selected
                 if (a.disabled && !b.selected && !b.disabled && c.selected) return true;
 
-                // Selected - empty - disabled
                 if (a.selected && !b.selected && !b.disabled && c.disabled) return true;
             }
         }
         return false;
     }
 
-    // MAXIMUM SEAT LIMIT
     const MAX_SEATS = 6;
 
     function selectedSeatCount() {
@@ -287,7 +270,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById("gap-warning").classList.add("hidden");
     }
 
-    // SEAT CLICK HANDLING
     document.querySelectorAll('.seat input[type="checkbox"]:not(:disabled)').forEach(checkbox => {
         const label = checkbox.closest('.seat');
 
@@ -296,7 +278,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             const newState = !checkbox.checked;
 
-            // LIMIT CHECK (only when selecting new seats)
             if (newState === true && selectedSeatCount() >= MAX_SEATS) {
                 showWarning("You can book a maximum of 6 seats per booking. For larger groups, please contact us by email.");
                 return;
@@ -304,17 +285,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             checkbox.checked = newState;
 
-            // Update seat color
             label.classList.toggle('bg-orange-400', checkbox.checked);
             label.classList.toggle('text-black', checkbox.checked);
             label.classList.toggle('bg-green-600', !checkbox.checked);
             label.classList.toggle('text-white', !checkbox.checked);
 
-            // GAP CHECK
             const rows = groupSeats();
             if (causesGap(rows)) {
 
-                // Undo change
                 checkbox.checked = !newState;
                 label.classList.toggle('bg-orange-400', checkbox.checked);
                 label.classList.toggle('text-black', checkbox.checked);
