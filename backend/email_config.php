@@ -22,7 +22,6 @@ function sendMail($to, $subject, $messageBody, $fromUserEmail = null, $fromUserN
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $_ENV['SMTP_PORT'];
 
-        // MUST be your domain → SMTP requires this
         $mail->setFrom($_ENV['SMTP_USER'], $_ENV['SMTP_FROM_NAME']);
 
         // User's email (so replies go to them)

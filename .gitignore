@@ -13,9 +13,6 @@ dataSources.local.xml
 
 # Environment & Credentials
 .env
-/include/constants.php
-/backend/connection.php
-/backend/email_config.php
 
 # Composer & Vendors
 /vendor/
