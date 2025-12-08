@@ -5,7 +5,6 @@ use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-// Load .env
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
 $dotenv->load();
 
