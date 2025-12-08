@@ -1,17 +1,28 @@
-# Default ignored files
+# IDE / Editor Files (JetBrains / PhpStorm)
+.idea/
+*.iml
 /shelf/
 /workspace.xml
-# Editor-based HTTP Client requests
+
+# HTTP Client Requests
 /httpRequests/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
-/include/constants.php
 
+# Local data sources (PhpStorm)
+dataSources/
+dataSources.local.xml
 
-/vendor/
+# Environment & Credentials
 .env
-.idea/inspectionProfiles/Project_Default.xml
-.idea/php.xml
-.idea/vcs.xml
-.idea/php.xml
+/include/constants.php
+/backend/connection.php
+/backend/email_config.php
+
+# Composer & Vendors
+/vendor/
+
+# Node / Frontend
+/node_modules/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
